@@ -4,21 +4,18 @@ import datetime
 from dateutil import parser
 import math
 from dateutil.parser import parse
-from geopandas import GeoDataFrame
 import pandas as pd
 import numpy as np
 from shapely.geometry import Point
-import matplotlib.pyplot as plt
-import ipdb
 import time
 import sys
 
-sys.path.insert(0, '/Users/sergiocamelo/Dropbox/Sergio-Joann/Code')
-sys.path.insert(0, '/Users/sergiocamelo/Dropbox/Sergio-Joann/Code/LowerBoundsC')
+sys.path.insert(0, 'Code/VRPEngine/pyCode')
+sys.path.insert(0, 'Code/VRPEngine/C++Engine')
+
 instance = sys.argv[1]
 
 import solver as solver
-import distances as distances
 import VRPClass
 import pickle
 import lower_bound
@@ -29,6 +26,7 @@ import lower_bound
 # Unpickle
 import pickle
 file_dict = pickle.load( open( instance + ".p", "rb" ) )
+print(file_dict)
 locals().update(file_dict)
 # Get data
 print("There is a total of %d trucks"% len(H))
@@ -69,7 +67,7 @@ result = lower_bound.construct_lower_bound_c(
 
 routes = lower_bound.primal_solver(result[iterations_m2],len(N),H, quantities, capacities, n_trucks, time_limit)
 
-vrp = VRPClass.VRP(H, N, H_p, N_p, quantities, capacities, type_dist, M = M, M_p = M_p)
+vrp = VRPClass.VRP(H, N, H_p, N_p, quantities, capacities, type_dist, M = M, M_p = M_p, distance_matrix = distance)
 z_ub = np.sum([vrp.distance_path([h]+route['route']+[h]) for h in H for route in routes[h]])
 z_lb = result[iterations_m2]['z_lb']
 z_gap = (z_ub - z_lb)/z_ub

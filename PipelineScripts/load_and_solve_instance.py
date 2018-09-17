@@ -12,6 +12,8 @@ import sys
 
 sys.path.insert(0, 'Code/VRPEngine/pyCode')
 sys.path.insert(0, 'Code/VRPEngine/C++Engine')
+sys.path.insert(0, 'Code/VRPEngine/pyCode/tsp')
+
 
 instance = sys.argv[1]
 

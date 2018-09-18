@@ -9,6 +9,7 @@ import numpy as np
 from shapely.geometry import Point
 import time
 import sys
+import pickle
 
 sys.path.insert(0, 'Code/VRPEngine/pyCode')
 sys.path.insert(0, 'Code/VRPEngine/C++Engine')
@@ -16,6 +17,7 @@ sys.path.insert(0, 'Code/VRPEngine/pyCode/tsp')
 
 
 instance = sys.argv[1]
+instance_end = '/'.join(instance.split('/')[-2:])
 
 import solver as solver
 import VRPClass
@@ -26,7 +28,6 @@ import lower_bound
 # calling the C++ library
 
 # Unpickle
-import pickle
 file_dict = pickle.load( open( instance + ".p", "rb" ) )
 print(file_dict)
 locals().update(file_dict)
@@ -67,6 +68,8 @@ result = lower_bound.construct_lower_bound_c(
     Delta_final,gamma,gamma_zero,gamma_final,
     epsilon,H,capacities,N,quantities,geo_distance,n_trucks)
 
+pickle.dump( result, open( 'Results/low_cost_routes/' + instance_end + '.p', "wb" ) )
+
 routes = lower_bound.primal_solver(result[iterations_m2],len(N),H, quantities, capacities, n_trucks, time_limit)
 
 vrp = VRPClass.VRP(H, N, H_p, N_p, quantities, capacities, type_dist, M = M, M_p = M_p, distance_matrix = distance)
@@ -82,3 +85,5 @@ result_dict = {"routes":routes,
 import json
 with open( instance + "_result.json", 'wb') as outfile:
     json.dump(result_dict, outfile)
+
+print('Results/low_cost_routes/' + instance_end + '.p')

@@ -83,7 +83,7 @@ result_dict = {"routes":routes,
               "z_lb":z_lb,
               "z_gap":z_gap}
 import json
-with open( instance + "_result.json", 'wb') as outfile:
+with open( 'Results/solution_routes/' + instance_end + '.json', 'wb') as outfile:
     json.dump(result_dict, outfile)
 
-print('Results/low_cost_routes/' + instance_end + '.p')
+print('Problem solved successfully')

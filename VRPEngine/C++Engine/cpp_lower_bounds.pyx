@@ -115,6 +115,21 @@ cdef extern from "baldacci.h":
       vector[int] n_trucks
    )
 
+cdef extern from "reduced_routes.h":
+   vector[list[SimpleRoute]] get_reduced_routes(
+      double z_ub,
+      int Delta,
+      double gamma,
+      vector[int] H,
+      vector[int] capacities,
+      vector[int] N,
+      vector[int] quantities,
+      vector[vector[double]] geo_distance,
+      vector[double] mu,
+      vector[double] u
+   )
+
+
 cpdef construct_q_paths(h_,truck_capacity_,N_,distance_,values_,values_pos_,quantities_,direction_):
     cdef:
         int h = h_
@@ -191,3 +206,40 @@ cpdef construct_lower_bound_(iterations_grad_m1_,iterations_grad_m2_,iterations_
       vector[int] n_trucks = n_trucks_
    cdef vector[DualSolution] dual_solution = construct_lower_bound(iterations_grad_m1,iterations_grad_m2,iterations_m2,z_ub,Delta,Delta_zero,Delta_final,gamma,gamma_zero,gamma_final,epsilon,H,capacities,N,quantities,geo_distance,n_trucks)
    return dual_solution
+
+cpdef get_reduced_routes_(
+      z_ub_,
+      Delta_,
+      gamma_,
+      H_,
+      capacities_,
+      N_,
+      quantities_,
+      geo_distance_,
+      mu_,
+      u_):
+   cdef:
+      double z_ub = z_ub_
+      int Delta = Delta_
+      double gamma = gamma_
+      vector[int] H = H_
+      vector[int] capacities = capacities_
+      vector[int] N = N_
+      vector[int] quantities = quantities_
+      vector[vector[double]] geo_distance = geo_distance_
+      vector[double] mu = mu_
+      vector[double] u = u_
+   cdef vector[list[SimpleRoute]] reduced_routes = get_reduced_routes(
+      z_ub,
+      Delta,
+      gamma,
+      H,
+      capacities,
+      N,
+      quantities,
+      geo_distance,
+      mu,
+      u
+   )
+   return reduced_routes
+

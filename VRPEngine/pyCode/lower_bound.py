@@ -839,7 +839,7 @@ def primal_solver(solution, len_N, H, quantities, capacities, n_trucks, time):
         truck_routes[truck] = [i for i,route in enumerate(reduced_routes) if truck==route["truck"]]
         print(truck)
     model = Model()
-    # Add variables to modes
+    # Add variables to model
     variables = []
     for i,route in enumerate(reduced_routes):
         variables.append(model.addVar(obj=route['geo_cost'], vtype=GRB.BINARY,

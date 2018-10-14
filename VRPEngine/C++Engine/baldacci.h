@@ -48,7 +48,7 @@ vector<list<Path>> GENPATH(
    int capacity,
    vector<int> N,
    vector<int> quantities,
-   vector<vector<double>> distance_dict,
+   vector<vector<double>> &distance_dict,
    string direction,
    bool &terminated,
    double &gamma_guarantee
@@ -62,8 +62,8 @@ list<SimpleRoute> GENROUTE(
    int capacity,
    vector<int> N,
    vector<int> quantities,
-   vector<vector<double>> distance_dict,
-   vector<vector<double>> geo_distance,
+   vector<vector<double>> &distance_dict,
+   vector<vector<double>> &geo_distance,
    bool &terminated,
    double &gamma_guarantee
 );
@@ -76,12 +76,7 @@ DualSolution optimize_lower_bound_M2(
    double gamma,
    double gamma_zero,
    double epsilon,
-   vector<int> H,
-   vector<int> capacities,
-   vector<int> N,
-   vector<int> quantities,
-   vector<vector<double>> geo_distance,
-   vector<int> n_trucks,
+   VRP &vrp,
    vector<double> mu,
    vector<double> lamb,
    vector<double> u,
@@ -101,10 +96,5 @@ vector<DualSolution> construct_lower_bound(
    double gamma_zero,
    double gamma_final,
    double epsilon,
-   vector<int> H,
-   vector<int> capacities,
-   vector<int> N,
-   vector<int> quantities,
-   vector<vector<double>> geo_distance,
-   vector<int> n_trucks
+   VRP &vrp
 );

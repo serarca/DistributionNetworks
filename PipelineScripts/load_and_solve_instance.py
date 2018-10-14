@@ -59,7 +59,7 @@ Delta_final = Delta
 gamma_zero = -10**(-14) * z_ub
 gamma_final = gamma
 epsilon = 0.1
-time_limit = 200
+time_limit = 600
 
 
 result = lower_bound.construct_lower_bound_c(
@@ -69,6 +69,8 @@ result = lower_bound.construct_lower_bound_c(
     epsilon,H,capacities,N,quantities,geo_distance,n_trucks)
 
 pickle.dump( result, open( 'Results/low_cost_routes/' + instance_end + '.p', "wb" ) )
+
+#result = pickle.load(open( 'Results/low_cost_routes/' + instance_end + '.p', "r" ) )
 
 routes = lower_bound.primal_solver(result[iterations_m2],len(N),H, quantities, capacities, n_trucks, time_limit)
 

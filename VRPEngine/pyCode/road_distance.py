@@ -1,6 +1,7 @@
 import urllib2
 import json
 import ipdb
+import copy
 # Calculates road distance between two (lat,lon) tuples, also returns time spent
 # 
 def road_distance(p0,p1, default_speed_mph = 6, detailed = False):
@@ -51,3 +52,19 @@ def road_distance(p0,p1, default_speed_mph = 6, detailed = False):
             })
         
     return result
+
+def waypoints(p0,p1):
+    response_path = json.loads(urllib2.urlopen("http://127.0.0.1:5000/route/v1/driving/%f,%f;%f,%f?steps=true&geometries=geojson"%(p0[1],p0[0],p1[1],p1[0])).read())
+    pol = response_path['routes'][0]['geometry']['coordinates']
+    new_pol = copy.deepcopy(pol)
+    for i in range(len(new_pol)):
+        new_pol[i][0] = pol[i][1]
+        new_pol[i][1] = pol[i][0]
+
+
+    return new_pol
+
+
+
+
+

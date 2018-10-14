@@ -29,7 +29,7 @@ using json = nlohmann::json;
 
 int main(){
 
-   std::ifstream i("/Users/sergiocamelo/Dropbox/Sergio-Joann/StandardizedData/instances/daily/daily_cluster_108_day_9.json");
+   std::ifstream i("/Users/sergiocamelo/Dropbox/Sergio-Joann/StandardizedData/instances/spatial/spatial_day_9.json");
 
    json j;
    i >> j;
@@ -41,6 +41,20 @@ int main(){
    vector<int> n_trucks = j["n_trucks"];
 
    vector<vector<double>> geo_distance = j["distances"];
+
+   // Extract penalties and construct VRP
+   auto it_penalties = j.find("penalties");
+   VRP vrp = VRP();
+   if (it_penalties != j.end()) {
+      vrp = VRP(H, capacities, N, quantities, geo_distance, n_trucks, *it_penalties);
+   } else {
+      vrp = VRP(H, capacities, N, quantities, geo_distance, n_trucks);
+   }
+   vrp.penalty_factor = 100000;
+
+
+
+
    cout<<geo_distance<<endl;
 
    double z_ub = 500000;
@@ -85,12 +99,7 @@ int main(){
       gamma_zero,
       gamma_final,
       epsilon,
-      H,
-      capacities,
-      N,
-      quantities,
-      geo_distance,
-      n_trucks
+      vrp
    );
    cout<<lb[2].routes[0].size()<<endl;
    cout<<lb[2].routes[1].size()<<endl;

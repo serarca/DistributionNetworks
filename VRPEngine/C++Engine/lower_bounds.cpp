@@ -18,6 +18,27 @@ template class std::vector<std::vector<double>>;
 
 using namespace std;
 
+// This function takes a disance matrix and a vector on vertex penalties on the farmers, and then it penalizes
+vector<vector<double>> penalized_matrix(
+   vector<vector<double>> distance_dict,
+   vector<double> penalties,
+   int len_N,
+   int len_H,
+   double penalty_factor
+){
+   for (int n = 0; n < len_N; n++){
+      for (int v = 0; v < len_N + len_H; v++){
+         if (v != n){
+            distance_dict[n][v] += penalties[n]/2.0 * penalty_factor;
+            distance_dict[v][n] += penalties[n]/2.0 * penalty_factor;
+         }
+      }
+   }
+   return distance_dict;
+}
+
+
+
 vector<vector<double>> reduced_cost_matrix(
    vector<vector<double>> geo_distance,
    vector<double> lamb,
@@ -53,15 +74,17 @@ PossibleValues possible_values(vector<int>& quantities, int truck_capacity){
 
 // Write lower bounds
 LowerBound lower_bound_(
-   vector<int> H,
-   vector<int> capacities,
-   vector<int> N,
-   vector<int> quantities,
-   vector<vector<double>> distance_dict,
+   VRP &vrp,
+   vector<vector<double>> &distance_dict,
    vector<double> mu,
-   vector<double> lamb,
-   vector<int> n_trucks
+   vector<double> lamb
 ){
+
+   vector<int>& H = vrp.H;
+   vector<int>& capacities = vrp.capacities;
+   vector<int>& N = vrp.N;
+   vector<int>& quantities = vrp.quantities;
+   vector<int>& n_trucks = vrp.n_trucks;
 
    //Calculate lengths
    int len_N = N.size();
@@ -75,8 +98,21 @@ LowerBound lower_bound_(
    for (int h = 0; h < len_H; h++){
       int truck_capacity = capacities[h];
 
+      vector<vector<double>> penalized_distance;
+      if (vrp.penalized){
+         penalized_distance = penalized_matrix(
+            distance_dict,
+            vrp.penalties[h],
+            len_N,
+            len_H,
+            vrp.penalty_factor
+         );
+      } else {
+         penalized_distance = distance_dict;
+      }
+
       PossibleValues possible = possible_values(quantities, truck_capacity);
-      QRoutes qroutes = construct_q_routes_(H[h], truck_capacity, N, distance_dict, possible.values, possible.values_pos, quantities);
+      QRoutes qroutes = construct_q_routes_(H[h], truck_capacity, N, penalized_distance, possible.values, possible.values_pos, quantities);
 
 
       // We find the minimum l
@@ -173,7 +209,7 @@ QPaths construct_q_paths_(
    int h,
    int truck_capacity,
    vector<int> N,
-   vector<vector<double>> distance_dict,
+   vector<vector<double>> &distance_dict,
    vector<int> values,
    map<int,int> values_pos,
    vector<int> quantities,
@@ -309,7 +345,7 @@ LB_GENPATH path_lower_bound(
    int h,
    int truck_capacity,
    vector<int> N,
-   vector<vector<double>> distance_dict,
+   vector<vector<double>> &distance_dict,
    vector<int> values,
    map<int,int> values_pos,
    vector<int> quantities,
@@ -399,7 +435,7 @@ QRoutes construct_q_routes_(
    int h,
    int truck_capacity,
    vector<int> N,
-   vector<vector<double>> distance_dict,
+   vector<vector<double>> &distance_dict,
    vector<int> values,
    map<int,int> values_pos,
    vector<int> quantities
@@ -504,13 +540,15 @@ DualSolution lower_bound_optimizer_M1(
    int iterations,
    double z_ub,
    double epsilon,
-   vector<int> H,
-   vector<int> capacities,
-   vector<int> N,
-   vector<int> quantities,
-   vector<vector<double>> geo_distance,
-   vector<int> n_trucks)
+   VRP &vrp)
 {
+
+   vector<int>& H = vrp.H;
+   vector<int>& capacities = vrp.capacities;
+   vector<int>& N = vrp.N;
+   vector<int>& quantities = vrp.quantities;
+   vector<vector<double>>& geo_distance = vrp.geo_distance;
+   vector<int>& n_trucks = vrp.n_trucks;
 
    //Calculate lengths
    int len_N = N.size();
@@ -536,7 +574,7 @@ DualSolution lower_bound_optimizer_M1(
 
       vector<vector<double>> distance_dict = reduced_cost_matrix(geo_distance, lamb, mu);
       // We pass these routes to the algorithm that calculates the lower bound
-      LowerBound lb = lower_bound_(H, capacities, N, quantities, distance_dict, mu, lamb, n_trucks);
+      LowerBound lb = lower_bound_(vrp, distance_dict, mu, lamb);
       cout<<lb.z_lb<<endl;
       //cout<<lamb<<endl;
       //cout<<mu<<endl;

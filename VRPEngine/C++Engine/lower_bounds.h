@@ -10,11 +10,72 @@
 
 using namespace std;
 
+
+class VRP {
+
+public:
+   vector<int> H;
+   vector<int> capacities;
+   vector<int> N;
+   vector<int> quantities;
+   vector<vector<double>> geo_distance;
+   vector<int> n_trucks;
+   vector<vector<double>> penalties;
+   bool penalized;
+   double penalty_factor;
+
+   VRP(){}
+
+
+   VRP(
+      vector<int> H_,
+      vector<int> capacities_,
+      vector<int> N_,
+      vector<int> quantities_,
+      vector<vector<double>> geo_distance_,
+      vector<int> n_trucks_,
+      vector<vector<double>> penalties_
+   ){
+      H = H_;
+      capacities = capacities_;
+      N = N_;
+      quantities = quantities_;
+      geo_distance = geo_distance_;
+      n_trucks = n_trucks_;
+      penalties = penalties_;
+      penalized = true;
+      penalty_factor = 1;
+   }
+
+   VRP(
+      vector<int> H_,
+      vector<int> capacities_,
+      vector<int> N_,
+      vector<int> quantities_,
+      vector<vector<double>> geo_distance_,
+      vector<int> n_trucks_
+   ){
+      H = H_;
+      capacities = capacities_;
+      N = N_;
+      quantities = quantities_;
+      geo_distance = geo_distance_;
+      n_trucks = n_trucks_;
+      penalized = false;
+      penalty_factor = 1;
+   }
+
+
+};
+
+
 // The struct of results for q-routes
 struct QRoutes {
    vector<vector<double>> psi;
    vector<vector<vector<int>>> psi_route;
 };
+
+
 
 // The struct of results
 struct QPaths {
@@ -80,21 +141,17 @@ vector<vector<double>> reduced_cost_matrix(
 PossibleValues possible_values(vector<int>& quantities, int truck_capacity);
 
 LowerBound lower_bound_(
-   vector<int> H,
-   vector<int> capacities,
-   vector<int> N,
-   vector<int> quantities,
-   vector<vector<double>> distance_dict,
+   VRP &vrp,
+   vector<vector<double>> &distance_dict,
    vector<double> mu,
-   vector<double> lamb,
-   vector<int> n_trucks
+   vector<double> lamb
 );
 
 QPaths construct_q_paths_(
    int h,
    int truck_capacity,
    vector<int> N,
-   vector<vector<double>> distance_dict,
+   vector<vector<double>> &distance_dict,
    vector<int> values,
    map<int,int> values_pos,
    vector<int> quantities,
@@ -105,7 +162,7 @@ QRoutes construct_q_routes_(
    int h,
    int truck_capacity,
    vector<int> N,
-   vector<vector<double>> distance_dict,
+   vector<vector<double>> &distance_dict,
    vector<int> values,
    map<int,int> values_pos,
    vector<int> quantities
@@ -115,19 +172,14 @@ DualSolution lower_bound_optimizer_M1(
    int iterations,
    double z_ub,
    double epsilon,
-   vector<int> H,
-   vector<int> capacities,
-   vector<int> N,
-   vector<int> quantities,
-   vector<vector<double>> geo_distance,
-   vector<int> n_trucks
+   VRP &vrp
 );
 
 LB_GENPATH path_lower_bound(
    int h,
    int truck_capacity,
    vector<int> N,
-   vector<vector<double>> distance_dict,
+   vector<vector<double>> &distance_dict,
    vector<int> values,
    map<int,int> values_pos,
    vector<int> quantities,

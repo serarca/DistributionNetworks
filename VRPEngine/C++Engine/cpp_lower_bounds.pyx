@@ -94,8 +94,8 @@ cdef extern from "baldacci.h":
       double l_lb
       double r_lb
 
-
-   vector[DualSolution] construct_lower_bound(
+cdef extern from "wrapper.h":
+   vector[DualSolution] construct_lower_bound_wrapper(
       int iterations_grad_m1,
       int iterations_grad_m2,
       int iterations_m2,
@@ -112,7 +112,9 @@ cdef extern from "baldacci.h":
       vector[int] N,
       vector[int] quantities,
       vector[vector[double]] geo_distance,
-      vector[int] n_trucks
+      vector[int] n_trucks,
+      vector[vector[double]] penalties,
+      double penalty_factor
    )
 
 cdef extern from "reduced_routes.h":
@@ -130,62 +132,62 @@ cdef extern from "reduced_routes.h":
    )
 
 
-cpdef construct_q_paths(h_,truck_capacity_,N_,distance_,values_,values_pos_,quantities_,direction_):
-    cdef:
-        int h = h_
-        int truck_capacity = truck_capacity_
-        vector[int] N = N_
-        vector[vector[double]] distance = distance_
-        vector[int] values = values_
-        map[int,int] values_pos = values_pos_
-        vector[int] quantities = quantities_
-        string direction = direction_
+# cpdef construct_q_paths(h_,truck_capacity_,N_,distance_,values_,values_pos_,quantities_,direction_):
+#     cdef:
+#         int h = h_
+#         int truck_capacity = truck_capacity_
+#         vector[int] N = N_
+#         vector[vector[double]] distance = distance_
+#         vector[int] values = values_
+#         map[int,int] values_pos = values_pos_
+#         vector[int] quantities = quantities_
+#         string direction = direction_
 
-    cdef QPaths qpaths = construct_q_paths_(h,truck_capacity,N,distance,values,values_pos,quantities,direction)
-    return qpaths
+#     cdef QPaths qpaths = construct_q_paths_(h,truck_capacity,N,distance,values,values_pos,quantities,direction)
+#     return qpaths
 
-cpdef construct_q_routes(h_,truck_capacity_,N_,distance_,values_,values_pos_,quantities_):
-   cdef:
-      int h = h_
-      int truck_capacity = truck_capacity_
-      vector[int] N = N_
-      vector[vector[double]] distance = distance_
-      vector[int] values = values_
-      map[int,int] values_pos = values_pos_
-      vector[int] quantities = quantities_
+# cpdef construct_q_routes(h_,truck_capacity_,N_,distance_,values_,values_pos_,quantities_):
+#    cdef:
+#       int h = h_
+#       int truck_capacity = truck_capacity_
+#       vector[int] N = N_
+#       vector[vector[double]] distance = distance_
+#       vector[int] values = values_
+#       map[int,int] values_pos = values_pos_
+#       vector[int] quantities = quantities_
 
-   cdef QRoutes qroutes = construct_q_routes_(h,truck_capacity,N,distance,values,values_pos,quantities)
-   return qroutes
+#    cdef QRoutes qroutes = construct_q_routes_(h,truck_capacity,N,distance,values,values_pos,quantities)
+#    return qroutes
 
-cpdef lower_bound(H_, capacities_, N_, quantities_, distance_, mu_, lamb_, n_trucks_):
-   cdef:
-      vector[int] H = H_,
-      vector[int] capacities = capacities_,
-      vector[int] N = N_,
-      vector[int] quantities = quantities_,
-      vector[vector[double]] distance = distance_,
-      vector[double] mu = mu_,
-      vector[double] lamb = lamb_
-      vector[int] n_trucks = n_trucks_
-   cdef LowerBound lb = lower_bound_(H, capacities, N, quantities, distance, mu, lamb, n_trucks)
-   return lb
+# cpdef lower_bound(H_, capacities_, N_, quantities_, distance_, mu_, lamb_, n_trucks_):
+#    cdef:
+#       vector[int] H = H_,
+#       vector[int] capacities = capacities_,
+#       vector[int] N = N_,
+#       vector[int] quantities = quantities_,
+#       vector[vector[double]] distance = distance_,
+#       vector[double] mu = mu_,
+#       vector[double] lamb = lamb_
+#       vector[int] n_trucks = n_trucks_
+#    cdef LowerBound lb = lower_bound_(H, capacities, N, quantities, distance, mu, lamb, n_trucks)
+#    return lb
 
 
-cpdef lower_bound_optimizer_M1_(iterations_, z_ub_, epsilon_, H_, capacities_, N_, quantities_, geo_distance_, n_trucks_):
-   cdef:
-      int iterations = iterations_
-      double z_ub = z_ub_
-      double epsilon = epsilon_
-      vector[int] H = H_
-      vector[int] capacities = capacities_
-      vector[int] N = N_
-      vector[int] quantities = quantities_
-      vector[vector[double]] geo_distance = geo_distance_
-      vector[int] n_trucks = n_trucks_
-   cdef DualSolution dual_solution = lower_bound_optimizer_M1(iterations, z_ub, epsilon, H, capacities, N, quantities, geo_distance, n_trucks)
-   return dual_solution
+# cpdef lower_bound_optimizer_M1_(iterations_, z_ub_, epsilon_, H_, capacities_, N_, quantities_, geo_distance_, n_trucks_):
+#    cdef:
+#       int iterations = iterations_
+#       double z_ub = z_ub_
+#       double epsilon = epsilon_
+#       vector[int] H = H_
+#       vector[int] capacities = capacities_
+#       vector[int] N = N_
+#       vector[int] quantities = quantities_
+#       vector[vector[double]] geo_distance = geo_distance_
+#       vector[int] n_trucks = n_trucks_
+#    cdef DualSolution dual_solution = lower_bound_optimizer_M1(iterations, z_ub, epsilon, H, capacities, N, quantities, geo_distance, n_trucks)
+#    return dual_solution
 
-cpdef construct_lower_bound_(iterations_grad_m1_,iterations_grad_m2_,iterations_m2_,z_ub_,Delta_,Delta_zero_,Delta_final_,gamma_,gamma_zero_,gamma_final_,epsilon_,H_,capacities_,N_,quantities_,geo_distance_,n_trucks_):
+cpdef construct_lower_bound_wrapper_(iterations_grad_m1_,iterations_grad_m2_,iterations_m2_,z_ub_,Delta_,Delta_zero_,Delta_final_,gamma_,gamma_zero_,gamma_final_,epsilon_,H_,capacities_,N_,quantities_,geo_distance_,n_trucks_,penalties_,penalty_factor_):
    cdef:
       int iterations_grad_m1 = iterations_grad_m1_
       int iterations_grad_m2 = iterations_grad_m2_
@@ -204,7 +206,9 @@ cpdef construct_lower_bound_(iterations_grad_m1_,iterations_grad_m2_,iterations_
       vector[int] quantities = quantities_
       vector[vector[double]] geo_distance = geo_distance_
       vector[int] n_trucks = n_trucks_
-   cdef vector[DualSolution] dual_solution = construct_lower_bound(iterations_grad_m1,iterations_grad_m2,iterations_m2,z_ub,Delta,Delta_zero,Delta_final,gamma,gamma_zero,gamma_final,epsilon,H,capacities,N,quantities,geo_distance,n_trucks)
+      vector[vector[double]] penalties = penalties_
+      double penalty_factor = penalty_factor_
+   cdef vector[DualSolution] dual_solution = construct_lower_bound_wrapper(iterations_grad_m1,iterations_grad_m2,iterations_m2,z_ub,Delta,Delta_zero,Delta_final,gamma,gamma_zero,gamma_final,epsilon,H,capacities,N,quantities,geo_distance,n_trucks,penalties,penalty_factor)
    return dual_solution
 
 cpdef get_reduced_routes_(

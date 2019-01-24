@@ -5,7 +5,7 @@ import numpy
 
 
 extensions = [
-    Extension('cpp_lower_bounds', ['cpp_lower_bounds.pyx', 'lower_bounds.cpp', 'baldacci.cpp', 'reduced_routes.cpp'],
+    Extension('cpp_lower_bounds', ['cpp_lower_bounds.pyx', 'lower_bounds.cpp', 'baldacci.cpp', 'reduced_routes.cpp', 'wrapper.cpp'],
               include_dirs=[numpy.get_include()],
               extra_compile_args=['-std=c++1y','-g0','-O3'],
               language='c++'

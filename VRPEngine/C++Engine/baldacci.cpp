@@ -1147,6 +1147,8 @@ DualSolution optimize_lower_bound_M2(
       vector<list<SimpleRoute>> newRoutes(len_H);
       vector<vector<double>> new_distance_dict = reduced_cost_matrix(geo_distance, ds.u, ds.v);
 
+
+
       int new_routes_count = 0;
       bool terminated_neg = true;
       for (auto h:H){

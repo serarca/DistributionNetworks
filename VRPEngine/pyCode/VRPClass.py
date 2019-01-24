@@ -10,7 +10,7 @@ from tsp_nn import NearestNeighbourSolver
 from tsp_ni import NearestInsertionSolver
 import copy
 from scipy.spatial import distance as distance_lib
-import lower_bound
+#import lower_bound
 import road_distance
 
 
@@ -34,10 +34,8 @@ class VRP:
 		if M:
 			self.closest_mill = {}
 			for i in range(len(self.N)):
-				try:
-					self.closest_mill[N[i]] = M[distance_lib.cdist([N_p[i,:]], M_p).argmin()]
-				except:
-					ipdb.set_trace()
+				self.closest_mill[N[i]] = M[distance_lib.cdist([N_p[i,:]], M_p).argmin()]
+
 		# Create distance matrices
 		if type(distance_matrix) is np.ndarray:
 			self.distance = distance_matrix
@@ -708,3 +706,27 @@ class VRP:
 			return(False)
 		else:
 			return(True)
+
+def feasibility(capacities, quantities):
+	model = Model()
+
+	variables = {}
+	for t, cap in enumerate(capacities):
+		variables[t] = {}
+		for f, q in enumerate(quantities):
+			variables[t][f] = model.addVar(obj=0, vtype=GRB.BINARY,
+										  name=str(t)+"_"+str(f))
+	model.update()
+	for t, cap in enumerate(capacities):
+		model.addConstr(quicksum([variables[t][f] * quantities[f]  for f,s in enumerate(quantities)])<=capacities[t])
+
+	for f, q in enumerate(quantities):
+		model.addConstr(quicksum([variables[t][f]  for t,s in enumerate(capacities)])==1)
+	model.setParam('OutputFlag', 0)
+	model.update()
+	model.optimize()
+	model.feasibility()
+	if model.Status == 3:
+		return(False)
+	else:
+		return(True)

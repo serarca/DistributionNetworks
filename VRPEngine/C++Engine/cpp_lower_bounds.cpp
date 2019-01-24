@@ -8,7 +8,8 @@
             "/Users/sergiocamelo/anaconda/lib/python2.7/site-packages/numpy/core/include/numpy/ufuncobject.h", 
             "baldacci.h", 
             "lower_bounds.h", 
-            "reduced_routes.h"
+            "reduced_routes.h", 
+            "wrapper.h"
         ], 
         "extra_compile_args": [
             "-std=c++14", 
@@ -23,6 +24,7 @@
         "name": "cpp_lower_bounds", 
         "sources": [
             "cpp_lower_bounds.pyx", 
+            "wrapper.cpp", 
             "lower_bounds.cpp", 
             "baldacci.cpp", 
             "reduced_routes.cpp"
@@ -623,6 +625,7 @@ static CYTHON_INLINE float __PYX_NAN() {
 #include <set>
 #include "lower_bounds.h"
 #include "baldacci.h"
+#include "wrapper.h"
 #include "reduced_routes.h"
 #ifdef _OPENMP
 #include <omp.h>
@@ -1314,43 +1317,6 @@ static int __Pyx__GetException(PyThreadState *tstate, PyObject **type, PyObject 
 static int __Pyx_GetException(PyObject **type, PyObject **value, PyObject **tb);
 #endif
 
-/* IterFinish.proto */
-static CYTHON_INLINE int __Pyx_IterFinish(void);
-
-/* PyObjectCallNoArg.proto */
-#if CYTHON_COMPILING_IN_CPYTHON
-static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func);
-#else
-#define __Pyx_PyObject_CallNoArg(func) __Pyx_PyObject_Call(func, __pyx_empty_tuple, NULL)
-#endif
-
-/* PyObjectCallMethod0.proto */
-static PyObject* __Pyx_PyObject_CallMethod0(PyObject* obj, PyObject* method_name);
-
-/* UnpackItemEndCheck.proto */
-static int __Pyx_IternextUnpackEndCheck(PyObject *retval, Py_ssize_t expected);
-
-/* UnpackTupleError.proto */
-static void __Pyx_UnpackTupleError(PyObject *, Py_ssize_t index);
-
-/* UnpackTuple2.proto */
-#define __Pyx_unpack_tuple2(tuple, value1, value2, is_tuple, has_known_size, decref_tuple)\
-    (likely(is_tuple || PyTuple_Check(tuple)) ?\
-        (likely(has_known_size || PyTuple_GET_SIZE(tuple) == 2) ?\
-            __Pyx_unpack_tuple2_exact(tuple, value1, value2, decref_tuple) :\
-            (__Pyx_UnpackTupleError(tuple, 2), -1)) :\
-        __Pyx_unpack_tuple2_generic(tuple, value1, value2, has_known_size, decref_tuple))
-static CYTHON_INLINE int __Pyx_unpack_tuple2_exact(
-    PyObject* tuple, PyObject** value1, PyObject** value2, int decref_tuple);
-static int __Pyx_unpack_tuple2_generic(
-    PyObject* tuple, PyObject** value1, PyObject** value2, int has_known_size, int decref_tuple);
-
-/* dict_iter.proto */
-static CYTHON_INLINE PyObject* __Pyx_dict_iterator(PyObject* dict, int is_dict, PyObject* method_name,
-                                                   Py_ssize_t* p_orig_length, int* p_is_dict);
-static CYTHON_INLINE int __Pyx_dict_iter_next(PyObject* dict_or_iter, Py_ssize_t orig_length, Py_ssize_t* ppos,
-                                              PyObject** pkey, PyObject** pvalue, PyObject** pitem, int is_dict);
-
 /* ListCompAppend.proto */
 #if CYTHON_USE_PYLIST_INTERNALS && CYTHON_ASSUME_SAFE_MACROS
 static CYTHON_INLINE int __Pyx_ListComp_Append(PyObject* list, PyObject* x) {
@@ -1417,9 +1383,6 @@ static void __Pyx_AddTraceback(const char *funcname, int c_line,
 /* CIntToPy.proto */
 static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value);
 
-static PyObject* __pyx_convert__to_py_struct__QPaths(struct QPaths s);
-static PyObject* __pyx_convert__to_py_struct__QRoutes(struct QRoutes s);
-static PyObject* __pyx_convert__to_py_struct__LowerBound(struct LowerBound s);
 static PyObject* __pyx_convert__to_py_struct__SimpleRoute(struct SimpleRoute s);
 static PyObject* __pyx_convert__to_py_struct__DualSolution(struct DualSolution s);
 /* RealImag.proto */
@@ -1612,22 +1575,12 @@ static CYTHON_INLINE char *__pyx_f_5numpy__util_dtypestring(PyArray_Descr *, cha
 /* Module declarations from 'libcpp.set' */
 
 /* Module declarations from 'cpp_lower_bounds' */
-static PyObject *__pyx_f_16cpp_lower_bounds_construct_q_paths(PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, int __pyx_skip_dispatch); /*proto*/
-static PyObject *__pyx_f_16cpp_lower_bounds_construct_q_routes(PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, int __pyx_skip_dispatch); /*proto*/
-static PyObject *__pyx_f_16cpp_lower_bounds_lower_bound(PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, int __pyx_skip_dispatch); /*proto*/
-static PyObject *__pyx_f_16cpp_lower_bounds_lower_bound_optimizer_M1_(PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, int __pyx_skip_dispatch); /*proto*/
-static PyObject *__pyx_f_16cpp_lower_bounds_construct_lower_bound_(PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, int __pyx_skip_dispatch); /*proto*/
+static PyObject *__pyx_f_16cpp_lower_bounds_construct_lower_bound_wrapper_(PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, int __pyx_skip_dispatch); /*proto*/
 static PyObject *__pyx_f_16cpp_lower_bounds_get_reduced_routes_(PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, PyObject *, int __pyx_skip_dispatch); /*proto*/
 static std::vector<int>  __pyx_convert_vector_from_py_int(PyObject *); /*proto*/
 static std::vector<double>  __pyx_convert_vector_from_py_double(PyObject *); /*proto*/
 static std::vector<std::vector<double> >  __pyx_convert_vector_from_py_std_3a__3a_vector_3c_double_3e___(PyObject *); /*proto*/
-static std::map<int,int>  __pyx_convert_map_from_py_int__and_int(PyObject *); /*proto*/
-static std::string __pyx_convert_string_from_py_std__in_string(PyObject *); /*proto*/
 static PyObject *__pyx_convert_vector_to_py_double(const std::vector<double>  &); /*proto*/
-static PyObject *__pyx_convert_vector_to_py_std_3a__3a_vector_3c_double_3e___(const std::vector<std::vector<double> >  &); /*proto*/
-static PyObject *__pyx_convert_vector_to_py_int(const std::vector<int>  &); /*proto*/
-static PyObject *__pyx_convert_vector_to_py_std_3a__3a_vector_3c_int_3e___(const std::vector<std::vector<int> >  &); /*proto*/
-static PyObject *__pyx_convert_vector_to_py_std_3a__3a_vector_3c_std_3a__3a_vector_3c_int_3e____3e___(const std::vector<std::vector<std::vector<int> > >  &); /*proto*/
 static PyObject *__pyx_convert_list_to_py_int(std::list<int>  const &); /*proto*/
 static PyObject *__pyx_convert_list_to_py_struct__SimpleRoute(std::list<struct SimpleRoute>  const &); /*proto*/
 static PyObject *__pyx_convert_vector_to_py_std_3a__3a_list_3c_struct__SimpleRoute_3e___(const std::vector<std::list<struct SimpleRoute> >  &); /*proto*/
@@ -1643,20 +1596,14 @@ static PyObject *__pyx_builtin_RuntimeError;
 static PyObject *__pyx_builtin_ImportError;
 static const char __pyx_k_H[] = "H_";
 static const char __pyx_k_N[] = "N_";
-static const char __pyx_k_f[] = "f";
-static const char __pyx_k_h[] = "h_";
-static const char __pyx_k_p[] = "p";
 static const char __pyx_k_u[] = "u_";
 static const char __pyx_k_v[] = "v";
 static const char __pyx_k_mu[] = "mu_";
 static const char __pyx_k_np[] = "np";
-static const char __pyx_k_phi[] = "phi";
-static const char __pyx_k_psi[] = "psi";
-static const char __pyx_k_rho[] = "rho";
 static const char __pyx_k_u_2[] = "u";
 static const char __pyx_k_cost[] = "cost";
 static const char __pyx_k_l_lb[] = "l_lb";
-static const char __pyx_k_lamb[] = "lamb_";
+static const char __pyx_k_lamb[] = "lamb";
 static const char __pyx_k_load[] = "load";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_path[] = "path";
@@ -1668,38 +1615,28 @@ static const char __pyx_k_Delta[] = "Delta_";
 static const char __pyx_k_gamma[] = "gamma_";
 static const char __pyx_k_numpy[] = "numpy";
 static const char __pyx_k_range[] = "range";
-static const char __pyx_k_theta[] = "theta";
 static const char __pyx_k_truck[] = "truck";
 static const char __pyx_k_import[] = "__import__";
-static const char __pyx_k_lamb_2[] = "lamb";
 static const char __pyx_k_median[] = "median";
 static const char __pyx_k_routes[] = "routes";
-static const char __pyx_k_values[] = "values_";
 static const char __pyx_k_epsilon[] = "epsilon_";
 static const char __pyx_k_index_l[] = "index_l";
 static const char __pyx_k_index_r[] = "index_r";
-static const char __pyx_k_q_route[] = "q_route";
-static const char __pyx_k_distance[] = "distance_";
 static const char __pyx_k_geo_cost[] = "geo_cost";
 static const char __pyx_k_n_trucks[] = "n_trucks_";
-static const char __pyx_k_direction[] = "direction_";
-static const char __pyx_k_iteritems[] = "iteritems";
-static const char __pyx_k_psi_route[] = "psi_route";
-static const char __pyx_k_q_route_2[] = "q_route_2";
+static const char __pyx_k_penalties[] = "penalties_";
 static const char __pyx_k_Delta_zero[] = "Delta_zero_";
 static const char __pyx_k_ValueError[] = "ValueError";
 static const char __pyx_k_capacities[] = "capacities_";
 static const char __pyx_k_gamma_zero[] = "gamma_zero_";
-static const char __pyx_k_iterations[] = "iterations_";
 static const char __pyx_k_quantities[] = "quantities_";
-static const char __pyx_k_values_pos[] = "values_pos_";
 static const char __pyx_k_Delta_final[] = "Delta_final_";
 static const char __pyx_k_ImportError[] = "ImportError";
 static const char __pyx_k_gamma_final[] = "gamma_final_";
 static const char __pyx_k_RuntimeError[] = "RuntimeError";
 static const char __pyx_k_geo_distance[] = "geo_distance_";
 static const char __pyx_k_iterations_m2[] = "iterations_m2_";
-static const char __pyx_k_truck_capacity[] = "truck_capacity_";
+static const char __pyx_k_penalty_factor[] = "penalty_factor_";
 static const char __pyx_k_gamma_guarantee[] = "gamma_guarantee";
 static const char __pyx_k_cline_in_traceback[] = "cline_in_traceback";
 static const char __pyx_k_iterations_grad_m1[] = "iterations_grad_m1_";
@@ -1726,28 +1663,21 @@ static PyObject *__pyx_n_s_ValueError;
 static PyObject *__pyx_n_s_capacities;
 static PyObject *__pyx_n_s_cline_in_traceback;
 static PyObject *__pyx_n_s_cost;
-static PyObject *__pyx_n_s_direction;
-static PyObject *__pyx_n_s_distance;
 static PyObject *__pyx_n_s_epsilon;
-static PyObject *__pyx_n_s_f;
 static PyObject *__pyx_n_s_gamma;
 static PyObject *__pyx_n_s_gamma_final;
 static PyObject *__pyx_n_s_gamma_guarantee;
 static PyObject *__pyx_n_s_gamma_zero;
 static PyObject *__pyx_n_s_geo_cost;
 static PyObject *__pyx_n_s_geo_distance;
-static PyObject *__pyx_n_s_h;
 static PyObject *__pyx_n_s_import;
 static PyObject *__pyx_n_s_index_l;
 static PyObject *__pyx_n_s_index_r;
-static PyObject *__pyx_n_s_iterations;
 static PyObject *__pyx_n_s_iterations_grad_m1;
 static PyObject *__pyx_n_s_iterations_grad_m2;
 static PyObject *__pyx_n_s_iterations_m2;
-static PyObject *__pyx_n_s_iteritems;
 static PyObject *__pyx_n_s_l_lb;
 static PyObject *__pyx_n_s_lamb;
-static PyObject *__pyx_n_s_lamb_2;
 static PyObject *__pyx_n_s_load;
 static PyObject *__pyx_n_s_main;
 static PyObject *__pyx_n_s_median;
@@ -1759,36 +1689,23 @@ static PyObject *__pyx_n_s_np;
 static PyObject *__pyx_n_s_numpy;
 static PyObject *__pyx_kp_s_numpy_core_multiarray_failed_to;
 static PyObject *__pyx_kp_s_numpy_core_umath_failed_to_impor;
-static PyObject *__pyx_n_s_p;
 static PyObject *__pyx_n_s_path;
-static PyObject *__pyx_n_s_phi;
-static PyObject *__pyx_n_s_psi;
-static PyObject *__pyx_n_s_psi_route;
-static PyObject *__pyx_n_s_q_route;
-static PyObject *__pyx_n_s_q_route_2;
+static PyObject *__pyx_n_s_penalties;
+static PyObject *__pyx_n_s_penalty_factor;
 static PyObject *__pyx_n_s_quantities;
 static PyObject *__pyx_n_s_r_lb;
 static PyObject *__pyx_n_s_range;
-static PyObject *__pyx_n_s_rho;
 static PyObject *__pyx_n_s_routes;
 static PyObject *__pyx_n_s_test;
-static PyObject *__pyx_n_s_theta;
 static PyObject *__pyx_n_s_truck;
-static PyObject *__pyx_n_s_truck_capacity;
 static PyObject *__pyx_n_s_u;
 static PyObject *__pyx_n_s_u_2;
 static PyObject *__pyx_kp_u_unknown_dtype_code_in_numpy_pxd;
 static PyObject *__pyx_n_s_v;
-static PyObject *__pyx_n_s_values;
-static PyObject *__pyx_n_s_values_pos;
 static PyObject *__pyx_n_s_z_lb;
 static PyObject *__pyx_n_s_z_ub;
-static PyObject *__pyx_pf_16cpp_lower_bounds_construct_q_paths(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_h_, PyObject *__pyx_v_truck_capacity_, PyObject *__pyx_v_N_, PyObject *__pyx_v_distance_, PyObject *__pyx_v_values_, PyObject *__pyx_v_values_pos_, PyObject *__pyx_v_quantities_, PyObject *__pyx_v_direction_); /* proto */
-static PyObject *__pyx_pf_16cpp_lower_bounds_2construct_q_routes(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_h_, PyObject *__pyx_v_truck_capacity_, PyObject *__pyx_v_N_, PyObject *__pyx_v_distance_, PyObject *__pyx_v_values_, PyObject *__pyx_v_values_pos_, PyObject *__pyx_v_quantities_); /* proto */
-static PyObject *__pyx_pf_16cpp_lower_bounds_4lower_bound(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_H_, PyObject *__pyx_v_capacities_, PyObject *__pyx_v_N_, PyObject *__pyx_v_quantities_, PyObject *__pyx_v_distance_, PyObject *__pyx_v_mu_, PyObject *__pyx_v_lamb_, PyObject *__pyx_v_n_trucks_); /* proto */
-static PyObject *__pyx_pf_16cpp_lower_bounds_6lower_bound_optimizer_M1_(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_iterations_, PyObject *__pyx_v_z_ub_, PyObject *__pyx_v_epsilon_, PyObject *__pyx_v_H_, PyObject *__pyx_v_capacities_, PyObject *__pyx_v_N_, PyObject *__pyx_v_quantities_, PyObject *__pyx_v_geo_distance_, PyObject *__pyx_v_n_trucks_); /* proto */
-static PyObject *__pyx_pf_16cpp_lower_bounds_8construct_lower_bound_(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_iterations_grad_m1_, PyObject *__pyx_v_iterations_grad_m2_, PyObject *__pyx_v_iterations_m2_, PyObject *__pyx_v_z_ub_, PyObject *__pyx_v_Delta_, PyObject *__pyx_v_Delta_zero_, PyObject *__pyx_v_Delta_final_, PyObject *__pyx_v_gamma_, PyObject *__pyx_v_gamma_zero_, PyObject *__pyx_v_gamma_final_, PyObject *__pyx_v_epsilon_, PyObject *__pyx_v_H_, PyObject *__pyx_v_capacities_, PyObject *__pyx_v_N_, PyObject *__pyx_v_quantities_, PyObject *__pyx_v_geo_distance_, PyObject *__pyx_v_n_trucks_); /* proto */
-static PyObject *__pyx_pf_16cpp_lower_bounds_10get_reduced_routes_(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_z_ub_, PyObject *__pyx_v_Delta_, PyObject *__pyx_v_gamma_, PyObject *__pyx_v_H_, PyObject *__pyx_v_capacities_, PyObject *__pyx_v_N_, PyObject *__pyx_v_quantities_, PyObject *__pyx_v_geo_distance_, PyObject *__pyx_v_mu_, PyObject *__pyx_v_u_); /* proto */
+static PyObject *__pyx_pf_16cpp_lower_bounds_construct_lower_bound_wrapper_(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_iterations_grad_m1_, PyObject *__pyx_v_iterations_grad_m2_, PyObject *__pyx_v_iterations_m2_, PyObject *__pyx_v_z_ub_, PyObject *__pyx_v_Delta_, PyObject *__pyx_v_Delta_zero_, PyObject *__pyx_v_Delta_final_, PyObject *__pyx_v_gamma_, PyObject *__pyx_v_gamma_zero_, PyObject *__pyx_v_gamma_final_, PyObject *__pyx_v_epsilon_, PyObject *__pyx_v_H_, PyObject *__pyx_v_capacities_, PyObject *__pyx_v_N_, PyObject *__pyx_v_quantities_, PyObject *__pyx_v_geo_distance_, PyObject *__pyx_v_n_trucks_, PyObject *__pyx_v_penalties_, PyObject *__pyx_v_penalty_factor_); /* proto */
+static PyObject *__pyx_pf_16cpp_lower_bounds_2get_reduced_routes_(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_z_ub_, PyObject *__pyx_v_Delta_, PyObject *__pyx_v_gamma_, PyObject *__pyx_v_H_, PyObject *__pyx_v_capacities_, PyObject *__pyx_v_N_, PyObject *__pyx_v_quantities_, PyObject *__pyx_v_geo_distance_, PyObject *__pyx_v_mu_, PyObject *__pyx_v_u_); /* proto */
 static int __pyx_pf_5numpy_7ndarray___getbuffer__(PyArrayObject *__pyx_v_self, Py_buffer *__pyx_v_info, int __pyx_v_flags); /* proto */
 static void __pyx_pf_5numpy_7ndarray_2__releasebuffer__(PyArrayObject *__pyx_v_self, Py_buffer *__pyx_v_info); /* proto */
 static PyObject *__pyx_tuple_;
@@ -1802,1216 +1719,16 @@ static PyObject *__pyx_tuple__8;
 static PyObject *__pyx_tuple__9;
 /* Late includes */
 
-/* "cpp_lower_bounds.pyx":133
+/* "cpp_lower_bounds.pyx":190
+ * #    return dual_solution
  * 
- * 
- * cpdef construct_q_paths(h_,truck_capacity_,N_,distance_,values_,values_pos_,quantities_,direction_):             # <<<<<<<<<<<<<<
- *     cdef:
- *         int h = h_
- */
-
-static PyObject *__pyx_pw_16cpp_lower_bounds_1construct_q_paths(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_f_16cpp_lower_bounds_construct_q_paths(PyObject *__pyx_v_h_, PyObject *__pyx_v_truck_capacity_, PyObject *__pyx_v_N_, PyObject *__pyx_v_distance_, PyObject *__pyx_v_values_, PyObject *__pyx_v_values_pos_, PyObject *__pyx_v_quantities_, PyObject *__pyx_v_direction_, CYTHON_UNUSED int __pyx_skip_dispatch) {
-  int __pyx_v_h;
-  int __pyx_v_truck_capacity;
-  std::vector<int>  __pyx_v_N;
-  std::vector<std::vector<double> >  __pyx_v_distance;
-  std::vector<int>  __pyx_v_values;
-  std::map<int,int>  __pyx_v_values_pos;
-  std::vector<int>  __pyx_v_quantities;
-  std::string __pyx_v_direction;
-  struct QPaths __pyx_v_qpaths;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
-  std::vector<int>  __pyx_t_2;
-  std::vector<std::vector<double> >  __pyx_t_3;
-  std::map<int,int>  __pyx_t_4;
-  std::string __pyx_t_5;
-  PyObject *__pyx_t_6 = NULL;
-  __Pyx_RefNannySetupContext("construct_q_paths", 0);
-
-  /* "cpp_lower_bounds.pyx":135
- * cpdef construct_q_paths(h_,truck_capacity_,N_,distance_,values_,values_pos_,quantities_,direction_):
- *     cdef:
- *         int h = h_             # <<<<<<<<<<<<<<
- *         int truck_capacity = truck_capacity_
- *         vector[int] N = N_
- */
-  __pyx_t_1 = __Pyx_PyInt_As_int(__pyx_v_h_); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 135, __pyx_L1_error)
-  __pyx_v_h = __pyx_t_1;
-
-  /* "cpp_lower_bounds.pyx":136
- *     cdef:
- *         int h = h_
- *         int truck_capacity = truck_capacity_             # <<<<<<<<<<<<<<
- *         vector[int] N = N_
- *         vector[vector[double]] distance = distance_
- */
-  __pyx_t_1 = __Pyx_PyInt_As_int(__pyx_v_truck_capacity_); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 136, __pyx_L1_error)
-  __pyx_v_truck_capacity = __pyx_t_1;
-
-  /* "cpp_lower_bounds.pyx":137
- *         int h = h_
- *         int truck_capacity = truck_capacity_
- *         vector[int] N = N_             # <<<<<<<<<<<<<<
- *         vector[vector[double]] distance = distance_
- *         vector[int] values = values_
- */
-  __pyx_t_2 = __pyx_convert_vector_from_py_int(__pyx_v_N_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 137, __pyx_L1_error)
-  __pyx_v_N = __pyx_t_2;
-
-  /* "cpp_lower_bounds.pyx":138
- *         int truck_capacity = truck_capacity_
- *         vector[int] N = N_
- *         vector[vector[double]] distance = distance_             # <<<<<<<<<<<<<<
- *         vector[int] values = values_
- *         map[int,int] values_pos = values_pos_
- */
-  __pyx_t_3 = __pyx_convert_vector_from_py_std_3a__3a_vector_3c_double_3e___(__pyx_v_distance_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 138, __pyx_L1_error)
-  __pyx_v_distance = __pyx_t_3;
-
-  /* "cpp_lower_bounds.pyx":139
- *         vector[int] N = N_
- *         vector[vector[double]] distance = distance_
- *         vector[int] values = values_             # <<<<<<<<<<<<<<
- *         map[int,int] values_pos = values_pos_
- *         vector[int] quantities = quantities_
- */
-  __pyx_t_2 = __pyx_convert_vector_from_py_int(__pyx_v_values_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 139, __pyx_L1_error)
-  __pyx_v_values = __pyx_t_2;
-
-  /* "cpp_lower_bounds.pyx":140
- *         vector[vector[double]] distance = distance_
- *         vector[int] values = values_
- *         map[int,int] values_pos = values_pos_             # <<<<<<<<<<<<<<
- *         vector[int] quantities = quantities_
- *         string direction = direction_
- */
-  __pyx_t_4 = __pyx_convert_map_from_py_int__and_int(__pyx_v_values_pos_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 140, __pyx_L1_error)
-  __pyx_v_values_pos = __pyx_t_4;
-
-  /* "cpp_lower_bounds.pyx":141
- *         vector[int] values = values_
- *         map[int,int] values_pos = values_pos_
- *         vector[int] quantities = quantities_             # <<<<<<<<<<<<<<
- *         string direction = direction_
- * 
- */
-  __pyx_t_2 = __pyx_convert_vector_from_py_int(__pyx_v_quantities_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 141, __pyx_L1_error)
-  __pyx_v_quantities = __pyx_t_2;
-
-  /* "cpp_lower_bounds.pyx":142
- *         map[int,int] values_pos = values_pos_
- *         vector[int] quantities = quantities_
- *         string direction = direction_             # <<<<<<<<<<<<<<
- * 
- *     cdef QPaths qpaths = construct_q_paths_(h,truck_capacity,N,distance,values,values_pos,quantities,direction)
- */
-  __pyx_t_5 = __pyx_convert_string_from_py_std__in_string(__pyx_v_direction_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 142, __pyx_L1_error)
-  __pyx_v_direction = __pyx_t_5;
-
-  /* "cpp_lower_bounds.pyx":144
- *         string direction = direction_
- * 
- *     cdef QPaths qpaths = construct_q_paths_(h,truck_capacity,N,distance,values,values_pos,quantities,direction)             # <<<<<<<<<<<<<<
- *     return qpaths
- * 
- */
-  __pyx_v_qpaths = construct_q_paths_(__pyx_v_h, __pyx_v_truck_capacity, __pyx_v_N, __pyx_v_distance, __pyx_v_values, __pyx_v_values_pos, __pyx_v_quantities, __pyx_v_direction);
-
-  /* "cpp_lower_bounds.pyx":145
- * 
- *     cdef QPaths qpaths = construct_q_paths_(h,truck_capacity,N,distance,values,values_pos,quantities,direction)
- *     return qpaths             # <<<<<<<<<<<<<<
- * 
- * cpdef construct_q_routes(h_,truck_capacity_,N_,distance_,values_,values_pos_,quantities_):
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_6 = __pyx_convert__to_py_struct__QPaths(__pyx_v_qpaths); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 145, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_6);
-  __pyx_r = __pyx_t_6;
-  __pyx_t_6 = 0;
-  goto __pyx_L0;
-
-  /* "cpp_lower_bounds.pyx":133
- * 
- * 
- * cpdef construct_q_paths(h_,truck_capacity_,N_,distance_,values_,values_pos_,quantities_,direction_):             # <<<<<<<<<<<<<<
- *     cdef:
- *         int h = h_
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_AddTraceback("cpp_lower_bounds.construct_q_paths", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = 0;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* Python wrapper */
-static PyObject *__pyx_pw_16cpp_lower_bounds_1construct_q_paths(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_16cpp_lower_bounds_1construct_q_paths(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  PyObject *__pyx_v_h_ = 0;
-  PyObject *__pyx_v_truck_capacity_ = 0;
-  PyObject *__pyx_v_N_ = 0;
-  PyObject *__pyx_v_distance_ = 0;
-  PyObject *__pyx_v_values_ = 0;
-  PyObject *__pyx_v_values_pos_ = 0;
-  PyObject *__pyx_v_quantities_ = 0;
-  PyObject *__pyx_v_direction_ = 0;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("construct_q_paths (wrapper)", 0);
-  {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_h,&__pyx_n_s_truck_capacity,&__pyx_n_s_N,&__pyx_n_s_distance,&__pyx_n_s_values,&__pyx_n_s_values_pos,&__pyx_n_s_quantities,&__pyx_n_s_direction,0};
-    PyObject* values[8] = {0,0,0,0,0,0,0,0};
-    if (unlikely(__pyx_kwds)) {
-      Py_ssize_t kw_args;
-      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
-      switch (pos_args) {
-        case  8: values[7] = PyTuple_GET_ITEM(__pyx_args, 7);
-        CYTHON_FALLTHROUGH;
-        case  7: values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
-        CYTHON_FALLTHROUGH;
-        case  6: values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
-        CYTHON_FALLTHROUGH;
-        case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
-        CYTHON_FALLTHROUGH;
-        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
-        CYTHON_FALLTHROUGH;
-        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
-        CYTHON_FALLTHROUGH;
-        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-        CYTHON_FALLTHROUGH;
-        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-        CYTHON_FALLTHROUGH;
-        case  0: break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-      kw_args = PyDict_Size(__pyx_kwds);
-      switch (pos_args) {
-        case  0:
-        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_h)) != 0)) kw_args--;
-        else goto __pyx_L5_argtuple_error;
-        CYTHON_FALLTHROUGH;
-        case  1:
-        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_truck_capacity)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("construct_q_paths", 1, 8, 8, 1); __PYX_ERR(0, 133, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  2:
-        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_N)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("construct_q_paths", 1, 8, 8, 2); __PYX_ERR(0, 133, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  3:
-        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_distance)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("construct_q_paths", 1, 8, 8, 3); __PYX_ERR(0, 133, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  4:
-        if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_values)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("construct_q_paths", 1, 8, 8, 4); __PYX_ERR(0, 133, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  5:
-        if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_values_pos)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("construct_q_paths", 1, 8, 8, 5); __PYX_ERR(0, 133, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  6:
-        if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_quantities)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("construct_q_paths", 1, 8, 8, 6); __PYX_ERR(0, 133, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  7:
-        if (likely((values[7] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_direction)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("construct_q_paths", 1, 8, 8, 7); __PYX_ERR(0, 133, __pyx_L3_error)
-        }
-      }
-      if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "construct_q_paths") < 0)) __PYX_ERR(0, 133, __pyx_L3_error)
-      }
-    } else if (PyTuple_GET_SIZE(__pyx_args) != 8) {
-      goto __pyx_L5_argtuple_error;
-    } else {
-      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-      values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
-      values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
-      values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
-      values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
-      values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
-      values[7] = PyTuple_GET_ITEM(__pyx_args, 7);
-    }
-    __pyx_v_h_ = values[0];
-    __pyx_v_truck_capacity_ = values[1];
-    __pyx_v_N_ = values[2];
-    __pyx_v_distance_ = values[3];
-    __pyx_v_values_ = values[4];
-    __pyx_v_values_pos_ = values[5];
-    __pyx_v_quantities_ = values[6];
-    __pyx_v_direction_ = values[7];
-  }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("construct_q_paths", 1, 8, 8, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 133, __pyx_L3_error)
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("cpp_lower_bounds.construct_q_paths", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_16cpp_lower_bounds_construct_q_paths(__pyx_self, __pyx_v_h_, __pyx_v_truck_capacity_, __pyx_v_N_, __pyx_v_distance_, __pyx_v_values_, __pyx_v_values_pos_, __pyx_v_quantities_, __pyx_v_direction_);
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_16cpp_lower_bounds_construct_q_paths(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_h_, PyObject *__pyx_v_truck_capacity_, PyObject *__pyx_v_N_, PyObject *__pyx_v_distance_, PyObject *__pyx_v_values_, PyObject *__pyx_v_values_pos_, PyObject *__pyx_v_quantities_, PyObject *__pyx_v_direction_) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  __Pyx_RefNannySetupContext("construct_q_paths", 0);
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_16cpp_lower_bounds_construct_q_paths(__pyx_v_h_, __pyx_v_truck_capacity_, __pyx_v_N_, __pyx_v_distance_, __pyx_v_values_, __pyx_v_values_pos_, __pyx_v_quantities_, __pyx_v_direction_, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 133, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("cpp_lower_bounds.construct_q_paths", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "cpp_lower_bounds.pyx":147
- *     return qpaths
- * 
- * cpdef construct_q_routes(h_,truck_capacity_,N_,distance_,values_,values_pos_,quantities_):             # <<<<<<<<<<<<<<
- *    cdef:
- *       int h = h_
- */
-
-static PyObject *__pyx_pw_16cpp_lower_bounds_3construct_q_routes(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_f_16cpp_lower_bounds_construct_q_routes(PyObject *__pyx_v_h_, PyObject *__pyx_v_truck_capacity_, PyObject *__pyx_v_N_, PyObject *__pyx_v_distance_, PyObject *__pyx_v_values_, PyObject *__pyx_v_values_pos_, PyObject *__pyx_v_quantities_, CYTHON_UNUSED int __pyx_skip_dispatch) {
-  int __pyx_v_h;
-  int __pyx_v_truck_capacity;
-  std::vector<int>  __pyx_v_N;
-  std::vector<std::vector<double> >  __pyx_v_distance;
-  std::vector<int>  __pyx_v_values;
-  std::map<int,int>  __pyx_v_values_pos;
-  std::vector<int>  __pyx_v_quantities;
-  struct QRoutes __pyx_v_qroutes;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
-  std::vector<int>  __pyx_t_2;
-  std::vector<std::vector<double> >  __pyx_t_3;
-  std::map<int,int>  __pyx_t_4;
-  PyObject *__pyx_t_5 = NULL;
-  __Pyx_RefNannySetupContext("construct_q_routes", 0);
-
-  /* "cpp_lower_bounds.pyx":149
- * cpdef construct_q_routes(h_,truck_capacity_,N_,distance_,values_,values_pos_,quantities_):
- *    cdef:
- *       int h = h_             # <<<<<<<<<<<<<<
- *       int truck_capacity = truck_capacity_
- *       vector[int] N = N_
- */
-  __pyx_t_1 = __Pyx_PyInt_As_int(__pyx_v_h_); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 149, __pyx_L1_error)
-  __pyx_v_h = __pyx_t_1;
-
-  /* "cpp_lower_bounds.pyx":150
- *    cdef:
- *       int h = h_
- *       int truck_capacity = truck_capacity_             # <<<<<<<<<<<<<<
- *       vector[int] N = N_
- *       vector[vector[double]] distance = distance_
- */
-  __pyx_t_1 = __Pyx_PyInt_As_int(__pyx_v_truck_capacity_); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 150, __pyx_L1_error)
-  __pyx_v_truck_capacity = __pyx_t_1;
-
-  /* "cpp_lower_bounds.pyx":151
- *       int h = h_
- *       int truck_capacity = truck_capacity_
- *       vector[int] N = N_             # <<<<<<<<<<<<<<
- *       vector[vector[double]] distance = distance_
- *       vector[int] values = values_
- */
-  __pyx_t_2 = __pyx_convert_vector_from_py_int(__pyx_v_N_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 151, __pyx_L1_error)
-  __pyx_v_N = __pyx_t_2;
-
-  /* "cpp_lower_bounds.pyx":152
- *       int truck_capacity = truck_capacity_
- *       vector[int] N = N_
- *       vector[vector[double]] distance = distance_             # <<<<<<<<<<<<<<
- *       vector[int] values = values_
- *       map[int,int] values_pos = values_pos_
- */
-  __pyx_t_3 = __pyx_convert_vector_from_py_std_3a__3a_vector_3c_double_3e___(__pyx_v_distance_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 152, __pyx_L1_error)
-  __pyx_v_distance = __pyx_t_3;
-
-  /* "cpp_lower_bounds.pyx":153
- *       vector[int] N = N_
- *       vector[vector[double]] distance = distance_
- *       vector[int] values = values_             # <<<<<<<<<<<<<<
- *       map[int,int] values_pos = values_pos_
- *       vector[int] quantities = quantities_
- */
-  __pyx_t_2 = __pyx_convert_vector_from_py_int(__pyx_v_values_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 153, __pyx_L1_error)
-  __pyx_v_values = __pyx_t_2;
-
-  /* "cpp_lower_bounds.pyx":154
- *       vector[vector[double]] distance = distance_
- *       vector[int] values = values_
- *       map[int,int] values_pos = values_pos_             # <<<<<<<<<<<<<<
- *       vector[int] quantities = quantities_
- * 
- */
-  __pyx_t_4 = __pyx_convert_map_from_py_int__and_int(__pyx_v_values_pos_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 154, __pyx_L1_error)
-  __pyx_v_values_pos = __pyx_t_4;
-
-  /* "cpp_lower_bounds.pyx":155
- *       vector[int] values = values_
- *       map[int,int] values_pos = values_pos_
- *       vector[int] quantities = quantities_             # <<<<<<<<<<<<<<
- * 
- *    cdef QRoutes qroutes = construct_q_routes_(h,truck_capacity,N,distance,values,values_pos,quantities)
- */
-  __pyx_t_2 = __pyx_convert_vector_from_py_int(__pyx_v_quantities_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 155, __pyx_L1_error)
-  __pyx_v_quantities = __pyx_t_2;
-
-  /* "cpp_lower_bounds.pyx":157
- *       vector[int] quantities = quantities_
- * 
- *    cdef QRoutes qroutes = construct_q_routes_(h,truck_capacity,N,distance,values,values_pos,quantities)             # <<<<<<<<<<<<<<
- *    return qroutes
- * 
- */
-  __pyx_v_qroutes = construct_q_routes_(__pyx_v_h, __pyx_v_truck_capacity, __pyx_v_N, __pyx_v_distance, __pyx_v_values, __pyx_v_values_pos, __pyx_v_quantities);
-
-  /* "cpp_lower_bounds.pyx":158
- * 
- *    cdef QRoutes qroutes = construct_q_routes_(h,truck_capacity,N,distance,values,values_pos,quantities)
- *    return qroutes             # <<<<<<<<<<<<<<
- * 
- * cpdef lower_bound(H_, capacities_, N_, quantities_, distance_, mu_, lamb_, n_trucks_):
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_5 = __pyx_convert__to_py_struct__QRoutes(__pyx_v_qroutes); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 158, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __pyx_r = __pyx_t_5;
-  __pyx_t_5 = 0;
-  goto __pyx_L0;
-
-  /* "cpp_lower_bounds.pyx":147
- *     return qpaths
- * 
- * cpdef construct_q_routes(h_,truck_capacity_,N_,distance_,values_,values_pos_,quantities_):             # <<<<<<<<<<<<<<
- *    cdef:
- *       int h = h_
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("cpp_lower_bounds.construct_q_routes", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = 0;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* Python wrapper */
-static PyObject *__pyx_pw_16cpp_lower_bounds_3construct_q_routes(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_16cpp_lower_bounds_3construct_q_routes(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  PyObject *__pyx_v_h_ = 0;
-  PyObject *__pyx_v_truck_capacity_ = 0;
-  PyObject *__pyx_v_N_ = 0;
-  PyObject *__pyx_v_distance_ = 0;
-  PyObject *__pyx_v_values_ = 0;
-  PyObject *__pyx_v_values_pos_ = 0;
-  PyObject *__pyx_v_quantities_ = 0;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("construct_q_routes (wrapper)", 0);
-  {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_h,&__pyx_n_s_truck_capacity,&__pyx_n_s_N,&__pyx_n_s_distance,&__pyx_n_s_values,&__pyx_n_s_values_pos,&__pyx_n_s_quantities,0};
-    PyObject* values[7] = {0,0,0,0,0,0,0};
-    if (unlikely(__pyx_kwds)) {
-      Py_ssize_t kw_args;
-      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
-      switch (pos_args) {
-        case  7: values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
-        CYTHON_FALLTHROUGH;
-        case  6: values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
-        CYTHON_FALLTHROUGH;
-        case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
-        CYTHON_FALLTHROUGH;
-        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
-        CYTHON_FALLTHROUGH;
-        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
-        CYTHON_FALLTHROUGH;
-        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-        CYTHON_FALLTHROUGH;
-        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-        CYTHON_FALLTHROUGH;
-        case  0: break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-      kw_args = PyDict_Size(__pyx_kwds);
-      switch (pos_args) {
-        case  0:
-        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_h)) != 0)) kw_args--;
-        else goto __pyx_L5_argtuple_error;
-        CYTHON_FALLTHROUGH;
-        case  1:
-        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_truck_capacity)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("construct_q_routes", 1, 7, 7, 1); __PYX_ERR(0, 147, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  2:
-        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_N)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("construct_q_routes", 1, 7, 7, 2); __PYX_ERR(0, 147, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  3:
-        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_distance)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("construct_q_routes", 1, 7, 7, 3); __PYX_ERR(0, 147, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  4:
-        if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_values)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("construct_q_routes", 1, 7, 7, 4); __PYX_ERR(0, 147, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  5:
-        if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_values_pos)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("construct_q_routes", 1, 7, 7, 5); __PYX_ERR(0, 147, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  6:
-        if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_quantities)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("construct_q_routes", 1, 7, 7, 6); __PYX_ERR(0, 147, __pyx_L3_error)
-        }
-      }
-      if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "construct_q_routes") < 0)) __PYX_ERR(0, 147, __pyx_L3_error)
-      }
-    } else if (PyTuple_GET_SIZE(__pyx_args) != 7) {
-      goto __pyx_L5_argtuple_error;
-    } else {
-      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-      values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
-      values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
-      values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
-      values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
-      values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
-    }
-    __pyx_v_h_ = values[0];
-    __pyx_v_truck_capacity_ = values[1];
-    __pyx_v_N_ = values[2];
-    __pyx_v_distance_ = values[3];
-    __pyx_v_values_ = values[4];
-    __pyx_v_values_pos_ = values[5];
-    __pyx_v_quantities_ = values[6];
-  }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("construct_q_routes", 1, 7, 7, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 147, __pyx_L3_error)
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("cpp_lower_bounds.construct_q_routes", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_16cpp_lower_bounds_2construct_q_routes(__pyx_self, __pyx_v_h_, __pyx_v_truck_capacity_, __pyx_v_N_, __pyx_v_distance_, __pyx_v_values_, __pyx_v_values_pos_, __pyx_v_quantities_);
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_16cpp_lower_bounds_2construct_q_routes(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_h_, PyObject *__pyx_v_truck_capacity_, PyObject *__pyx_v_N_, PyObject *__pyx_v_distance_, PyObject *__pyx_v_values_, PyObject *__pyx_v_values_pos_, PyObject *__pyx_v_quantities_) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  __Pyx_RefNannySetupContext("construct_q_routes", 0);
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_16cpp_lower_bounds_construct_q_routes(__pyx_v_h_, __pyx_v_truck_capacity_, __pyx_v_N_, __pyx_v_distance_, __pyx_v_values_, __pyx_v_values_pos_, __pyx_v_quantities_, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 147, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("cpp_lower_bounds.construct_q_routes", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "cpp_lower_bounds.pyx":160
- *    return qroutes
- * 
- * cpdef lower_bound(H_, capacities_, N_, quantities_, distance_, mu_, lamb_, n_trucks_):             # <<<<<<<<<<<<<<
- *    cdef:
- *       vector[int] H = H_,
- */
-
-static PyObject *__pyx_pw_16cpp_lower_bounds_5lower_bound(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_f_16cpp_lower_bounds_lower_bound(PyObject *__pyx_v_H_, PyObject *__pyx_v_capacities_, PyObject *__pyx_v_N_, PyObject *__pyx_v_quantities_, PyObject *__pyx_v_distance_, PyObject *__pyx_v_mu_, PyObject *__pyx_v_lamb_, PyObject *__pyx_v_n_trucks_, CYTHON_UNUSED int __pyx_skip_dispatch) {
-  std::vector<int>  __pyx_v_H;
-  std::vector<int>  __pyx_v_capacities;
-  std::vector<int>  __pyx_v_N;
-  std::vector<int>  __pyx_v_quantities;
-  std::vector<std::vector<double> >  __pyx_v_distance;
-  std::vector<double>  __pyx_v_mu;
-  std::vector<double>  __pyx_v_lamb;
-  std::vector<int>  __pyx_v_n_trucks;
-  struct LowerBound __pyx_v_lb;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  std::vector<int>  __pyx_t_1;
-  std::vector<std::vector<double> >  __pyx_t_2;
-  std::vector<double>  __pyx_t_3;
-  PyObject *__pyx_t_4 = NULL;
-  __Pyx_RefNannySetupContext("lower_bound", 0);
-
-  /* "cpp_lower_bounds.pyx":162
- * cpdef lower_bound(H_, capacities_, N_, quantities_, distance_, mu_, lamb_, n_trucks_):
- *    cdef:
- *       vector[int] H = H_,             # <<<<<<<<<<<<<<
- *       vector[int] capacities = capacities_,
- *       vector[int] N = N_,
- */
-  __pyx_t_1 = __pyx_convert_vector_from_py_int(__pyx_v_H_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 162, __pyx_L1_error)
-  __pyx_v_H = __pyx_t_1;
-
-  /* "cpp_lower_bounds.pyx":163
- *    cdef:
- *       vector[int] H = H_,
- *       vector[int] capacities = capacities_,             # <<<<<<<<<<<<<<
- *       vector[int] N = N_,
- *       vector[int] quantities = quantities_,
- */
-  __pyx_t_1 = __pyx_convert_vector_from_py_int(__pyx_v_capacities_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 163, __pyx_L1_error)
-  __pyx_v_capacities = __pyx_t_1;
-
-  /* "cpp_lower_bounds.pyx":164
- *       vector[int] H = H_,
- *       vector[int] capacities = capacities_,
- *       vector[int] N = N_,             # <<<<<<<<<<<<<<
- *       vector[int] quantities = quantities_,
- *       vector[vector[double]] distance = distance_,
- */
-  __pyx_t_1 = __pyx_convert_vector_from_py_int(__pyx_v_N_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 164, __pyx_L1_error)
-  __pyx_v_N = __pyx_t_1;
-
-  /* "cpp_lower_bounds.pyx":165
- *       vector[int] capacities = capacities_,
- *       vector[int] N = N_,
- *       vector[int] quantities = quantities_,             # <<<<<<<<<<<<<<
- *       vector[vector[double]] distance = distance_,
- *       vector[double] mu = mu_,
- */
-  __pyx_t_1 = __pyx_convert_vector_from_py_int(__pyx_v_quantities_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 165, __pyx_L1_error)
-  __pyx_v_quantities = __pyx_t_1;
-
-  /* "cpp_lower_bounds.pyx":166
- *       vector[int] N = N_,
- *       vector[int] quantities = quantities_,
- *       vector[vector[double]] distance = distance_,             # <<<<<<<<<<<<<<
- *       vector[double] mu = mu_,
- *       vector[double] lamb = lamb_
- */
-  __pyx_t_2 = __pyx_convert_vector_from_py_std_3a__3a_vector_3c_double_3e___(__pyx_v_distance_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 166, __pyx_L1_error)
-  __pyx_v_distance = __pyx_t_2;
-
-  /* "cpp_lower_bounds.pyx":167
- *       vector[int] quantities = quantities_,
- *       vector[vector[double]] distance = distance_,
- *       vector[double] mu = mu_,             # <<<<<<<<<<<<<<
- *       vector[double] lamb = lamb_
- *       vector[int] n_trucks = n_trucks_
- */
-  __pyx_t_3 = __pyx_convert_vector_from_py_double(__pyx_v_mu_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 167, __pyx_L1_error)
-  __pyx_v_mu = __pyx_t_3;
-
-  /* "cpp_lower_bounds.pyx":168
- *       vector[vector[double]] distance = distance_,
- *       vector[double] mu = mu_,
- *       vector[double] lamb = lamb_             # <<<<<<<<<<<<<<
- *       vector[int] n_trucks = n_trucks_
- *    cdef LowerBound lb = lower_bound_(H, capacities, N, quantities, distance, mu, lamb, n_trucks)
- */
-  __pyx_t_3 = __pyx_convert_vector_from_py_double(__pyx_v_lamb_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 168, __pyx_L1_error)
-  __pyx_v_lamb = __pyx_t_3;
-
-  /* "cpp_lower_bounds.pyx":169
- *       vector[double] mu = mu_,
- *       vector[double] lamb = lamb_
- *       vector[int] n_trucks = n_trucks_             # <<<<<<<<<<<<<<
- *    cdef LowerBound lb = lower_bound_(H, capacities, N, quantities, distance, mu, lamb, n_trucks)
- *    return lb
- */
-  __pyx_t_1 = __pyx_convert_vector_from_py_int(__pyx_v_n_trucks_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 169, __pyx_L1_error)
-  __pyx_v_n_trucks = __pyx_t_1;
-
-  /* "cpp_lower_bounds.pyx":170
- *       vector[double] lamb = lamb_
- *       vector[int] n_trucks = n_trucks_
- *    cdef LowerBound lb = lower_bound_(H, capacities, N, quantities, distance, mu, lamb, n_trucks)             # <<<<<<<<<<<<<<
- *    return lb
- * 
- */
-  __pyx_v_lb = lower_bound_(__pyx_v_H, __pyx_v_capacities, __pyx_v_N, __pyx_v_quantities, __pyx_v_distance, __pyx_v_mu, __pyx_v_lamb, __pyx_v_n_trucks);
-
-  /* "cpp_lower_bounds.pyx":171
- *       vector[int] n_trucks = n_trucks_
- *    cdef LowerBound lb = lower_bound_(H, capacities, N, quantities, distance, mu, lamb, n_trucks)
- *    return lb             # <<<<<<<<<<<<<<
- * 
- * 
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_4 = __pyx_convert__to_py_struct__LowerBound(__pyx_v_lb); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 171, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_r = __pyx_t_4;
-  __pyx_t_4 = 0;
-  goto __pyx_L0;
-
-  /* "cpp_lower_bounds.pyx":160
- *    return qroutes
- * 
- * cpdef lower_bound(H_, capacities_, N_, quantities_, distance_, mu_, lamb_, n_trucks_):             # <<<<<<<<<<<<<<
- *    cdef:
- *       vector[int] H = H_,
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_4);
-  __Pyx_AddTraceback("cpp_lower_bounds.lower_bound", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = 0;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* Python wrapper */
-static PyObject *__pyx_pw_16cpp_lower_bounds_5lower_bound(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_16cpp_lower_bounds_5lower_bound(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  PyObject *__pyx_v_H_ = 0;
-  PyObject *__pyx_v_capacities_ = 0;
-  PyObject *__pyx_v_N_ = 0;
-  PyObject *__pyx_v_quantities_ = 0;
-  PyObject *__pyx_v_distance_ = 0;
-  PyObject *__pyx_v_mu_ = 0;
-  PyObject *__pyx_v_lamb_ = 0;
-  PyObject *__pyx_v_n_trucks_ = 0;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("lower_bound (wrapper)", 0);
-  {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_H,&__pyx_n_s_capacities,&__pyx_n_s_N,&__pyx_n_s_quantities,&__pyx_n_s_distance,&__pyx_n_s_mu,&__pyx_n_s_lamb,&__pyx_n_s_n_trucks,0};
-    PyObject* values[8] = {0,0,0,0,0,0,0,0};
-    if (unlikely(__pyx_kwds)) {
-      Py_ssize_t kw_args;
-      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
-      switch (pos_args) {
-        case  8: values[7] = PyTuple_GET_ITEM(__pyx_args, 7);
-        CYTHON_FALLTHROUGH;
-        case  7: values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
-        CYTHON_FALLTHROUGH;
-        case  6: values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
-        CYTHON_FALLTHROUGH;
-        case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
-        CYTHON_FALLTHROUGH;
-        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
-        CYTHON_FALLTHROUGH;
-        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
-        CYTHON_FALLTHROUGH;
-        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-        CYTHON_FALLTHROUGH;
-        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-        CYTHON_FALLTHROUGH;
-        case  0: break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-      kw_args = PyDict_Size(__pyx_kwds);
-      switch (pos_args) {
-        case  0:
-        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_H)) != 0)) kw_args--;
-        else goto __pyx_L5_argtuple_error;
-        CYTHON_FALLTHROUGH;
-        case  1:
-        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_capacities)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("lower_bound", 1, 8, 8, 1); __PYX_ERR(0, 160, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  2:
-        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_N)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("lower_bound", 1, 8, 8, 2); __PYX_ERR(0, 160, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  3:
-        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_quantities)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("lower_bound", 1, 8, 8, 3); __PYX_ERR(0, 160, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  4:
-        if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_distance)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("lower_bound", 1, 8, 8, 4); __PYX_ERR(0, 160, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  5:
-        if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_mu)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("lower_bound", 1, 8, 8, 5); __PYX_ERR(0, 160, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  6:
-        if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_lamb)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("lower_bound", 1, 8, 8, 6); __PYX_ERR(0, 160, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  7:
-        if (likely((values[7] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_n_trucks)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("lower_bound", 1, 8, 8, 7); __PYX_ERR(0, 160, __pyx_L3_error)
-        }
-      }
-      if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "lower_bound") < 0)) __PYX_ERR(0, 160, __pyx_L3_error)
-      }
-    } else if (PyTuple_GET_SIZE(__pyx_args) != 8) {
-      goto __pyx_L5_argtuple_error;
-    } else {
-      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-      values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
-      values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
-      values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
-      values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
-      values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
-      values[7] = PyTuple_GET_ITEM(__pyx_args, 7);
-    }
-    __pyx_v_H_ = values[0];
-    __pyx_v_capacities_ = values[1];
-    __pyx_v_N_ = values[2];
-    __pyx_v_quantities_ = values[3];
-    __pyx_v_distance_ = values[4];
-    __pyx_v_mu_ = values[5];
-    __pyx_v_lamb_ = values[6];
-    __pyx_v_n_trucks_ = values[7];
-  }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("lower_bound", 1, 8, 8, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 160, __pyx_L3_error)
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("cpp_lower_bounds.lower_bound", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_16cpp_lower_bounds_4lower_bound(__pyx_self, __pyx_v_H_, __pyx_v_capacities_, __pyx_v_N_, __pyx_v_quantities_, __pyx_v_distance_, __pyx_v_mu_, __pyx_v_lamb_, __pyx_v_n_trucks_);
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_16cpp_lower_bounds_4lower_bound(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_H_, PyObject *__pyx_v_capacities_, PyObject *__pyx_v_N_, PyObject *__pyx_v_quantities_, PyObject *__pyx_v_distance_, PyObject *__pyx_v_mu_, PyObject *__pyx_v_lamb_, PyObject *__pyx_v_n_trucks_) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  __Pyx_RefNannySetupContext("lower_bound", 0);
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_16cpp_lower_bounds_lower_bound(__pyx_v_H_, __pyx_v_capacities_, __pyx_v_N_, __pyx_v_quantities_, __pyx_v_distance_, __pyx_v_mu_, __pyx_v_lamb_, __pyx_v_n_trucks_, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 160, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("cpp_lower_bounds.lower_bound", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "cpp_lower_bounds.pyx":174
- * 
- * 
- * cpdef lower_bound_optimizer_M1_(iterations_, z_ub_, epsilon_, H_, capacities_, N_, quantities_, geo_distance_, n_trucks_):             # <<<<<<<<<<<<<<
- *    cdef:
- *       int iterations = iterations_
- */
-
-static PyObject *__pyx_pw_16cpp_lower_bounds_7lower_bound_optimizer_M1_(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_f_16cpp_lower_bounds_lower_bound_optimizer_M1_(PyObject *__pyx_v_iterations_, PyObject *__pyx_v_z_ub_, PyObject *__pyx_v_epsilon_, PyObject *__pyx_v_H_, PyObject *__pyx_v_capacities_, PyObject *__pyx_v_N_, PyObject *__pyx_v_quantities_, PyObject *__pyx_v_geo_distance_, PyObject *__pyx_v_n_trucks_, CYTHON_UNUSED int __pyx_skip_dispatch) {
-  int __pyx_v_iterations;
-  double __pyx_v_z_ub;
-  double __pyx_v_epsilon;
-  std::vector<int>  __pyx_v_H;
-  std::vector<int>  __pyx_v_capacities;
-  std::vector<int>  __pyx_v_N;
-  std::vector<int>  __pyx_v_quantities;
-  std::vector<std::vector<double> >  __pyx_v_geo_distance;
-  std::vector<int>  __pyx_v_n_trucks;
-  struct DualSolution __pyx_v_dual_solution;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  int __pyx_t_1;
-  double __pyx_t_2;
-  std::vector<int>  __pyx_t_3;
-  std::vector<std::vector<double> >  __pyx_t_4;
-  PyObject *__pyx_t_5 = NULL;
-  __Pyx_RefNannySetupContext("lower_bound_optimizer_M1_", 0);
-
-  /* "cpp_lower_bounds.pyx":176
- * cpdef lower_bound_optimizer_M1_(iterations_, z_ub_, epsilon_, H_, capacities_, N_, quantities_, geo_distance_, n_trucks_):
- *    cdef:
- *       int iterations = iterations_             # <<<<<<<<<<<<<<
- *       double z_ub = z_ub_
- *       double epsilon = epsilon_
- */
-  __pyx_t_1 = __Pyx_PyInt_As_int(__pyx_v_iterations_); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 176, __pyx_L1_error)
-  __pyx_v_iterations = __pyx_t_1;
-
-  /* "cpp_lower_bounds.pyx":177
- *    cdef:
- *       int iterations = iterations_
- *       double z_ub = z_ub_             # <<<<<<<<<<<<<<
- *       double epsilon = epsilon_
- *       vector[int] H = H_
- */
-  __pyx_t_2 = __pyx_PyFloat_AsDouble(__pyx_v_z_ub_); if (unlikely((__pyx_t_2 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 177, __pyx_L1_error)
-  __pyx_v_z_ub = __pyx_t_2;
-
-  /* "cpp_lower_bounds.pyx":178
- *       int iterations = iterations_
- *       double z_ub = z_ub_
- *       double epsilon = epsilon_             # <<<<<<<<<<<<<<
- *       vector[int] H = H_
- *       vector[int] capacities = capacities_
- */
-  __pyx_t_2 = __pyx_PyFloat_AsDouble(__pyx_v_epsilon_); if (unlikely((__pyx_t_2 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 178, __pyx_L1_error)
-  __pyx_v_epsilon = __pyx_t_2;
-
-  /* "cpp_lower_bounds.pyx":179
- *       double z_ub = z_ub_
- *       double epsilon = epsilon_
- *       vector[int] H = H_             # <<<<<<<<<<<<<<
- *       vector[int] capacities = capacities_
- *       vector[int] N = N_
- */
-  __pyx_t_3 = __pyx_convert_vector_from_py_int(__pyx_v_H_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 179, __pyx_L1_error)
-  __pyx_v_H = __pyx_t_3;
-
-  /* "cpp_lower_bounds.pyx":180
- *       double epsilon = epsilon_
- *       vector[int] H = H_
- *       vector[int] capacities = capacities_             # <<<<<<<<<<<<<<
- *       vector[int] N = N_
- *       vector[int] quantities = quantities_
- */
-  __pyx_t_3 = __pyx_convert_vector_from_py_int(__pyx_v_capacities_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 180, __pyx_L1_error)
-  __pyx_v_capacities = __pyx_t_3;
-
-  /* "cpp_lower_bounds.pyx":181
- *       vector[int] H = H_
- *       vector[int] capacities = capacities_
- *       vector[int] N = N_             # <<<<<<<<<<<<<<
- *       vector[int] quantities = quantities_
- *       vector[vector[double]] geo_distance = geo_distance_
- */
-  __pyx_t_3 = __pyx_convert_vector_from_py_int(__pyx_v_N_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 181, __pyx_L1_error)
-  __pyx_v_N = __pyx_t_3;
-
-  /* "cpp_lower_bounds.pyx":182
- *       vector[int] capacities = capacities_
- *       vector[int] N = N_
- *       vector[int] quantities = quantities_             # <<<<<<<<<<<<<<
- *       vector[vector[double]] geo_distance = geo_distance_
- *       vector[int] n_trucks = n_trucks_
- */
-  __pyx_t_3 = __pyx_convert_vector_from_py_int(__pyx_v_quantities_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 182, __pyx_L1_error)
-  __pyx_v_quantities = __pyx_t_3;
-
-  /* "cpp_lower_bounds.pyx":183
- *       vector[int] N = N_
- *       vector[int] quantities = quantities_
- *       vector[vector[double]] geo_distance = geo_distance_             # <<<<<<<<<<<<<<
- *       vector[int] n_trucks = n_trucks_
- *    cdef DualSolution dual_solution = lower_bound_optimizer_M1(iterations, z_ub, epsilon, H, capacities, N, quantities, geo_distance, n_trucks)
- */
-  __pyx_t_4 = __pyx_convert_vector_from_py_std_3a__3a_vector_3c_double_3e___(__pyx_v_geo_distance_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 183, __pyx_L1_error)
-  __pyx_v_geo_distance = __pyx_t_4;
-
-  /* "cpp_lower_bounds.pyx":184
- *       vector[int] quantities = quantities_
- *       vector[vector[double]] geo_distance = geo_distance_
- *       vector[int] n_trucks = n_trucks_             # <<<<<<<<<<<<<<
- *    cdef DualSolution dual_solution = lower_bound_optimizer_M1(iterations, z_ub, epsilon, H, capacities, N, quantities, geo_distance, n_trucks)
- *    return dual_solution
- */
-  __pyx_t_3 = __pyx_convert_vector_from_py_int(__pyx_v_n_trucks_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 184, __pyx_L1_error)
-  __pyx_v_n_trucks = __pyx_t_3;
-
-  /* "cpp_lower_bounds.pyx":185
- *       vector[vector[double]] geo_distance = geo_distance_
- *       vector[int] n_trucks = n_trucks_
- *    cdef DualSolution dual_solution = lower_bound_optimizer_M1(iterations, z_ub, epsilon, H, capacities, N, quantities, geo_distance, n_trucks)             # <<<<<<<<<<<<<<
- *    return dual_solution
- * 
- */
-  __pyx_v_dual_solution = lower_bound_optimizer_M1(__pyx_v_iterations, __pyx_v_z_ub, __pyx_v_epsilon, __pyx_v_H, __pyx_v_capacities, __pyx_v_N, __pyx_v_quantities, __pyx_v_geo_distance, __pyx_v_n_trucks);
-
-  /* "cpp_lower_bounds.pyx":186
- *       vector[int] n_trucks = n_trucks_
- *    cdef DualSolution dual_solution = lower_bound_optimizer_M1(iterations, z_ub, epsilon, H, capacities, N, quantities, geo_distance, n_trucks)
- *    return dual_solution             # <<<<<<<<<<<<<<
- * 
- * cpdef construct_lower_bound_(iterations_grad_m1_,iterations_grad_m2_,iterations_m2_,z_ub_,Delta_,Delta_zero_,Delta_final_,gamma_,gamma_zero_,gamma_final_,epsilon_,H_,capacities_,N_,quantities_,geo_distance_,n_trucks_):
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_5 = __pyx_convert__to_py_struct__DualSolution(__pyx_v_dual_solution); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 186, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __pyx_r = __pyx_t_5;
-  __pyx_t_5 = 0;
-  goto __pyx_L0;
-
-  /* "cpp_lower_bounds.pyx":174
- * 
- * 
- * cpdef lower_bound_optimizer_M1_(iterations_, z_ub_, epsilon_, H_, capacities_, N_, quantities_, geo_distance_, n_trucks_):             # <<<<<<<<<<<<<<
- *    cdef:
- *       int iterations = iterations_
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("cpp_lower_bounds.lower_bound_optimizer_M1_", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = 0;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* Python wrapper */
-static PyObject *__pyx_pw_16cpp_lower_bounds_7lower_bound_optimizer_M1_(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_16cpp_lower_bounds_7lower_bound_optimizer_M1_(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
-  PyObject *__pyx_v_iterations_ = 0;
-  PyObject *__pyx_v_z_ub_ = 0;
-  PyObject *__pyx_v_epsilon_ = 0;
-  PyObject *__pyx_v_H_ = 0;
-  PyObject *__pyx_v_capacities_ = 0;
-  PyObject *__pyx_v_N_ = 0;
-  PyObject *__pyx_v_quantities_ = 0;
-  PyObject *__pyx_v_geo_distance_ = 0;
-  PyObject *__pyx_v_n_trucks_ = 0;
-  PyObject *__pyx_r = 0;
-  __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("lower_bound_optimizer_M1_ (wrapper)", 0);
-  {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_iterations,&__pyx_n_s_z_ub,&__pyx_n_s_epsilon,&__pyx_n_s_H,&__pyx_n_s_capacities,&__pyx_n_s_N,&__pyx_n_s_quantities,&__pyx_n_s_geo_distance,&__pyx_n_s_n_trucks,0};
-    PyObject* values[9] = {0,0,0,0,0,0,0,0,0};
-    if (unlikely(__pyx_kwds)) {
-      Py_ssize_t kw_args;
-      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
-      switch (pos_args) {
-        case  9: values[8] = PyTuple_GET_ITEM(__pyx_args, 8);
-        CYTHON_FALLTHROUGH;
-        case  8: values[7] = PyTuple_GET_ITEM(__pyx_args, 7);
-        CYTHON_FALLTHROUGH;
-        case  7: values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
-        CYTHON_FALLTHROUGH;
-        case  6: values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
-        CYTHON_FALLTHROUGH;
-        case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
-        CYTHON_FALLTHROUGH;
-        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
-        CYTHON_FALLTHROUGH;
-        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
-        CYTHON_FALLTHROUGH;
-        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-        CYTHON_FALLTHROUGH;
-        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-        CYTHON_FALLTHROUGH;
-        case  0: break;
-        default: goto __pyx_L5_argtuple_error;
-      }
-      kw_args = PyDict_Size(__pyx_kwds);
-      switch (pos_args) {
-        case  0:
-        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_iterations)) != 0)) kw_args--;
-        else goto __pyx_L5_argtuple_error;
-        CYTHON_FALLTHROUGH;
-        case  1:
-        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_z_ub)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("lower_bound_optimizer_M1_", 1, 9, 9, 1); __PYX_ERR(0, 174, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  2:
-        if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_epsilon)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("lower_bound_optimizer_M1_", 1, 9, 9, 2); __PYX_ERR(0, 174, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  3:
-        if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_H)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("lower_bound_optimizer_M1_", 1, 9, 9, 3); __PYX_ERR(0, 174, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  4:
-        if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_capacities)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("lower_bound_optimizer_M1_", 1, 9, 9, 4); __PYX_ERR(0, 174, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  5:
-        if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_N)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("lower_bound_optimizer_M1_", 1, 9, 9, 5); __PYX_ERR(0, 174, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  6:
-        if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_quantities)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("lower_bound_optimizer_M1_", 1, 9, 9, 6); __PYX_ERR(0, 174, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  7:
-        if (likely((values[7] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_geo_distance)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("lower_bound_optimizer_M1_", 1, 9, 9, 7); __PYX_ERR(0, 174, __pyx_L3_error)
-        }
-        CYTHON_FALLTHROUGH;
-        case  8:
-        if (likely((values[8] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_n_trucks)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("lower_bound_optimizer_M1_", 1, 9, 9, 8); __PYX_ERR(0, 174, __pyx_L3_error)
-        }
-      }
-      if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "lower_bound_optimizer_M1_") < 0)) __PYX_ERR(0, 174, __pyx_L3_error)
-      }
-    } else if (PyTuple_GET_SIZE(__pyx_args) != 9) {
-      goto __pyx_L5_argtuple_error;
-    } else {
-      values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
-      values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-      values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
-      values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
-      values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
-      values[5] = PyTuple_GET_ITEM(__pyx_args, 5);
-      values[6] = PyTuple_GET_ITEM(__pyx_args, 6);
-      values[7] = PyTuple_GET_ITEM(__pyx_args, 7);
-      values[8] = PyTuple_GET_ITEM(__pyx_args, 8);
-    }
-    __pyx_v_iterations_ = values[0];
-    __pyx_v_z_ub_ = values[1];
-    __pyx_v_epsilon_ = values[2];
-    __pyx_v_H_ = values[3];
-    __pyx_v_capacities_ = values[4];
-    __pyx_v_N_ = values[5];
-    __pyx_v_quantities_ = values[6];
-    __pyx_v_geo_distance_ = values[7];
-    __pyx_v_n_trucks_ = values[8];
-  }
-  goto __pyx_L4_argument_unpacking_done;
-  __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("lower_bound_optimizer_M1_", 1, 9, 9, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 174, __pyx_L3_error)
-  __pyx_L3_error:;
-  __Pyx_AddTraceback("cpp_lower_bounds.lower_bound_optimizer_M1_", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_RefNannyFinishContext();
-  return NULL;
-  __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_16cpp_lower_bounds_6lower_bound_optimizer_M1_(__pyx_self, __pyx_v_iterations_, __pyx_v_z_ub_, __pyx_v_epsilon_, __pyx_v_H_, __pyx_v_capacities_, __pyx_v_N_, __pyx_v_quantities_, __pyx_v_geo_distance_, __pyx_v_n_trucks_);
-
-  /* function exit code */
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_pf_16cpp_lower_bounds_6lower_bound_optimizer_M1_(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_iterations_, PyObject *__pyx_v_z_ub_, PyObject *__pyx_v_epsilon_, PyObject *__pyx_v_H_, PyObject *__pyx_v_capacities_, PyObject *__pyx_v_N_, PyObject *__pyx_v_quantities_, PyObject *__pyx_v_geo_distance_, PyObject *__pyx_v_n_trucks_) {
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  __Pyx_RefNannySetupContext("lower_bound_optimizer_M1_", 0);
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_16cpp_lower_bounds_lower_bound_optimizer_M1_(__pyx_v_iterations_, __pyx_v_z_ub_, __pyx_v_epsilon_, __pyx_v_H_, __pyx_v_capacities_, __pyx_v_N_, __pyx_v_quantities_, __pyx_v_geo_distance_, __pyx_v_n_trucks_, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 174, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("cpp_lower_bounds.lower_bound_optimizer_M1_", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = NULL;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "cpp_lower_bounds.pyx":188
- *    return dual_solution
- * 
- * cpdef construct_lower_bound_(iterations_grad_m1_,iterations_grad_m2_,iterations_m2_,z_ub_,Delta_,Delta_zero_,Delta_final_,gamma_,gamma_zero_,gamma_final_,epsilon_,H_,capacities_,N_,quantities_,geo_distance_,n_trucks_):             # <<<<<<<<<<<<<<
+ * cpdef construct_lower_bound_wrapper_(iterations_grad_m1_,iterations_grad_m2_,iterations_m2_,z_ub_,Delta_,Delta_zero_,Delta_final_,gamma_,gamma_zero_,gamma_final_,epsilon_,H_,capacities_,N_,quantities_,geo_distance_,n_trucks_,penalties_,penalty_factor_):             # <<<<<<<<<<<<<<
  *    cdef:
  *       int iterations_grad_m1 = iterations_grad_m1_
  */
 
-static PyObject *__pyx_pw_16cpp_lower_bounds_9construct_lower_bound_(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_f_16cpp_lower_bounds_construct_lower_bound_(PyObject *__pyx_v_iterations_grad_m1_, PyObject *__pyx_v_iterations_grad_m2_, PyObject *__pyx_v_iterations_m2_, PyObject *__pyx_v_z_ub_, PyObject *__pyx_v_Delta_, PyObject *__pyx_v_Delta_zero_, PyObject *__pyx_v_Delta_final_, PyObject *__pyx_v_gamma_, PyObject *__pyx_v_gamma_zero_, PyObject *__pyx_v_gamma_final_, PyObject *__pyx_v_epsilon_, PyObject *__pyx_v_H_, PyObject *__pyx_v_capacities_, PyObject *__pyx_v_N_, PyObject *__pyx_v_quantities_, PyObject *__pyx_v_geo_distance_, PyObject *__pyx_v_n_trucks_, CYTHON_UNUSED int __pyx_skip_dispatch) {
+static PyObject *__pyx_pw_16cpp_lower_bounds_1construct_lower_bound_wrapper_(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_f_16cpp_lower_bounds_construct_lower_bound_wrapper_(PyObject *__pyx_v_iterations_grad_m1_, PyObject *__pyx_v_iterations_grad_m2_, PyObject *__pyx_v_iterations_m2_, PyObject *__pyx_v_z_ub_, PyObject *__pyx_v_Delta_, PyObject *__pyx_v_Delta_zero_, PyObject *__pyx_v_Delta_final_, PyObject *__pyx_v_gamma_, PyObject *__pyx_v_gamma_zero_, PyObject *__pyx_v_gamma_final_, PyObject *__pyx_v_epsilon_, PyObject *__pyx_v_H_, PyObject *__pyx_v_capacities_, PyObject *__pyx_v_N_, PyObject *__pyx_v_quantities_, PyObject *__pyx_v_geo_distance_, PyObject *__pyx_v_n_trucks_, PyObject *__pyx_v_penalties_, PyObject *__pyx_v_penalty_factor_, CYTHON_UNUSED int __pyx_skip_dispatch) {
   int __pyx_v_iterations_grad_m1;
   int __pyx_v_iterations_grad_m2;
   int __pyx_v_iterations_m2;
@@ -3029,6 +1746,8 @@ static PyObject *__pyx_f_16cpp_lower_bounds_construct_lower_bound_(PyObject *__p
   std::vector<int>  __pyx_v_quantities;
   std::vector<std::vector<double> >  __pyx_v_geo_distance;
   std::vector<int>  __pyx_v_n_trucks;
+  std::vector<std::vector<double> >  __pyx_v_penalties;
+  double __pyx_v_penalty_factor;
   std::vector<struct DualSolution>  __pyx_v_dual_solution;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
@@ -3037,205 +1756,225 @@ static PyObject *__pyx_f_16cpp_lower_bounds_construct_lower_bound_(PyObject *__p
   std::vector<int>  __pyx_t_3;
   std::vector<std::vector<double> >  __pyx_t_4;
   PyObject *__pyx_t_5 = NULL;
-  __Pyx_RefNannySetupContext("construct_lower_bound_", 0);
+  __Pyx_RefNannySetupContext("construct_lower_bound_wrapper_", 0);
 
-  /* "cpp_lower_bounds.pyx":190
- * cpdef construct_lower_bound_(iterations_grad_m1_,iterations_grad_m2_,iterations_m2_,z_ub_,Delta_,Delta_zero_,Delta_final_,gamma_,gamma_zero_,gamma_final_,epsilon_,H_,capacities_,N_,quantities_,geo_distance_,n_trucks_):
+  /* "cpp_lower_bounds.pyx":192
+ * cpdef construct_lower_bound_wrapper_(iterations_grad_m1_,iterations_grad_m2_,iterations_m2_,z_ub_,Delta_,Delta_zero_,Delta_final_,gamma_,gamma_zero_,gamma_final_,epsilon_,H_,capacities_,N_,quantities_,geo_distance_,n_trucks_,penalties_,penalty_factor_):
  *    cdef:
  *       int iterations_grad_m1 = iterations_grad_m1_             # <<<<<<<<<<<<<<
  *       int iterations_grad_m2 = iterations_grad_m2_
  *       int iterations_m2 = iterations_m2_
  */
-  __pyx_t_1 = __Pyx_PyInt_As_int(__pyx_v_iterations_grad_m1_); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 190, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_As_int(__pyx_v_iterations_grad_m1_); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 192, __pyx_L1_error)
   __pyx_v_iterations_grad_m1 = __pyx_t_1;
 
-  /* "cpp_lower_bounds.pyx":191
+  /* "cpp_lower_bounds.pyx":193
  *    cdef:
  *       int iterations_grad_m1 = iterations_grad_m1_
  *       int iterations_grad_m2 = iterations_grad_m2_             # <<<<<<<<<<<<<<
  *       int iterations_m2 = iterations_m2_
  *       double z_ub = z_ub_
  */
-  __pyx_t_1 = __Pyx_PyInt_As_int(__pyx_v_iterations_grad_m2_); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 191, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_As_int(__pyx_v_iterations_grad_m2_); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 193, __pyx_L1_error)
   __pyx_v_iterations_grad_m2 = __pyx_t_1;
 
-  /* "cpp_lower_bounds.pyx":192
+  /* "cpp_lower_bounds.pyx":194
  *       int iterations_grad_m1 = iterations_grad_m1_
  *       int iterations_grad_m2 = iterations_grad_m2_
  *       int iterations_m2 = iterations_m2_             # <<<<<<<<<<<<<<
  *       double z_ub = z_ub_
  *       int Delta = Delta_
  */
-  __pyx_t_1 = __Pyx_PyInt_As_int(__pyx_v_iterations_m2_); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 192, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_As_int(__pyx_v_iterations_m2_); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 194, __pyx_L1_error)
   __pyx_v_iterations_m2 = __pyx_t_1;
 
-  /* "cpp_lower_bounds.pyx":193
+  /* "cpp_lower_bounds.pyx":195
  *       int iterations_grad_m2 = iterations_grad_m2_
  *       int iterations_m2 = iterations_m2_
  *       double z_ub = z_ub_             # <<<<<<<<<<<<<<
  *       int Delta = Delta_
  *       int Delta_zero = Delta_zero_
  */
-  __pyx_t_2 = __pyx_PyFloat_AsDouble(__pyx_v_z_ub_); if (unlikely((__pyx_t_2 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 193, __pyx_L1_error)
+  __pyx_t_2 = __pyx_PyFloat_AsDouble(__pyx_v_z_ub_); if (unlikely((__pyx_t_2 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 195, __pyx_L1_error)
   __pyx_v_z_ub = __pyx_t_2;
 
-  /* "cpp_lower_bounds.pyx":194
+  /* "cpp_lower_bounds.pyx":196
  *       int iterations_m2 = iterations_m2_
  *       double z_ub = z_ub_
  *       int Delta = Delta_             # <<<<<<<<<<<<<<
  *       int Delta_zero = Delta_zero_
  *       int Delta_final = Delta_final_
  */
-  __pyx_t_1 = __Pyx_PyInt_As_int(__pyx_v_Delta_); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 194, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_As_int(__pyx_v_Delta_); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 196, __pyx_L1_error)
   __pyx_v_Delta = __pyx_t_1;
 
-  /* "cpp_lower_bounds.pyx":195
+  /* "cpp_lower_bounds.pyx":197
  *       double z_ub = z_ub_
  *       int Delta = Delta_
  *       int Delta_zero = Delta_zero_             # <<<<<<<<<<<<<<
  *       int Delta_final = Delta_final_
  *       double gamma = gamma_
  */
-  __pyx_t_1 = __Pyx_PyInt_As_int(__pyx_v_Delta_zero_); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 195, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_As_int(__pyx_v_Delta_zero_); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 197, __pyx_L1_error)
   __pyx_v_Delta_zero = __pyx_t_1;
 
-  /* "cpp_lower_bounds.pyx":196
+  /* "cpp_lower_bounds.pyx":198
  *       int Delta = Delta_
  *       int Delta_zero = Delta_zero_
  *       int Delta_final = Delta_final_             # <<<<<<<<<<<<<<
  *       double gamma = gamma_
  *       double gamma_zero = gamma_zero_
  */
-  __pyx_t_1 = __Pyx_PyInt_As_int(__pyx_v_Delta_final_); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 196, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_As_int(__pyx_v_Delta_final_); if (unlikely((__pyx_t_1 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 198, __pyx_L1_error)
   __pyx_v_Delta_final = __pyx_t_1;
 
-  /* "cpp_lower_bounds.pyx":197
+  /* "cpp_lower_bounds.pyx":199
  *       int Delta_zero = Delta_zero_
  *       int Delta_final = Delta_final_
  *       double gamma = gamma_             # <<<<<<<<<<<<<<
  *       double gamma_zero = gamma_zero_
  *       double gamma_final = gamma_final_
  */
-  __pyx_t_2 = __pyx_PyFloat_AsDouble(__pyx_v_gamma_); if (unlikely((__pyx_t_2 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 197, __pyx_L1_error)
+  __pyx_t_2 = __pyx_PyFloat_AsDouble(__pyx_v_gamma_); if (unlikely((__pyx_t_2 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 199, __pyx_L1_error)
   __pyx_v_gamma = __pyx_t_2;
 
-  /* "cpp_lower_bounds.pyx":198
+  /* "cpp_lower_bounds.pyx":200
  *       int Delta_final = Delta_final_
  *       double gamma = gamma_
  *       double gamma_zero = gamma_zero_             # <<<<<<<<<<<<<<
  *       double gamma_final = gamma_final_
  *       double epsilon = epsilon_
  */
-  __pyx_t_2 = __pyx_PyFloat_AsDouble(__pyx_v_gamma_zero_); if (unlikely((__pyx_t_2 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 198, __pyx_L1_error)
+  __pyx_t_2 = __pyx_PyFloat_AsDouble(__pyx_v_gamma_zero_); if (unlikely((__pyx_t_2 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 200, __pyx_L1_error)
   __pyx_v_gamma_zero = __pyx_t_2;
 
-  /* "cpp_lower_bounds.pyx":199
+  /* "cpp_lower_bounds.pyx":201
  *       double gamma = gamma_
  *       double gamma_zero = gamma_zero_
  *       double gamma_final = gamma_final_             # <<<<<<<<<<<<<<
  *       double epsilon = epsilon_
  *       vector[int] H = H_
  */
-  __pyx_t_2 = __pyx_PyFloat_AsDouble(__pyx_v_gamma_final_); if (unlikely((__pyx_t_2 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 199, __pyx_L1_error)
+  __pyx_t_2 = __pyx_PyFloat_AsDouble(__pyx_v_gamma_final_); if (unlikely((__pyx_t_2 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 201, __pyx_L1_error)
   __pyx_v_gamma_final = __pyx_t_2;
 
-  /* "cpp_lower_bounds.pyx":200
+  /* "cpp_lower_bounds.pyx":202
  *       double gamma_zero = gamma_zero_
  *       double gamma_final = gamma_final_
  *       double epsilon = epsilon_             # <<<<<<<<<<<<<<
  *       vector[int] H = H_
  *       vector[int] capacities = capacities_
  */
-  __pyx_t_2 = __pyx_PyFloat_AsDouble(__pyx_v_epsilon_); if (unlikely((__pyx_t_2 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 200, __pyx_L1_error)
+  __pyx_t_2 = __pyx_PyFloat_AsDouble(__pyx_v_epsilon_); if (unlikely((__pyx_t_2 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 202, __pyx_L1_error)
   __pyx_v_epsilon = __pyx_t_2;
 
-  /* "cpp_lower_bounds.pyx":201
+  /* "cpp_lower_bounds.pyx":203
  *       double gamma_final = gamma_final_
  *       double epsilon = epsilon_
  *       vector[int] H = H_             # <<<<<<<<<<<<<<
  *       vector[int] capacities = capacities_
  *       vector[int] N = N_
  */
-  __pyx_t_3 = __pyx_convert_vector_from_py_int(__pyx_v_H_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 201, __pyx_L1_error)
+  __pyx_t_3 = __pyx_convert_vector_from_py_int(__pyx_v_H_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 203, __pyx_L1_error)
   __pyx_v_H = __pyx_t_3;
 
-  /* "cpp_lower_bounds.pyx":202
+  /* "cpp_lower_bounds.pyx":204
  *       double epsilon = epsilon_
  *       vector[int] H = H_
  *       vector[int] capacities = capacities_             # <<<<<<<<<<<<<<
  *       vector[int] N = N_
  *       vector[int] quantities = quantities_
  */
-  __pyx_t_3 = __pyx_convert_vector_from_py_int(__pyx_v_capacities_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 202, __pyx_L1_error)
+  __pyx_t_3 = __pyx_convert_vector_from_py_int(__pyx_v_capacities_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 204, __pyx_L1_error)
   __pyx_v_capacities = __pyx_t_3;
 
-  /* "cpp_lower_bounds.pyx":203
+  /* "cpp_lower_bounds.pyx":205
  *       vector[int] H = H_
  *       vector[int] capacities = capacities_
  *       vector[int] N = N_             # <<<<<<<<<<<<<<
  *       vector[int] quantities = quantities_
  *       vector[vector[double]] geo_distance = geo_distance_
  */
-  __pyx_t_3 = __pyx_convert_vector_from_py_int(__pyx_v_N_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 203, __pyx_L1_error)
+  __pyx_t_3 = __pyx_convert_vector_from_py_int(__pyx_v_N_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 205, __pyx_L1_error)
   __pyx_v_N = __pyx_t_3;
 
-  /* "cpp_lower_bounds.pyx":204
+  /* "cpp_lower_bounds.pyx":206
  *       vector[int] capacities = capacities_
  *       vector[int] N = N_
  *       vector[int] quantities = quantities_             # <<<<<<<<<<<<<<
  *       vector[vector[double]] geo_distance = geo_distance_
  *       vector[int] n_trucks = n_trucks_
  */
-  __pyx_t_3 = __pyx_convert_vector_from_py_int(__pyx_v_quantities_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 204, __pyx_L1_error)
+  __pyx_t_3 = __pyx_convert_vector_from_py_int(__pyx_v_quantities_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 206, __pyx_L1_error)
   __pyx_v_quantities = __pyx_t_3;
 
-  /* "cpp_lower_bounds.pyx":205
+  /* "cpp_lower_bounds.pyx":207
  *       vector[int] N = N_
  *       vector[int] quantities = quantities_
  *       vector[vector[double]] geo_distance = geo_distance_             # <<<<<<<<<<<<<<
  *       vector[int] n_trucks = n_trucks_
- *    cdef vector[DualSolution] dual_solution = construct_lower_bound(iterations_grad_m1,iterations_grad_m2,iterations_m2,z_ub,Delta,Delta_zero,Delta_final,gamma,gamma_zero,gamma_final,epsilon,H,capacities,N,quantities,geo_distance,n_trucks)
+ *       vector[vector[double]] penalties = penalties_
  */
-  __pyx_t_4 = __pyx_convert_vector_from_py_std_3a__3a_vector_3c_double_3e___(__pyx_v_geo_distance_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 205, __pyx_L1_error)
+  __pyx_t_4 = __pyx_convert_vector_from_py_std_3a__3a_vector_3c_double_3e___(__pyx_v_geo_distance_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 207, __pyx_L1_error)
   __pyx_v_geo_distance = __pyx_t_4;
 
-  /* "cpp_lower_bounds.pyx":206
+  /* "cpp_lower_bounds.pyx":208
  *       vector[int] quantities = quantities_
  *       vector[vector[double]] geo_distance = geo_distance_
  *       vector[int] n_trucks = n_trucks_             # <<<<<<<<<<<<<<
- *    cdef vector[DualSolution] dual_solution = construct_lower_bound(iterations_grad_m1,iterations_grad_m2,iterations_m2,z_ub,Delta,Delta_zero,Delta_final,gamma,gamma_zero,gamma_final,epsilon,H,capacities,N,quantities,geo_distance,n_trucks)
- *    return dual_solution
+ *       vector[vector[double]] penalties = penalties_
+ *       double penalty_factor = penalty_factor_
  */
-  __pyx_t_3 = __pyx_convert_vector_from_py_int(__pyx_v_n_trucks_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 206, __pyx_L1_error)
+  __pyx_t_3 = __pyx_convert_vector_from_py_int(__pyx_v_n_trucks_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 208, __pyx_L1_error)
   __pyx_v_n_trucks = __pyx_t_3;
 
-  /* "cpp_lower_bounds.pyx":207
+  /* "cpp_lower_bounds.pyx":209
  *       vector[vector[double]] geo_distance = geo_distance_
  *       vector[int] n_trucks = n_trucks_
- *    cdef vector[DualSolution] dual_solution = construct_lower_bound(iterations_grad_m1,iterations_grad_m2,iterations_m2,z_ub,Delta,Delta_zero,Delta_final,gamma,gamma_zero,gamma_final,epsilon,H,capacities,N,quantities,geo_distance,n_trucks)             # <<<<<<<<<<<<<<
+ *       vector[vector[double]] penalties = penalties_             # <<<<<<<<<<<<<<
+ *       double penalty_factor = penalty_factor_
+ *    cdef vector[DualSolution] dual_solution = construct_lower_bound_wrapper(iterations_grad_m1,iterations_grad_m2,iterations_m2,z_ub,Delta,Delta_zero,Delta_final,gamma,gamma_zero,gamma_final,epsilon,H,capacities,N,quantities,geo_distance,n_trucks,penalties,penalty_factor)
+ */
+  __pyx_t_4 = __pyx_convert_vector_from_py_std_3a__3a_vector_3c_double_3e___(__pyx_v_penalties_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 209, __pyx_L1_error)
+  __pyx_v_penalties = __pyx_t_4;
+
+  /* "cpp_lower_bounds.pyx":210
+ *       vector[int] n_trucks = n_trucks_
+ *       vector[vector[double]] penalties = penalties_
+ *       double penalty_factor = penalty_factor_             # <<<<<<<<<<<<<<
+ *    cdef vector[DualSolution] dual_solution = construct_lower_bound_wrapper(iterations_grad_m1,iterations_grad_m2,iterations_m2,z_ub,Delta,Delta_zero,Delta_final,gamma,gamma_zero,gamma_final,epsilon,H,capacities,N,quantities,geo_distance,n_trucks,penalties,penalty_factor)
+ *    return dual_solution
+ */
+  __pyx_t_2 = __pyx_PyFloat_AsDouble(__pyx_v_penalty_factor_); if (unlikely((__pyx_t_2 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 210, __pyx_L1_error)
+  __pyx_v_penalty_factor = __pyx_t_2;
+
+  /* "cpp_lower_bounds.pyx":211
+ *       vector[vector[double]] penalties = penalties_
+ *       double penalty_factor = penalty_factor_
+ *    cdef vector[DualSolution] dual_solution = construct_lower_bound_wrapper(iterations_grad_m1,iterations_grad_m2,iterations_m2,z_ub,Delta,Delta_zero,Delta_final,gamma,gamma_zero,gamma_final,epsilon,H,capacities,N,quantities,geo_distance,n_trucks,penalties,penalty_factor)             # <<<<<<<<<<<<<<
  *    return dual_solution
  * 
  */
-  __pyx_v_dual_solution = construct_lower_bound(__pyx_v_iterations_grad_m1, __pyx_v_iterations_grad_m2, __pyx_v_iterations_m2, __pyx_v_z_ub, __pyx_v_Delta, __pyx_v_Delta_zero, __pyx_v_Delta_final, __pyx_v_gamma, __pyx_v_gamma_zero, __pyx_v_gamma_final, __pyx_v_epsilon, __pyx_v_H, __pyx_v_capacities, __pyx_v_N, __pyx_v_quantities, __pyx_v_geo_distance, __pyx_v_n_trucks);
+  __pyx_v_dual_solution = construct_lower_bound_wrapper(__pyx_v_iterations_grad_m1, __pyx_v_iterations_grad_m2, __pyx_v_iterations_m2, __pyx_v_z_ub, __pyx_v_Delta, __pyx_v_Delta_zero, __pyx_v_Delta_final, __pyx_v_gamma, __pyx_v_gamma_zero, __pyx_v_gamma_final, __pyx_v_epsilon, __pyx_v_H, __pyx_v_capacities, __pyx_v_N, __pyx_v_quantities, __pyx_v_geo_distance, __pyx_v_n_trucks, __pyx_v_penalties, __pyx_v_penalty_factor);
 
-  /* "cpp_lower_bounds.pyx":208
- *       vector[int] n_trucks = n_trucks_
- *    cdef vector[DualSolution] dual_solution = construct_lower_bound(iterations_grad_m1,iterations_grad_m2,iterations_m2,z_ub,Delta,Delta_zero,Delta_final,gamma,gamma_zero,gamma_final,epsilon,H,capacities,N,quantities,geo_distance,n_trucks)
+  /* "cpp_lower_bounds.pyx":212
+ *       double penalty_factor = penalty_factor_
+ *    cdef vector[DualSolution] dual_solution = construct_lower_bound_wrapper(iterations_grad_m1,iterations_grad_m2,iterations_m2,z_ub,Delta,Delta_zero,Delta_final,gamma,gamma_zero,gamma_final,epsilon,H,capacities,N,quantities,geo_distance,n_trucks,penalties,penalty_factor)
  *    return dual_solution             # <<<<<<<<<<<<<<
  * 
  * cpdef get_reduced_routes_(
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_5 = __pyx_convert_vector_to_py_struct__DualSolution(__pyx_v_dual_solution); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 208, __pyx_L1_error)
+  __pyx_t_5 = __pyx_convert_vector_to_py_struct__DualSolution(__pyx_v_dual_solution); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 212, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __pyx_r = __pyx_t_5;
   __pyx_t_5 = 0;
   goto __pyx_L0;
 
-  /* "cpp_lower_bounds.pyx":188
- *    return dual_solution
+  /* "cpp_lower_bounds.pyx":190
+ * #    return dual_solution
  * 
- * cpdef construct_lower_bound_(iterations_grad_m1_,iterations_grad_m2_,iterations_m2_,z_ub_,Delta_,Delta_zero_,Delta_final_,gamma_,gamma_zero_,gamma_final_,epsilon_,H_,capacities_,N_,quantities_,geo_distance_,n_trucks_):             # <<<<<<<<<<<<<<
+ * cpdef construct_lower_bound_wrapper_(iterations_grad_m1_,iterations_grad_m2_,iterations_m2_,z_ub_,Delta_,Delta_zero_,Delta_final_,gamma_,gamma_zero_,gamma_final_,epsilon_,H_,capacities_,N_,quantities_,geo_distance_,n_trucks_,penalties_,penalty_factor_):             # <<<<<<<<<<<<<<
  *    cdef:
  *       int iterations_grad_m1 = iterations_grad_m1_
  */
@@ -3243,7 +1982,7 @@ static PyObject *__pyx_f_16cpp_lower_bounds_construct_lower_bound_(PyObject *__p
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("cpp_lower_bounds.construct_lower_bound_", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cpp_lower_bounds.construct_lower_bound_wrapper_", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -3252,8 +1991,8 @@ static PyObject *__pyx_f_16cpp_lower_bounds_construct_lower_bound_(PyObject *__p
 }
 
 /* Python wrapper */
-static PyObject *__pyx_pw_16cpp_lower_bounds_9construct_lower_bound_(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_16cpp_lower_bounds_9construct_lower_bound_(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_16cpp_lower_bounds_1construct_lower_bound_wrapper_(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_16cpp_lower_bounds_1construct_lower_bound_wrapper_(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_iterations_grad_m1_ = 0;
   PyObject *__pyx_v_iterations_grad_m2_ = 0;
   PyObject *__pyx_v_iterations_m2_ = 0;
@@ -3271,16 +2010,22 @@ static PyObject *__pyx_pw_16cpp_lower_bounds_9construct_lower_bound_(PyObject *_
   PyObject *__pyx_v_quantities_ = 0;
   PyObject *__pyx_v_geo_distance_ = 0;
   PyObject *__pyx_v_n_trucks_ = 0;
+  PyObject *__pyx_v_penalties_ = 0;
+  PyObject *__pyx_v_penalty_factor_ = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("construct_lower_bound_ (wrapper)", 0);
+  __Pyx_RefNannySetupContext("construct_lower_bound_wrapper_ (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_iterations_grad_m1,&__pyx_n_s_iterations_grad_m2,&__pyx_n_s_iterations_m2,&__pyx_n_s_z_ub,&__pyx_n_s_Delta,&__pyx_n_s_Delta_zero,&__pyx_n_s_Delta_final,&__pyx_n_s_gamma,&__pyx_n_s_gamma_zero,&__pyx_n_s_gamma_final,&__pyx_n_s_epsilon,&__pyx_n_s_H,&__pyx_n_s_capacities,&__pyx_n_s_N,&__pyx_n_s_quantities,&__pyx_n_s_geo_distance,&__pyx_n_s_n_trucks,0};
-    PyObject* values[17] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_iterations_grad_m1,&__pyx_n_s_iterations_grad_m2,&__pyx_n_s_iterations_m2,&__pyx_n_s_z_ub,&__pyx_n_s_Delta,&__pyx_n_s_Delta_zero,&__pyx_n_s_Delta_final,&__pyx_n_s_gamma,&__pyx_n_s_gamma_zero,&__pyx_n_s_gamma_final,&__pyx_n_s_epsilon,&__pyx_n_s_H,&__pyx_n_s_capacities,&__pyx_n_s_N,&__pyx_n_s_quantities,&__pyx_n_s_geo_distance,&__pyx_n_s_n_trucks,&__pyx_n_s_penalties,&__pyx_n_s_penalty_factor,0};
+    PyObject* values[19] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
       switch (pos_args) {
+        case 19: values[18] = PyTuple_GET_ITEM(__pyx_args, 18);
+        CYTHON_FALLTHROUGH;
+        case 18: values[17] = PyTuple_GET_ITEM(__pyx_args, 17);
+        CYTHON_FALLTHROUGH;
         case 17: values[16] = PyTuple_GET_ITEM(__pyx_args, 16);
         CYTHON_FALLTHROUGH;
         case 16: values[15] = PyTuple_GET_ITEM(__pyx_args, 15);
@@ -3327,103 +2072,115 @@ static PyObject *__pyx_pw_16cpp_lower_bounds_9construct_lower_bound_(PyObject *_
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_iterations_grad_m2)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_", 1, 17, 17, 1); __PYX_ERR(0, 188, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_wrapper_", 1, 19, 19, 1); __PYX_ERR(0, 190, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_iterations_m2)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_", 1, 17, 17, 2); __PYX_ERR(0, 188, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_wrapper_", 1, 19, 19, 2); __PYX_ERR(0, 190, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_z_ub)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_", 1, 17, 17, 3); __PYX_ERR(0, 188, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_wrapper_", 1, 19, 19, 3); __PYX_ERR(0, 190, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Delta)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_", 1, 17, 17, 4); __PYX_ERR(0, 188, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_wrapper_", 1, 19, 19, 4); __PYX_ERR(0, 190, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
         if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Delta_zero)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_", 1, 17, 17, 5); __PYX_ERR(0, 188, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_wrapper_", 1, 19, 19, 5); __PYX_ERR(0, 190, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  6:
         if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Delta_final)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_", 1, 17, 17, 6); __PYX_ERR(0, 188, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_wrapper_", 1, 19, 19, 6); __PYX_ERR(0, 190, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  7:
         if (likely((values[7] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_gamma)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_", 1, 17, 17, 7); __PYX_ERR(0, 188, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_wrapper_", 1, 19, 19, 7); __PYX_ERR(0, 190, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  8:
         if (likely((values[8] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_gamma_zero)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_", 1, 17, 17, 8); __PYX_ERR(0, 188, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_wrapper_", 1, 19, 19, 8); __PYX_ERR(0, 190, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  9:
         if (likely((values[9] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_gamma_final)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_", 1, 17, 17, 9); __PYX_ERR(0, 188, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_wrapper_", 1, 19, 19, 9); __PYX_ERR(0, 190, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 10:
         if (likely((values[10] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_epsilon)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_", 1, 17, 17, 10); __PYX_ERR(0, 188, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_wrapper_", 1, 19, 19, 10); __PYX_ERR(0, 190, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 11:
         if (likely((values[11] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_H)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_", 1, 17, 17, 11); __PYX_ERR(0, 188, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_wrapper_", 1, 19, 19, 11); __PYX_ERR(0, 190, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 12:
         if (likely((values[12] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_capacities)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_", 1, 17, 17, 12); __PYX_ERR(0, 188, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_wrapper_", 1, 19, 19, 12); __PYX_ERR(0, 190, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 13:
         if (likely((values[13] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_N)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_", 1, 17, 17, 13); __PYX_ERR(0, 188, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_wrapper_", 1, 19, 19, 13); __PYX_ERR(0, 190, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 14:
         if (likely((values[14] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_quantities)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_", 1, 17, 17, 14); __PYX_ERR(0, 188, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_wrapper_", 1, 19, 19, 14); __PYX_ERR(0, 190, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 15:
         if (likely((values[15] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_geo_distance)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_", 1, 17, 17, 15); __PYX_ERR(0, 188, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_wrapper_", 1, 19, 19, 15); __PYX_ERR(0, 190, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case 16:
         if (likely((values[16] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_n_trucks)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_", 1, 17, 17, 16); __PYX_ERR(0, 188, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_wrapper_", 1, 19, 19, 16); __PYX_ERR(0, 190, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case 17:
+        if (likely((values[17] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_penalties)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_wrapper_", 1, 19, 19, 17); __PYX_ERR(0, 190, __pyx_L3_error)
+        }
+        CYTHON_FALLTHROUGH;
+        case 18:
+        if (likely((values[18] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_penalty_factor)) != 0)) kw_args--;
+        else {
+          __Pyx_RaiseArgtupleInvalid("construct_lower_bound_wrapper_", 1, 19, 19, 18); __PYX_ERR(0, 190, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "construct_lower_bound_") < 0)) __PYX_ERR(0, 188, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "construct_lower_bound_wrapper_") < 0)) __PYX_ERR(0, 190, __pyx_L3_error)
       }
-    } else if (PyTuple_GET_SIZE(__pyx_args) != 17) {
+    } else if (PyTuple_GET_SIZE(__pyx_args) != 19) {
       goto __pyx_L5_argtuple_error;
     } else {
       values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
@@ -3443,6 +2200,8 @@ static PyObject *__pyx_pw_16cpp_lower_bounds_9construct_lower_bound_(PyObject *_
       values[14] = PyTuple_GET_ITEM(__pyx_args, 14);
       values[15] = PyTuple_GET_ITEM(__pyx_args, 15);
       values[16] = PyTuple_GET_ITEM(__pyx_args, 16);
+      values[17] = PyTuple_GET_ITEM(__pyx_args, 17);
+      values[18] = PyTuple_GET_ITEM(__pyx_args, 18);
     }
     __pyx_v_iterations_grad_m1_ = values[0];
     __pyx_v_iterations_grad_m2_ = values[1];
@@ -3461,29 +2220,31 @@ static PyObject *__pyx_pw_16cpp_lower_bounds_9construct_lower_bound_(PyObject *_
     __pyx_v_quantities_ = values[14];
     __pyx_v_geo_distance_ = values[15];
     __pyx_v_n_trucks_ = values[16];
+    __pyx_v_penalties_ = values[17];
+    __pyx_v_penalty_factor_ = values[18];
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("construct_lower_bound_", 1, 17, 17, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 188, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("construct_lower_bound_wrapper_", 1, 19, 19, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 190, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("cpp_lower_bounds.construct_lower_bound_", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cpp_lower_bounds.construct_lower_bound_wrapper_", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_16cpp_lower_bounds_8construct_lower_bound_(__pyx_self, __pyx_v_iterations_grad_m1_, __pyx_v_iterations_grad_m2_, __pyx_v_iterations_m2_, __pyx_v_z_ub_, __pyx_v_Delta_, __pyx_v_Delta_zero_, __pyx_v_Delta_final_, __pyx_v_gamma_, __pyx_v_gamma_zero_, __pyx_v_gamma_final_, __pyx_v_epsilon_, __pyx_v_H_, __pyx_v_capacities_, __pyx_v_N_, __pyx_v_quantities_, __pyx_v_geo_distance_, __pyx_v_n_trucks_);
+  __pyx_r = __pyx_pf_16cpp_lower_bounds_construct_lower_bound_wrapper_(__pyx_self, __pyx_v_iterations_grad_m1_, __pyx_v_iterations_grad_m2_, __pyx_v_iterations_m2_, __pyx_v_z_ub_, __pyx_v_Delta_, __pyx_v_Delta_zero_, __pyx_v_Delta_final_, __pyx_v_gamma_, __pyx_v_gamma_zero_, __pyx_v_gamma_final_, __pyx_v_epsilon_, __pyx_v_H_, __pyx_v_capacities_, __pyx_v_N_, __pyx_v_quantities_, __pyx_v_geo_distance_, __pyx_v_n_trucks_, __pyx_v_penalties_, __pyx_v_penalty_factor_);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_16cpp_lower_bounds_8construct_lower_bound_(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_iterations_grad_m1_, PyObject *__pyx_v_iterations_grad_m2_, PyObject *__pyx_v_iterations_m2_, PyObject *__pyx_v_z_ub_, PyObject *__pyx_v_Delta_, PyObject *__pyx_v_Delta_zero_, PyObject *__pyx_v_Delta_final_, PyObject *__pyx_v_gamma_, PyObject *__pyx_v_gamma_zero_, PyObject *__pyx_v_gamma_final_, PyObject *__pyx_v_epsilon_, PyObject *__pyx_v_H_, PyObject *__pyx_v_capacities_, PyObject *__pyx_v_N_, PyObject *__pyx_v_quantities_, PyObject *__pyx_v_geo_distance_, PyObject *__pyx_v_n_trucks_) {
+static PyObject *__pyx_pf_16cpp_lower_bounds_construct_lower_bound_wrapper_(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_iterations_grad_m1_, PyObject *__pyx_v_iterations_grad_m2_, PyObject *__pyx_v_iterations_m2_, PyObject *__pyx_v_z_ub_, PyObject *__pyx_v_Delta_, PyObject *__pyx_v_Delta_zero_, PyObject *__pyx_v_Delta_final_, PyObject *__pyx_v_gamma_, PyObject *__pyx_v_gamma_zero_, PyObject *__pyx_v_gamma_final_, PyObject *__pyx_v_epsilon_, PyObject *__pyx_v_H_, PyObject *__pyx_v_capacities_, PyObject *__pyx_v_N_, PyObject *__pyx_v_quantities_, PyObject *__pyx_v_geo_distance_, PyObject *__pyx_v_n_trucks_, PyObject *__pyx_v_penalties_, PyObject *__pyx_v_penalty_factor_) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
-  __Pyx_RefNannySetupContext("construct_lower_bound_", 0);
+  __Pyx_RefNannySetupContext("construct_lower_bound_wrapper_", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_16cpp_lower_bounds_construct_lower_bound_(__pyx_v_iterations_grad_m1_, __pyx_v_iterations_grad_m2_, __pyx_v_iterations_m2_, __pyx_v_z_ub_, __pyx_v_Delta_, __pyx_v_Delta_zero_, __pyx_v_Delta_final_, __pyx_v_gamma_, __pyx_v_gamma_zero_, __pyx_v_gamma_final_, __pyx_v_epsilon_, __pyx_v_H_, __pyx_v_capacities_, __pyx_v_N_, __pyx_v_quantities_, __pyx_v_geo_distance_, __pyx_v_n_trucks_, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 188, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_16cpp_lower_bounds_construct_lower_bound_wrapper_(__pyx_v_iterations_grad_m1_, __pyx_v_iterations_grad_m2_, __pyx_v_iterations_m2_, __pyx_v_z_ub_, __pyx_v_Delta_, __pyx_v_Delta_zero_, __pyx_v_Delta_final_, __pyx_v_gamma_, __pyx_v_gamma_zero_, __pyx_v_gamma_final_, __pyx_v_epsilon_, __pyx_v_H_, __pyx_v_capacities_, __pyx_v_N_, __pyx_v_quantities_, __pyx_v_geo_distance_, __pyx_v_n_trucks_, __pyx_v_penalties_, __pyx_v_penalty_factor_, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 190, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -3492,7 +2253,7 @@ static PyObject *__pyx_pf_16cpp_lower_bounds_8construct_lower_bound_(CYTHON_UNUS
   /* function exit code */
   __pyx_L1_error:;
   __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_AddTraceback("cpp_lower_bounds.construct_lower_bound_", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("cpp_lower_bounds.construct_lower_bound_wrapper_", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -3500,7 +2261,7 @@ static PyObject *__pyx_pf_16cpp_lower_bounds_8construct_lower_bound_(CYTHON_UNUS
   return __pyx_r;
 }
 
-/* "cpp_lower_bounds.pyx":210
+/* "cpp_lower_bounds.pyx":214
  *    return dual_solution
  * 
  * cpdef get_reduced_routes_(             # <<<<<<<<<<<<<<
@@ -3508,7 +2269,7 @@ static PyObject *__pyx_pf_16cpp_lower_bounds_8construct_lower_bound_(CYTHON_UNUS
  *       Delta_,
  */
 
-static PyObject *__pyx_pw_16cpp_lower_bounds_11get_reduced_routes_(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_16cpp_lower_bounds_3get_reduced_routes_(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
 static PyObject *__pyx_f_16cpp_lower_bounds_get_reduced_routes_(PyObject *__pyx_v_z_ub_, PyObject *__pyx_v_Delta_, PyObject *__pyx_v_gamma_, PyObject *__pyx_v_H_, PyObject *__pyx_v_capacities_, PyObject *__pyx_v_N_, PyObject *__pyx_v_quantities_, PyObject *__pyx_v_geo_distance_, PyObject *__pyx_v_mu_, PyObject *__pyx_v_u_, CYTHON_UNUSED int __pyx_skip_dispatch) {
   double __pyx_v_z_ub;
   int __pyx_v_Delta;
@@ -3531,107 +2292,107 @@ static PyObject *__pyx_f_16cpp_lower_bounds_get_reduced_routes_(PyObject *__pyx_
   PyObject *__pyx_t_6 = NULL;
   __Pyx_RefNannySetupContext("get_reduced_routes_", 0);
 
-  /* "cpp_lower_bounds.pyx":222
+  /* "cpp_lower_bounds.pyx":226
  *       u_):
  *    cdef:
  *       double z_ub = z_ub_             # <<<<<<<<<<<<<<
  *       int Delta = Delta_
  *       double gamma = gamma_
  */
-  __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_v_z_ub_); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 222, __pyx_L1_error)
+  __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_v_z_ub_); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 226, __pyx_L1_error)
   __pyx_v_z_ub = __pyx_t_1;
 
-  /* "cpp_lower_bounds.pyx":223
+  /* "cpp_lower_bounds.pyx":227
  *    cdef:
  *       double z_ub = z_ub_
  *       int Delta = Delta_             # <<<<<<<<<<<<<<
  *       double gamma = gamma_
  *       vector[int] H = H_
  */
-  __pyx_t_2 = __Pyx_PyInt_As_int(__pyx_v_Delta_); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 223, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyInt_As_int(__pyx_v_Delta_); if (unlikely((__pyx_t_2 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 227, __pyx_L1_error)
   __pyx_v_Delta = __pyx_t_2;
 
-  /* "cpp_lower_bounds.pyx":224
+  /* "cpp_lower_bounds.pyx":228
  *       double z_ub = z_ub_
  *       int Delta = Delta_
  *       double gamma = gamma_             # <<<<<<<<<<<<<<
  *       vector[int] H = H_
  *       vector[int] capacities = capacities_
  */
-  __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_v_gamma_); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 224, __pyx_L1_error)
+  __pyx_t_1 = __pyx_PyFloat_AsDouble(__pyx_v_gamma_); if (unlikely((__pyx_t_1 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 228, __pyx_L1_error)
   __pyx_v_gamma = __pyx_t_1;
 
-  /* "cpp_lower_bounds.pyx":225
+  /* "cpp_lower_bounds.pyx":229
  *       int Delta = Delta_
  *       double gamma = gamma_
  *       vector[int] H = H_             # <<<<<<<<<<<<<<
  *       vector[int] capacities = capacities_
  *       vector[int] N = N_
  */
-  __pyx_t_3 = __pyx_convert_vector_from_py_int(__pyx_v_H_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 225, __pyx_L1_error)
+  __pyx_t_3 = __pyx_convert_vector_from_py_int(__pyx_v_H_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 229, __pyx_L1_error)
   __pyx_v_H = __pyx_t_3;
 
-  /* "cpp_lower_bounds.pyx":226
+  /* "cpp_lower_bounds.pyx":230
  *       double gamma = gamma_
  *       vector[int] H = H_
  *       vector[int] capacities = capacities_             # <<<<<<<<<<<<<<
  *       vector[int] N = N_
  *       vector[int] quantities = quantities_
  */
-  __pyx_t_3 = __pyx_convert_vector_from_py_int(__pyx_v_capacities_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 226, __pyx_L1_error)
+  __pyx_t_3 = __pyx_convert_vector_from_py_int(__pyx_v_capacities_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 230, __pyx_L1_error)
   __pyx_v_capacities = __pyx_t_3;
 
-  /* "cpp_lower_bounds.pyx":227
+  /* "cpp_lower_bounds.pyx":231
  *       vector[int] H = H_
  *       vector[int] capacities = capacities_
  *       vector[int] N = N_             # <<<<<<<<<<<<<<
  *       vector[int] quantities = quantities_
  *       vector[vector[double]] geo_distance = geo_distance_
  */
-  __pyx_t_3 = __pyx_convert_vector_from_py_int(__pyx_v_N_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 227, __pyx_L1_error)
+  __pyx_t_3 = __pyx_convert_vector_from_py_int(__pyx_v_N_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 231, __pyx_L1_error)
   __pyx_v_N = __pyx_t_3;
 
-  /* "cpp_lower_bounds.pyx":228
+  /* "cpp_lower_bounds.pyx":232
  *       vector[int] capacities = capacities_
  *       vector[int] N = N_
  *       vector[int] quantities = quantities_             # <<<<<<<<<<<<<<
  *       vector[vector[double]] geo_distance = geo_distance_
  *       vector[double] mu = mu_
  */
-  __pyx_t_3 = __pyx_convert_vector_from_py_int(__pyx_v_quantities_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 228, __pyx_L1_error)
+  __pyx_t_3 = __pyx_convert_vector_from_py_int(__pyx_v_quantities_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 232, __pyx_L1_error)
   __pyx_v_quantities = __pyx_t_3;
 
-  /* "cpp_lower_bounds.pyx":229
+  /* "cpp_lower_bounds.pyx":233
  *       vector[int] N = N_
  *       vector[int] quantities = quantities_
  *       vector[vector[double]] geo_distance = geo_distance_             # <<<<<<<<<<<<<<
  *       vector[double] mu = mu_
  *       vector[double] u = u_
  */
-  __pyx_t_4 = __pyx_convert_vector_from_py_std_3a__3a_vector_3c_double_3e___(__pyx_v_geo_distance_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 229, __pyx_L1_error)
+  __pyx_t_4 = __pyx_convert_vector_from_py_std_3a__3a_vector_3c_double_3e___(__pyx_v_geo_distance_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 233, __pyx_L1_error)
   __pyx_v_geo_distance = __pyx_t_4;
 
-  /* "cpp_lower_bounds.pyx":230
+  /* "cpp_lower_bounds.pyx":234
  *       vector[int] quantities = quantities_
  *       vector[vector[double]] geo_distance = geo_distance_
  *       vector[double] mu = mu_             # <<<<<<<<<<<<<<
  *       vector[double] u = u_
  *    cdef vector[list[SimpleRoute]] reduced_routes = get_reduced_routes(
  */
-  __pyx_t_5 = __pyx_convert_vector_from_py_double(__pyx_v_mu_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 230, __pyx_L1_error)
+  __pyx_t_5 = __pyx_convert_vector_from_py_double(__pyx_v_mu_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 234, __pyx_L1_error)
   __pyx_v_mu = __pyx_t_5;
 
-  /* "cpp_lower_bounds.pyx":231
+  /* "cpp_lower_bounds.pyx":235
  *       vector[vector[double]] geo_distance = geo_distance_
  *       vector[double] mu = mu_
  *       vector[double] u = u_             # <<<<<<<<<<<<<<
  *    cdef vector[list[SimpleRoute]] reduced_routes = get_reduced_routes(
  *       z_ub,
  */
-  __pyx_t_5 = __pyx_convert_vector_from_py_double(__pyx_v_u_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 231, __pyx_L1_error)
+  __pyx_t_5 = __pyx_convert_vector_from_py_double(__pyx_v_u_); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 235, __pyx_L1_error)
   __pyx_v_u = __pyx_t_5;
 
-  /* "cpp_lower_bounds.pyx":232
+  /* "cpp_lower_bounds.pyx":236
  *       vector[double] mu = mu_
  *       vector[double] u = u_
  *    cdef vector[list[SimpleRoute]] reduced_routes = get_reduced_routes(             # <<<<<<<<<<<<<<
@@ -3640,20 +2401,20 @@ static PyObject *__pyx_f_16cpp_lower_bounds_get_reduced_routes_(PyObject *__pyx_
  */
   __pyx_v_reduced_routes = get_reduced_routes(__pyx_v_z_ub, __pyx_v_Delta, __pyx_v_gamma, __pyx_v_H, __pyx_v_capacities, __pyx_v_N, __pyx_v_quantities, __pyx_v_geo_distance, __pyx_v_mu, __pyx_v_u);
 
-  /* "cpp_lower_bounds.pyx":244
+  /* "cpp_lower_bounds.pyx":248
  *       u
  *    )
  *    return reduced_routes             # <<<<<<<<<<<<<<
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_6 = __pyx_convert_vector_to_py_std_3a__3a_list_3c_struct__SimpleRoute_3e___(__pyx_v_reduced_routes); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 244, __pyx_L1_error)
+  __pyx_t_6 = __pyx_convert_vector_to_py_std_3a__3a_list_3c_struct__SimpleRoute_3e___(__pyx_v_reduced_routes); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 248, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __pyx_r = __pyx_t_6;
   __pyx_t_6 = 0;
   goto __pyx_L0;
 
-  /* "cpp_lower_bounds.pyx":210
+  /* "cpp_lower_bounds.pyx":214
  *    return dual_solution
  * 
  * cpdef get_reduced_routes_(             # <<<<<<<<<<<<<<
@@ -3673,8 +2434,8 @@ static PyObject *__pyx_f_16cpp_lower_bounds_get_reduced_routes_(PyObject *__pyx_
 }
 
 /* Python wrapper */
-static PyObject *__pyx_pw_16cpp_lower_bounds_11get_reduced_routes_(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_16cpp_lower_bounds_11get_reduced_routes_(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_16cpp_lower_bounds_3get_reduced_routes_(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_16cpp_lower_bounds_3get_reduced_routes_(PyObject *__pyx_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_z_ub_ = 0;
   PyObject *__pyx_v_Delta_ = 0;
   PyObject *__pyx_v_gamma_ = 0;
@@ -3727,59 +2488,59 @@ static PyObject *__pyx_pw_16cpp_lower_bounds_11get_reduced_routes_(PyObject *__p
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_Delta)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("get_reduced_routes_", 1, 10, 10, 1); __PYX_ERR(0, 210, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_reduced_routes_", 1, 10, 10, 1); __PYX_ERR(0, 214, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_gamma)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("get_reduced_routes_", 1, 10, 10, 2); __PYX_ERR(0, 210, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_reduced_routes_", 1, 10, 10, 2); __PYX_ERR(0, 214, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_H)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("get_reduced_routes_", 1, 10, 10, 3); __PYX_ERR(0, 210, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_reduced_routes_", 1, 10, 10, 3); __PYX_ERR(0, 214, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_capacities)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("get_reduced_routes_", 1, 10, 10, 4); __PYX_ERR(0, 210, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_reduced_routes_", 1, 10, 10, 4); __PYX_ERR(0, 214, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
         if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_N)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("get_reduced_routes_", 1, 10, 10, 5); __PYX_ERR(0, 210, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_reduced_routes_", 1, 10, 10, 5); __PYX_ERR(0, 214, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  6:
         if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_quantities)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("get_reduced_routes_", 1, 10, 10, 6); __PYX_ERR(0, 210, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_reduced_routes_", 1, 10, 10, 6); __PYX_ERR(0, 214, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  7:
         if (likely((values[7] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_geo_distance)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("get_reduced_routes_", 1, 10, 10, 7); __PYX_ERR(0, 210, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_reduced_routes_", 1, 10, 10, 7); __PYX_ERR(0, 214, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  8:
         if (likely((values[8] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_mu)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("get_reduced_routes_", 1, 10, 10, 8); __PYX_ERR(0, 210, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_reduced_routes_", 1, 10, 10, 8); __PYX_ERR(0, 214, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  9:
         if (likely((values[9] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_u)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("get_reduced_routes_", 1, 10, 10, 9); __PYX_ERR(0, 210, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("get_reduced_routes_", 1, 10, 10, 9); __PYX_ERR(0, 214, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "get_reduced_routes_") < 0)) __PYX_ERR(0, 210, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "get_reduced_routes_") < 0)) __PYX_ERR(0, 214, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 10) {
       goto __pyx_L5_argtuple_error;
@@ -3808,26 +2569,26 @@ static PyObject *__pyx_pw_16cpp_lower_bounds_11get_reduced_routes_(PyObject *__p
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("get_reduced_routes_", 1, 10, 10, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 210, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("get_reduced_routes_", 1, 10, 10, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 214, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("cpp_lower_bounds.get_reduced_routes_", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_16cpp_lower_bounds_10get_reduced_routes_(__pyx_self, __pyx_v_z_ub_, __pyx_v_Delta_, __pyx_v_gamma_, __pyx_v_H_, __pyx_v_capacities_, __pyx_v_N_, __pyx_v_quantities_, __pyx_v_geo_distance_, __pyx_v_mu_, __pyx_v_u_);
+  __pyx_r = __pyx_pf_16cpp_lower_bounds_2get_reduced_routes_(__pyx_self, __pyx_v_z_ub_, __pyx_v_Delta_, __pyx_v_gamma_, __pyx_v_H_, __pyx_v_capacities_, __pyx_v_N_, __pyx_v_quantities_, __pyx_v_geo_distance_, __pyx_v_mu_, __pyx_v_u_);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_16cpp_lower_bounds_10get_reduced_routes_(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_z_ub_, PyObject *__pyx_v_Delta_, PyObject *__pyx_v_gamma_, PyObject *__pyx_v_H_, PyObject *__pyx_v_capacities_, PyObject *__pyx_v_N_, PyObject *__pyx_v_quantities_, PyObject *__pyx_v_geo_distance_, PyObject *__pyx_v_mu_, PyObject *__pyx_v_u_) {
+static PyObject *__pyx_pf_16cpp_lower_bounds_2get_reduced_routes_(CYTHON_UNUSED PyObject *__pyx_self, PyObject *__pyx_v_z_ub_, PyObject *__pyx_v_Delta_, PyObject *__pyx_v_gamma_, PyObject *__pyx_v_H_, PyObject *__pyx_v_capacities_, PyObject *__pyx_v_N_, PyObject *__pyx_v_quantities_, PyObject *__pyx_v_geo_distance_, PyObject *__pyx_v_mu_, PyObject *__pyx_v_u_) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   __Pyx_RefNannySetupContext("get_reduced_routes_", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_16cpp_lower_bounds_get_reduced_routes_(__pyx_v_z_ub_, __pyx_v_Delta_, __pyx_v_gamma_, __pyx_v_H_, __pyx_v_capacities_, __pyx_v_N_, __pyx_v_quantities_, __pyx_v_geo_distance_, __pyx_v_mu_, __pyx_v_u_, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 210, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_16cpp_lower_bounds_get_reduced_routes_(__pyx_v_z_ub_, __pyx_v_Delta_, __pyx_v_gamma_, __pyx_v_H_, __pyx_v_capacities_, __pyx_v_N_, __pyx_v_quantities_, __pyx_v_geo_distance_, __pyx_v_mu_, __pyx_v_u_, 0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 214, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -6647,171 +5408,6 @@ static std::vector<std::vector<double> >  __pyx_convert_vector_from_py_std_3a__3
   return __pyx_r;
 }
 
-/* "map.from_py":174
- * 
- * @cname("__pyx_convert_map_from_py_int__and_int")
- * cdef map[X,Y] __pyx_convert_map_from_py_int__and_int(object o) except *:             # <<<<<<<<<<<<<<
- *     cdef dict d = o
- *     cdef map[X,Y] m
- */
-
-static std::map<int,int>  __pyx_convert_map_from_py_int__and_int(PyObject *__pyx_v_o) {
-  PyObject *__pyx_v_d = 0;
-  std::map<int,int>  __pyx_v_m;
-  PyObject *__pyx_v_key = NULL;
-  PyObject *__pyx_v_value = NULL;
-  std::map<int,int>  __pyx_r;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  Py_ssize_t __pyx_t_2;
-  Py_ssize_t __pyx_t_3;
-  int __pyx_t_4;
-  PyObject *__pyx_t_5 = NULL;
-  PyObject *__pyx_t_6 = NULL;
-  int __pyx_t_7;
-  int __pyx_t_8;
-  __Pyx_RefNannySetupContext("__pyx_convert_map_from_py_int__and_int", 0);
-
-  /* "map.from_py":175
- * @cname("__pyx_convert_map_from_py_int__and_int")
- * cdef map[X,Y] __pyx_convert_map_from_py_int__and_int(object o) except *:
- *     cdef dict d = o             # <<<<<<<<<<<<<<
- *     cdef map[X,Y] m
- *     for key, value in d.iteritems():
- */
-  if (!(likely(PyDict_CheckExact(__pyx_v_o))||((__pyx_v_o) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "dict", Py_TYPE(__pyx_v_o)->tp_name), 0))) __PYX_ERR(2, 175, __pyx_L1_error)
-  __pyx_t_1 = __pyx_v_o;
-  __Pyx_INCREF(__pyx_t_1);
-  __pyx_v_d = ((PyObject*)__pyx_t_1);
-  __pyx_t_1 = 0;
-
-  /* "map.from_py":177
- *     cdef dict d = o
- *     cdef map[X,Y] m
- *     for key, value in d.iteritems():             # <<<<<<<<<<<<<<
- *         m.insert(pair[X,Y](<X>key, <Y>value))
- *     return m
- */
-  __pyx_t_2 = 0;
-  if (unlikely(__pyx_v_d == Py_None)) {
-    PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "iteritems");
-    __PYX_ERR(2, 177, __pyx_L1_error)
-  }
-  __pyx_t_5 = __Pyx_dict_iterator(__pyx_v_d, 1, __pyx_n_s_iteritems, (&__pyx_t_3), (&__pyx_t_4)); if (unlikely(!__pyx_t_5)) __PYX_ERR(2, 177, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_5);
-  __Pyx_XDECREF(__pyx_t_1);
-  __pyx_t_1 = __pyx_t_5;
-  __pyx_t_5 = 0;
-  while (1) {
-    __pyx_t_7 = __Pyx_dict_iter_next(__pyx_t_1, __pyx_t_3, &__pyx_t_2, &__pyx_t_5, &__pyx_t_6, NULL, __pyx_t_4);
-    if (unlikely(__pyx_t_7 == 0)) break;
-    if (unlikely(__pyx_t_7 == -1)) __PYX_ERR(2, 177, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    __Pyx_GOTREF(__pyx_t_6);
-    __Pyx_XDECREF_SET(__pyx_v_key, __pyx_t_5);
-    __pyx_t_5 = 0;
-    __Pyx_XDECREF_SET(__pyx_v_value, __pyx_t_6);
-    __pyx_t_6 = 0;
-
-    /* "map.from_py":178
- *     cdef map[X,Y] m
- *     for key, value in d.iteritems():
- *         m.insert(pair[X,Y](<X>key, <Y>value))             # <<<<<<<<<<<<<<
- *     return m
- * 
- */
-    __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_v_key); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(2, 178, __pyx_L1_error)
-    __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_v_value); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(2, 178, __pyx_L1_error)
-    __pyx_v_m.insert(std::pair<int,int> (((int)__pyx_t_7), ((int)__pyx_t_8)));
-  }
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "map.from_py":179
- *     for key, value in d.iteritems():
- *         m.insert(pair[X,Y](<X>key, <Y>value))
- *     return m             # <<<<<<<<<<<<<<
- * 
- * 
- */
-  __pyx_r = __pyx_v_m;
-  goto __pyx_L0;
-
-  /* "map.from_py":174
- * 
- * @cname("__pyx_convert_map_from_py_int__and_int")
- * cdef map[X,Y] __pyx_convert_map_from_py_int__and_int(object o) except *:             # <<<<<<<<<<<<<<
- *     cdef dict d = o
- *     cdef map[X,Y] m
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_XDECREF(__pyx_t_6);
-  __Pyx_AddTraceback("map.from_py.__pyx_convert_map_from_py_int__and_int", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_pretend_to_initialize(&__pyx_r);
-  __pyx_L0:;
-  __Pyx_XDECREF(__pyx_v_d);
-  __Pyx_XDECREF(__pyx_v_key);
-  __Pyx_XDECREF(__pyx_v_value);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-/* "string.from_py":13
- * 
- * @cname("__pyx_convert_string_from_py_std__in_string")
- * cdef string __pyx_convert_string_from_py_std__in_string(object o) except *:             # <<<<<<<<<<<<<<
- *     cdef Py_ssize_t length
- *     cdef const char* data = __Pyx_PyObject_AsStringAndSize(o, &length)
- */
-
-static std::string __pyx_convert_string_from_py_std__in_string(PyObject *__pyx_v_o) {
-  Py_ssize_t __pyx_v_length;
-  char const *__pyx_v_data;
-  std::string __pyx_r;
-  __Pyx_RefNannyDeclarations
-  char const *__pyx_t_1;
-  __Pyx_RefNannySetupContext("__pyx_convert_string_from_py_std__in_string", 0);
-
-  /* "string.from_py":15
- * cdef string __pyx_convert_string_from_py_std__in_string(object o) except *:
- *     cdef Py_ssize_t length
- *     cdef const char* data = __Pyx_PyObject_AsStringAndSize(o, &length)             # <<<<<<<<<<<<<<
- *     return string(data, length)
- * 
- */
-  __pyx_t_1 = __Pyx_PyObject_AsStringAndSize(__pyx_v_o, (&__pyx_v_length)); if (unlikely(__pyx_t_1 == ((char const *)NULL))) __PYX_ERR(2, 15, __pyx_L1_error)
-  __pyx_v_data = __pyx_t_1;
-
-  /* "string.from_py":16
- *     cdef Py_ssize_t length
- *     cdef const char* data = __Pyx_PyObject_AsStringAndSize(o, &length)
- *     return string(data, length)             # <<<<<<<<<<<<<<
- * 
- * 
- */
-  __pyx_r = std::string(__pyx_v_data, __pyx_v_length);
-  goto __pyx_L0;
-
-  /* "string.from_py":13
- * 
- * @cname("__pyx_convert_string_from_py_std__in_string")
- * cdef string __pyx_convert_string_from_py_std__in_string(object o) except *:             # <<<<<<<<<<<<<<
- *     cdef Py_ssize_t length
- *     cdef const char* data = __Pyx_PyObject_AsStringAndSize(o, &length)
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_AddTraceback("string.from_py.__pyx_convert_string_from_py_std__in_string", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __Pyx_pretend_to_initialize(&__pyx_r);
-  __pyx_L0:;
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
 /* "vector.to_py":60
  * 
  * @cname("__pyx_convert_vector_to_py_double")
@@ -6867,222 +5463,6 @@ static PyObject *__pyx_convert_vector_to_py_double(const std::vector<double>  &_
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_5);
   __Pyx_AddTraceback("vector.to_py.__pyx_convert_vector_to_py_double", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = 0;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_convert_vector_to_py_std_3a__3a_vector_3c_double_3e___(const std::vector<std::vector<double> >  &__pyx_v_v) {
-  size_t __pyx_v_i;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  size_t __pyx_t_2;
-  size_t __pyx_t_3;
-  size_t __pyx_t_4;
-  PyObject *__pyx_t_5 = NULL;
-  __Pyx_RefNannySetupContext("__pyx_convert_vector_to_py_std_3a__3a_vector_3c_double_3e___", 0);
-
-  /* "vector.to_py":61
- * @cname("__pyx_convert_vector_to_py_std_3a__3a_vector_3c_double_3e___")
- * cdef object __pyx_convert_vector_to_py_std_3a__3a_vector_3c_double_3e___(vector[X]& v):
- *     return [v[i] for i in range(v.size())]             # <<<<<<<<<<<<<<
- * 
- * 
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 61, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __pyx_v_v.size();
-  __pyx_t_3 = __pyx_t_2;
-  for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
-    __pyx_v_i = __pyx_t_4;
-    __pyx_t_5 = __pyx_convert_vector_to_py_double((__pyx_v_v[__pyx_v_i])); if (unlikely(!__pyx_t_5)) __PYX_ERR(2, 61, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_5))) __PYX_ERR(2, 61, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  }
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* "vector.to_py":60
- * 
- * @cname("__pyx_convert_vector_to_py_std_3a__3a_vector_3c_double_3e___")
- * cdef object __pyx_convert_vector_to_py_std_3a__3a_vector_3c_double_3e___(vector[X]& v):             # <<<<<<<<<<<<<<
- *     return [v[i] for i in range(v.size())]
- * 
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("vector.to_py.__pyx_convert_vector_to_py_std_3a__3a_vector_3c_double_3e___", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = 0;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_convert_vector_to_py_int(const std::vector<int>  &__pyx_v_v) {
-  size_t __pyx_v_i;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  size_t __pyx_t_2;
-  size_t __pyx_t_3;
-  size_t __pyx_t_4;
-  PyObject *__pyx_t_5 = NULL;
-  __Pyx_RefNannySetupContext("__pyx_convert_vector_to_py_int", 0);
-
-  /* "vector.to_py":61
- * @cname("__pyx_convert_vector_to_py_int")
- * cdef object __pyx_convert_vector_to_py_int(vector[X]& v):
- *     return [v[i] for i in range(v.size())]             # <<<<<<<<<<<<<<
- * 
- * 
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 61, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __pyx_v_v.size();
-  __pyx_t_3 = __pyx_t_2;
-  for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
-    __pyx_v_i = __pyx_t_4;
-    __pyx_t_5 = __Pyx_PyInt_From_int((__pyx_v_v[__pyx_v_i])); if (unlikely(!__pyx_t_5)) __PYX_ERR(2, 61, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_5))) __PYX_ERR(2, 61, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  }
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* "vector.to_py":60
- * 
- * @cname("__pyx_convert_vector_to_py_int")
- * cdef object __pyx_convert_vector_to_py_int(vector[X]& v):             # <<<<<<<<<<<<<<
- *     return [v[i] for i in range(v.size())]
- * 
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("vector.to_py.__pyx_convert_vector_to_py_int", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = 0;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_convert_vector_to_py_std_3a__3a_vector_3c_int_3e___(const std::vector<std::vector<int> >  &__pyx_v_v) {
-  size_t __pyx_v_i;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  size_t __pyx_t_2;
-  size_t __pyx_t_3;
-  size_t __pyx_t_4;
-  PyObject *__pyx_t_5 = NULL;
-  __Pyx_RefNannySetupContext("__pyx_convert_vector_to_py_std_3a__3a_vector_3c_int_3e___", 0);
-
-  /* "vector.to_py":61
- * @cname("__pyx_convert_vector_to_py_std_3a__3a_vector_3c_int_3e___")
- * cdef object __pyx_convert_vector_to_py_std_3a__3a_vector_3c_int_3e___(vector[X]& v):
- *     return [v[i] for i in range(v.size())]             # <<<<<<<<<<<<<<
- * 
- * 
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 61, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __pyx_v_v.size();
-  __pyx_t_3 = __pyx_t_2;
-  for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
-    __pyx_v_i = __pyx_t_4;
-    __pyx_t_5 = __pyx_convert_vector_to_py_int((__pyx_v_v[__pyx_v_i])); if (unlikely(!__pyx_t_5)) __PYX_ERR(2, 61, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_5))) __PYX_ERR(2, 61, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  }
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* "vector.to_py":60
- * 
- * @cname("__pyx_convert_vector_to_py_std_3a__3a_vector_3c_int_3e___")
- * cdef object __pyx_convert_vector_to_py_std_3a__3a_vector_3c_int_3e___(vector[X]& v):             # <<<<<<<<<<<<<<
- *     return [v[i] for i in range(v.size())]
- * 
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("vector.to_py.__pyx_convert_vector_to_py_std_3a__3a_vector_3c_int_3e___", __pyx_clineno, __pyx_lineno, __pyx_filename);
-  __pyx_r = 0;
-  __pyx_L0:;
-  __Pyx_XGIVEREF(__pyx_r);
-  __Pyx_RefNannyFinishContext();
-  return __pyx_r;
-}
-
-static PyObject *__pyx_convert_vector_to_py_std_3a__3a_vector_3c_std_3a__3a_vector_3c_int_3e____3e___(const std::vector<std::vector<std::vector<int> > >  &__pyx_v_v) {
-  size_t __pyx_v_i;
-  PyObject *__pyx_r = NULL;
-  __Pyx_RefNannyDeclarations
-  PyObject *__pyx_t_1 = NULL;
-  size_t __pyx_t_2;
-  size_t __pyx_t_3;
-  size_t __pyx_t_4;
-  PyObject *__pyx_t_5 = NULL;
-  __Pyx_RefNannySetupContext("__pyx_convert_vector_to_py_std_3a__3a_vector_3c_std_3a__3a_vector_3c_int_3e____3e___", 0);
-
-  /* "vector.to_py":61
- * @cname("__pyx_convert_vector_to_py_std_3a__3a_vector_3c_std_3a__3a_vector_3c_int_3e____3e___")
- * cdef object __pyx_convert_vector_to_py_std_3a__3a_vector_3c_std_3a__3a_vector_3c_int_3e____3e___(vector[X]& v):
- *     return [v[i] for i in range(v.size())]             # <<<<<<<<<<<<<<
- * 
- * 
- */
-  __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(2, 61, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __pyx_v_v.size();
-  __pyx_t_3 = __pyx_t_2;
-  for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
-    __pyx_v_i = __pyx_t_4;
-    __pyx_t_5 = __pyx_convert_vector_to_py_std_3a__3a_vector_3c_int_3e___((__pyx_v_v[__pyx_v_i])); if (unlikely(!__pyx_t_5)) __PYX_ERR(2, 61, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_5);
-    if (unlikely(__Pyx_ListComp_Append(__pyx_t_1, (PyObject*)__pyx_t_5))) __PYX_ERR(2, 61, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  }
-  __pyx_r = __pyx_t_1;
-  __pyx_t_1 = 0;
-  goto __pyx_L0;
-
-  /* "vector.to_py":60
- * 
- * @cname("__pyx_convert_vector_to_py_std_3a__3a_vector_3c_std_3a__3a_vector_3c_int_3e____3e___")
- * cdef object __pyx_convert_vector_to_py_std_3a__3a_vector_3c_std_3a__3a_vector_3c_int_3e____3e___(vector[X]& v):             # <<<<<<<<<<<<<<
- *     return [v[i] for i in range(v.size())]
- * 
- */
-
-  /* function exit code */
-  __pyx_L1_error:;
-  __Pyx_XDECREF(__pyx_t_1);
-  __Pyx_XDECREF(__pyx_t_5);
-  __Pyx_AddTraceback("vector.to_py.__pyx_convert_vector_to_py_std_3a__3a_vector_3c_std_3a__3a_vector_3c_int_3e____3e___", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = 0;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -7407,12 +5787,8 @@ static PyObject *__pyx_convert_vector_to_py_struct__DualSolution(const std::vect
 }
 
 static PyMethodDef __pyx_methods[] = {
-  {"construct_q_paths", (PyCFunction)__pyx_pw_16cpp_lower_bounds_1construct_q_paths, METH_VARARGS|METH_KEYWORDS, 0},
-  {"construct_q_routes", (PyCFunction)__pyx_pw_16cpp_lower_bounds_3construct_q_routes, METH_VARARGS|METH_KEYWORDS, 0},
-  {"lower_bound", (PyCFunction)__pyx_pw_16cpp_lower_bounds_5lower_bound, METH_VARARGS|METH_KEYWORDS, 0},
-  {"lower_bound_optimizer_M1_", (PyCFunction)__pyx_pw_16cpp_lower_bounds_7lower_bound_optimizer_M1_, METH_VARARGS|METH_KEYWORDS, 0},
-  {"construct_lower_bound_", (PyCFunction)__pyx_pw_16cpp_lower_bounds_9construct_lower_bound_, METH_VARARGS|METH_KEYWORDS, 0},
-  {"get_reduced_routes_", (PyCFunction)__pyx_pw_16cpp_lower_bounds_11get_reduced_routes_, METH_VARARGS|METH_KEYWORDS, 0},
+  {"construct_lower_bound_wrapper_", (PyCFunction)__pyx_pw_16cpp_lower_bounds_1construct_lower_bound_wrapper_, METH_VARARGS|METH_KEYWORDS, 0},
+  {"get_reduced_routes_", (PyCFunction)__pyx_pw_16cpp_lower_bounds_3get_reduced_routes_, METH_VARARGS|METH_KEYWORDS, 0},
   {0, 0, 0, 0}
 };
 
@@ -7463,28 +5839,21 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_capacities, __pyx_k_capacities, sizeof(__pyx_k_capacities), 0, 0, 1, 1},
   {&__pyx_n_s_cline_in_traceback, __pyx_k_cline_in_traceback, sizeof(__pyx_k_cline_in_traceback), 0, 0, 1, 1},
   {&__pyx_n_s_cost, __pyx_k_cost, sizeof(__pyx_k_cost), 0, 0, 1, 1},
-  {&__pyx_n_s_direction, __pyx_k_direction, sizeof(__pyx_k_direction), 0, 0, 1, 1},
-  {&__pyx_n_s_distance, __pyx_k_distance, sizeof(__pyx_k_distance), 0, 0, 1, 1},
   {&__pyx_n_s_epsilon, __pyx_k_epsilon, sizeof(__pyx_k_epsilon), 0, 0, 1, 1},
-  {&__pyx_n_s_f, __pyx_k_f, sizeof(__pyx_k_f), 0, 0, 1, 1},
   {&__pyx_n_s_gamma, __pyx_k_gamma, sizeof(__pyx_k_gamma), 0, 0, 1, 1},
   {&__pyx_n_s_gamma_final, __pyx_k_gamma_final, sizeof(__pyx_k_gamma_final), 0, 0, 1, 1},
   {&__pyx_n_s_gamma_guarantee, __pyx_k_gamma_guarantee, sizeof(__pyx_k_gamma_guarantee), 0, 0, 1, 1},
   {&__pyx_n_s_gamma_zero, __pyx_k_gamma_zero, sizeof(__pyx_k_gamma_zero), 0, 0, 1, 1},
   {&__pyx_n_s_geo_cost, __pyx_k_geo_cost, sizeof(__pyx_k_geo_cost), 0, 0, 1, 1},
   {&__pyx_n_s_geo_distance, __pyx_k_geo_distance, sizeof(__pyx_k_geo_distance), 0, 0, 1, 1},
-  {&__pyx_n_s_h, __pyx_k_h, sizeof(__pyx_k_h), 0, 0, 1, 1},
   {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
   {&__pyx_n_s_index_l, __pyx_k_index_l, sizeof(__pyx_k_index_l), 0, 0, 1, 1},
   {&__pyx_n_s_index_r, __pyx_k_index_r, sizeof(__pyx_k_index_r), 0, 0, 1, 1},
-  {&__pyx_n_s_iterations, __pyx_k_iterations, sizeof(__pyx_k_iterations), 0, 0, 1, 1},
   {&__pyx_n_s_iterations_grad_m1, __pyx_k_iterations_grad_m1, sizeof(__pyx_k_iterations_grad_m1), 0, 0, 1, 1},
   {&__pyx_n_s_iterations_grad_m2, __pyx_k_iterations_grad_m2, sizeof(__pyx_k_iterations_grad_m2), 0, 0, 1, 1},
   {&__pyx_n_s_iterations_m2, __pyx_k_iterations_m2, sizeof(__pyx_k_iterations_m2), 0, 0, 1, 1},
-  {&__pyx_n_s_iteritems, __pyx_k_iteritems, sizeof(__pyx_k_iteritems), 0, 0, 1, 1},
   {&__pyx_n_s_l_lb, __pyx_k_l_lb, sizeof(__pyx_k_l_lb), 0, 0, 1, 1},
   {&__pyx_n_s_lamb, __pyx_k_lamb, sizeof(__pyx_k_lamb), 0, 0, 1, 1},
-  {&__pyx_n_s_lamb_2, __pyx_k_lamb_2, sizeof(__pyx_k_lamb_2), 0, 0, 1, 1},
   {&__pyx_n_s_load, __pyx_k_load, sizeof(__pyx_k_load), 0, 0, 1, 1},
   {&__pyx_n_s_main, __pyx_k_main, sizeof(__pyx_k_main), 0, 0, 1, 1},
   {&__pyx_n_s_median, __pyx_k_median, sizeof(__pyx_k_median), 0, 0, 1, 1},
@@ -7496,28 +5865,19 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_numpy, __pyx_k_numpy, sizeof(__pyx_k_numpy), 0, 0, 1, 1},
   {&__pyx_kp_s_numpy_core_multiarray_failed_to, __pyx_k_numpy_core_multiarray_failed_to, sizeof(__pyx_k_numpy_core_multiarray_failed_to), 0, 0, 1, 0},
   {&__pyx_kp_s_numpy_core_umath_failed_to_impor, __pyx_k_numpy_core_umath_failed_to_impor, sizeof(__pyx_k_numpy_core_umath_failed_to_impor), 0, 0, 1, 0},
-  {&__pyx_n_s_p, __pyx_k_p, sizeof(__pyx_k_p), 0, 0, 1, 1},
   {&__pyx_n_s_path, __pyx_k_path, sizeof(__pyx_k_path), 0, 0, 1, 1},
-  {&__pyx_n_s_phi, __pyx_k_phi, sizeof(__pyx_k_phi), 0, 0, 1, 1},
-  {&__pyx_n_s_psi, __pyx_k_psi, sizeof(__pyx_k_psi), 0, 0, 1, 1},
-  {&__pyx_n_s_psi_route, __pyx_k_psi_route, sizeof(__pyx_k_psi_route), 0, 0, 1, 1},
-  {&__pyx_n_s_q_route, __pyx_k_q_route, sizeof(__pyx_k_q_route), 0, 0, 1, 1},
-  {&__pyx_n_s_q_route_2, __pyx_k_q_route_2, sizeof(__pyx_k_q_route_2), 0, 0, 1, 1},
+  {&__pyx_n_s_penalties, __pyx_k_penalties, sizeof(__pyx_k_penalties), 0, 0, 1, 1},
+  {&__pyx_n_s_penalty_factor, __pyx_k_penalty_factor, sizeof(__pyx_k_penalty_factor), 0, 0, 1, 1},
   {&__pyx_n_s_quantities, __pyx_k_quantities, sizeof(__pyx_k_quantities), 0, 0, 1, 1},
   {&__pyx_n_s_r_lb, __pyx_k_r_lb, sizeof(__pyx_k_r_lb), 0, 0, 1, 1},
   {&__pyx_n_s_range, __pyx_k_range, sizeof(__pyx_k_range), 0, 0, 1, 1},
-  {&__pyx_n_s_rho, __pyx_k_rho, sizeof(__pyx_k_rho), 0, 0, 1, 1},
   {&__pyx_n_s_routes, __pyx_k_routes, sizeof(__pyx_k_routes), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
-  {&__pyx_n_s_theta, __pyx_k_theta, sizeof(__pyx_k_theta), 0, 0, 1, 1},
   {&__pyx_n_s_truck, __pyx_k_truck, sizeof(__pyx_k_truck), 0, 0, 1, 1},
-  {&__pyx_n_s_truck_capacity, __pyx_k_truck_capacity, sizeof(__pyx_k_truck_capacity), 0, 0, 1, 1},
   {&__pyx_n_s_u, __pyx_k_u, sizeof(__pyx_k_u), 0, 0, 1, 1},
   {&__pyx_n_s_u_2, __pyx_k_u_2, sizeof(__pyx_k_u_2), 0, 0, 1, 1},
   {&__pyx_kp_u_unknown_dtype_code_in_numpy_pxd, __pyx_k_unknown_dtype_code_in_numpy_pxd, sizeof(__pyx_k_unknown_dtype_code_in_numpy_pxd), 0, 1, 0, 0},
   {&__pyx_n_s_v, __pyx_k_v, sizeof(__pyx_k_v), 0, 0, 1, 1},
-  {&__pyx_n_s_values, __pyx_k_values, sizeof(__pyx_k_values), 0, 0, 1, 1},
-  {&__pyx_n_s_values_pos, __pyx_k_values_pos, sizeof(__pyx_k_values_pos), 0, 0, 1, 1},
   {&__pyx_n_s_z_lb, __pyx_k_z_lb, sizeof(__pyx_k_z_lb), 0, 0, 1, 1},
   {&__pyx_n_s_z_ub, __pyx_k_z_ub, sizeof(__pyx_k_z_ub), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
@@ -7908,7 +6268,7 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_np, __pyx_t_1) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "cpp_lower_bounds.pyx":210
+  /* "cpp_lower_bounds.pyx":214
  *    return dual_solution
  * 
  * cpdef get_reduced_routes_(             # <<<<<<<<<<<<<<
@@ -8730,274 +7090,8 @@ bad:
     return -1;
 }
 
-/* IterFinish */
-  static CYTHON_INLINE int __Pyx_IterFinish(void) {
-#if CYTHON_FAST_THREAD_STATE
-    PyThreadState *tstate = __Pyx_PyThreadState_Current;
-    PyObject* exc_type = tstate->curexc_type;
-    if (unlikely(exc_type)) {
-        if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) {
-            PyObject *exc_value, *exc_tb;
-            exc_value = tstate->curexc_value;
-            exc_tb = tstate->curexc_traceback;
-            tstate->curexc_type = 0;
-            tstate->curexc_value = 0;
-            tstate->curexc_traceback = 0;
-            Py_DECREF(exc_type);
-            Py_XDECREF(exc_value);
-            Py_XDECREF(exc_tb);
-            return 0;
-        } else {
-            return -1;
-        }
-    }
-    return 0;
-#else
-    if (unlikely(PyErr_Occurred())) {
-        if (likely(PyErr_ExceptionMatches(PyExc_StopIteration))) {
-            PyErr_Clear();
-            return 0;
-        } else {
-            return -1;
-        }
-    }
-    return 0;
-#endif
-}
-
-/* PyObjectCallNoArg */
-  #if CYTHON_COMPILING_IN_CPYTHON
-static CYTHON_INLINE PyObject* __Pyx_PyObject_CallNoArg(PyObject *func) {
-#if CYTHON_FAST_PYCALL
-    if (PyFunction_Check(func)) {
-        return __Pyx_PyFunction_FastCall(func, NULL, 0);
-    }
-#endif
-#ifdef __Pyx_CyFunction_USED
-    if (likely(PyCFunction_Check(func) || __Pyx_TypeCheck(func, __pyx_CyFunctionType))) {
-#else
-    if (likely(PyCFunction_Check(func))) {
-#endif
-        if (likely(PyCFunction_GET_FLAGS(func) & METH_NOARGS)) {
-            return __Pyx_PyObject_CallMethO(func, NULL);
-        }
-    }
-    return __Pyx_PyObject_Call(func, __pyx_empty_tuple, NULL);
-}
-#endif
-
-/* PyObjectCallMethod0 */
-    static PyObject* __Pyx_PyObject_CallMethod0(PyObject* obj, PyObject* method_name) {
-    PyObject *method, *result = NULL;
-    method = __Pyx_PyObject_GetAttrStr(obj, method_name);
-    if (unlikely(!method)) goto bad;
-#if CYTHON_UNPACK_METHODS
-    if (likely(PyMethod_Check(method))) {
-        PyObject *self = PyMethod_GET_SELF(method);
-        if (likely(self)) {
-            PyObject *function = PyMethod_GET_FUNCTION(method);
-            result = __Pyx_PyObject_CallOneArg(function, self);
-            Py_DECREF(method);
-            return result;
-        }
-    }
-#endif
-    result = __Pyx_PyObject_CallNoArg(method);
-    Py_DECREF(method);
-bad:
-    return result;
-}
-
-/* UnpackItemEndCheck */
-    static int __Pyx_IternextUnpackEndCheck(PyObject *retval, Py_ssize_t expected) {
-    if (unlikely(retval)) {
-        Py_DECREF(retval);
-        __Pyx_RaiseTooManyValuesError(expected);
-        return -1;
-    } else {
-        return __Pyx_IterFinish();
-    }
-    return 0;
-}
-
-/* UnpackTupleError */
-    static void __Pyx_UnpackTupleError(PyObject *t, Py_ssize_t index) {
-    if (t == Py_None) {
-      __Pyx_RaiseNoneNotIterableError();
-    } else if (PyTuple_GET_SIZE(t) < index) {
-      __Pyx_RaiseNeedMoreValuesError(PyTuple_GET_SIZE(t));
-    } else {
-      __Pyx_RaiseTooManyValuesError(index);
-    }
-}
-
-/* UnpackTuple2 */
-    static CYTHON_INLINE int __Pyx_unpack_tuple2_exact(
-        PyObject* tuple, PyObject** pvalue1, PyObject** pvalue2, int decref_tuple) {
-    PyObject *value1 = NULL, *value2 = NULL;
-#if CYTHON_COMPILING_IN_PYPY
-    value1 = PySequence_ITEM(tuple, 0);  if (unlikely(!value1)) goto bad;
-    value2 = PySequence_ITEM(tuple, 1);  if (unlikely(!value2)) goto bad;
-#else
-    value1 = PyTuple_GET_ITEM(tuple, 0);  Py_INCREF(value1);
-    value2 = PyTuple_GET_ITEM(tuple, 1);  Py_INCREF(value2);
-#endif
-    if (decref_tuple) {
-        Py_DECREF(tuple);
-    }
-    *pvalue1 = value1;
-    *pvalue2 = value2;
-    return 0;
-#if CYTHON_COMPILING_IN_PYPY
-bad:
-    Py_XDECREF(value1);
-    Py_XDECREF(value2);
-    if (decref_tuple) { Py_XDECREF(tuple); }
-    return -1;
-#endif
-}
-static int __Pyx_unpack_tuple2_generic(PyObject* tuple, PyObject** pvalue1, PyObject** pvalue2,
-                                       int has_known_size, int decref_tuple) {
-    Py_ssize_t index;
-    PyObject *value1 = NULL, *value2 = NULL, *iter = NULL;
-    iternextfunc iternext;
-    iter = PyObject_GetIter(tuple);
-    if (unlikely(!iter)) goto bad;
-    if (decref_tuple) { Py_DECREF(tuple); tuple = NULL; }
-    iternext = Py_TYPE(iter)->tp_iternext;
-    value1 = iternext(iter); if (unlikely(!value1)) { index = 0; goto unpacking_failed; }
-    value2 = iternext(iter); if (unlikely(!value2)) { index = 1; goto unpacking_failed; }
-    if (!has_known_size && unlikely(__Pyx_IternextUnpackEndCheck(iternext(iter), 2))) goto bad;
-    Py_DECREF(iter);
-    *pvalue1 = value1;
-    *pvalue2 = value2;
-    return 0;
-unpacking_failed:
-    if (!has_known_size && __Pyx_IterFinish() == 0)
-        __Pyx_RaiseNeedMoreValuesError(index);
-bad:
-    Py_XDECREF(iter);
-    Py_XDECREF(value1);
-    Py_XDECREF(value2);
-    if (decref_tuple) { Py_XDECREF(tuple); }
-    return -1;
-}
-
-/* dict_iter */
-    static CYTHON_INLINE PyObject* __Pyx_dict_iterator(PyObject* iterable, int is_dict, PyObject* method_name,
-                                                   Py_ssize_t* p_orig_length, int* p_source_is_dict) {
-    is_dict = is_dict || likely(PyDict_CheckExact(iterable));
-    *p_source_is_dict = is_dict;
-    if (is_dict) {
-#if !CYTHON_COMPILING_IN_PYPY
-        *p_orig_length = PyDict_Size(iterable);
-        Py_INCREF(iterable);
-        return iterable;
-#elif PY_MAJOR_VERSION >= 3
-        static PyObject *py_items = NULL, *py_keys = NULL, *py_values = NULL;
-        PyObject **pp = NULL;
-        if (method_name) {
-            const char *name = PyUnicode_AsUTF8(method_name);
-            if (strcmp(name, "iteritems") == 0) pp = &py_items;
-            else if (strcmp(name, "iterkeys") == 0) pp = &py_keys;
-            else if (strcmp(name, "itervalues") == 0) pp = &py_values;
-            if (pp) {
-                if (!*pp) {
-                    *pp = PyUnicode_FromString(name + 4);
-                    if (!*pp)
-                        return NULL;
-                }
-                method_name = *pp;
-            }
-        }
-#endif
-    }
-    *p_orig_length = 0;
-    if (method_name) {
-        PyObject* iter;
-        iterable = __Pyx_PyObject_CallMethod0(iterable, method_name);
-        if (!iterable)
-            return NULL;
-#if !CYTHON_COMPILING_IN_PYPY
-        if (PyTuple_CheckExact(iterable) || PyList_CheckExact(iterable))
-            return iterable;
-#endif
-        iter = PyObject_GetIter(iterable);
-        Py_DECREF(iterable);
-        return iter;
-    }
-    return PyObject_GetIter(iterable);
-}
-static CYTHON_INLINE int __Pyx_dict_iter_next(
-        PyObject* iter_obj, CYTHON_NCP_UNUSED Py_ssize_t orig_length, CYTHON_NCP_UNUSED Py_ssize_t* ppos,
-        PyObject** pkey, PyObject** pvalue, PyObject** pitem, int source_is_dict) {
-    PyObject* next_item;
-#if !CYTHON_COMPILING_IN_PYPY
-    if (source_is_dict) {
-        PyObject *key, *value;
-        if (unlikely(orig_length != PyDict_Size(iter_obj))) {
-            PyErr_SetString(PyExc_RuntimeError, "dictionary changed size during iteration");
-            return -1;
-        }
-        if (unlikely(!PyDict_Next(iter_obj, ppos, &key, &value))) {
-            return 0;
-        }
-        if (pitem) {
-            PyObject* tuple = PyTuple_New(2);
-            if (unlikely(!tuple)) {
-                return -1;
-            }
-            Py_INCREF(key);
-            Py_INCREF(value);
-            PyTuple_SET_ITEM(tuple, 0, key);
-            PyTuple_SET_ITEM(tuple, 1, value);
-            *pitem = tuple;
-        } else {
-            if (pkey) {
-                Py_INCREF(key);
-                *pkey = key;
-            }
-            if (pvalue) {
-                Py_INCREF(value);
-                *pvalue = value;
-            }
-        }
-        return 1;
-    } else if (PyTuple_CheckExact(iter_obj)) {
-        Py_ssize_t pos = *ppos;
-        if (unlikely(pos >= PyTuple_GET_SIZE(iter_obj))) return 0;
-        *ppos = pos + 1;
-        next_item = PyTuple_GET_ITEM(iter_obj, pos);
-        Py_INCREF(next_item);
-    } else if (PyList_CheckExact(iter_obj)) {
-        Py_ssize_t pos = *ppos;
-        if (unlikely(pos >= PyList_GET_SIZE(iter_obj))) return 0;
-        *ppos = pos + 1;
-        next_item = PyList_GET_ITEM(iter_obj, pos);
-        Py_INCREF(next_item);
-    } else
-#endif
-    {
-        next_item = PyIter_Next(iter_obj);
-        if (unlikely(!next_item)) {
-            return __Pyx_IterFinish();
-        }
-    }
-    if (pitem) {
-        *pitem = next_item;
-    } else if (pkey && pvalue) {
-        if (__Pyx_unpack_tuple2(next_item, pkey, pvalue, source_is_dict, source_is_dict, 1))
-            return -1;
-    } else if (pkey) {
-        *pkey = next_item;
-    } else {
-        *pvalue = next_item;
-    }
-    return 1;
-}
-
 /* Import */
-    static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level) {
+  static PyObject *__Pyx_Import(PyObject *name, PyObject *from_list, int level) {
     PyObject *empty_list = 0;
     PyObject *module = 0;
     PyObject *global_dict = 0;
@@ -9062,7 +7156,7 @@ bad:
 }
 
 /* CLineInTraceback */
-    #ifndef CYTHON_CLINE_IN_TRACEBACK
+  #ifndef CYTHON_CLINE_IN_TRACEBACK
 static int __Pyx_CLineForTraceback(CYTHON_UNUSED PyThreadState *tstate, int c_line) {
     PyObject *use_cline;
     PyObject *ptype, *pvalue, *ptraceback;
@@ -9099,7 +7193,7 @@ static int __Pyx_CLineForTraceback(CYTHON_UNUSED PyThreadState *tstate, int c_li
 #endif
 
 /* CodeObjectCache */
-    static int __pyx_bisect_code_objects(__Pyx_CodeObjectCacheEntry* entries, int count, int code_line) {
+  static int __pyx_bisect_code_objects(__Pyx_CodeObjectCacheEntry* entries, int count, int code_line) {
     int start = 0, mid = 0, end = count - 1;
     if (end >= 0 && code_line > entries[end].code_line) {
         return count;
@@ -9179,7 +7273,7 @@ static void __pyx_insert_code_object(int code_line, PyCodeObject* code_object) {
 }
 
 /* AddTraceback */
-    #include "compile.h"
+  #include "compile.h"
 #include "frameobject.h"
 #include "traceback.h"
 static PyCodeObject* __Pyx_CreateCodeObjectForTraceback(
@@ -9264,7 +7358,7 @@ bad:
 }
 
 /* CIntFromPyVerify */
-    #define __PYX_VERIFY_RETURN_INT(target_type, func_type, func_value)\
+  #define __PYX_VERIFY_RETURN_INT(target_type, func_type, func_value)\
     __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 0)
 #define __PYX_VERIFY_RETURN_INT_EXC(target_type, func_type, func_value)\
     __PYX__VERIFY_RETURN_INT(target_type, func_type, func_value, 1)
@@ -9286,7 +7380,7 @@ bad:
     }
 
 /* CIntToPy */
-    static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
+  static CYTHON_INLINE PyObject* __Pyx_PyInt_From_int(int value) {
     const int neg_one = (int) -1, const_zero = (int) 0;
     const int is_unsigned = neg_one > const_zero;
     if (is_unsigned) {
@@ -9316,139 +7410,76 @@ bad:
     }
 }
 
-static PyObject* __pyx_convert__to_py_struct__QPaths(struct QPaths s) {
-      PyObject* res;
-      PyObject* member;
-      res = __Pyx_PyDict_NewPresized(5); if (unlikely(!res)) return NULL;
-      member = __pyx_convert_vector_to_py_std_3a__3a_vector_3c_double_3e___(s.f); if (unlikely(!member)) goto bad;
-      if (unlikely(PyDict_SetItem(res, __pyx_n_s_f, member) < 0)) goto bad;
-      Py_DECREF(member);
-      member = __pyx_convert_vector_to_py_std_3a__3a_vector_3c_double_3e___(s.phi); if (unlikely(!member)) goto bad;
-      if (unlikely(PyDict_SetItem(res, __pyx_n_s_phi, member) < 0)) goto bad;
-      Py_DECREF(member);
-      member = __pyx_convert_vector_to_py_std_3a__3a_vector_3c_int_3e___(s.p); if (unlikely(!member)) goto bad;
-      if (unlikely(PyDict_SetItem(res, __pyx_n_s_p, member) < 0)) goto bad;
-      Py_DECREF(member);
-      member = __pyx_convert_vector_to_py_std_3a__3a_vector_3c_std_3a__3a_vector_3c_int_3e____3e___(s.q_route); if (unlikely(!member)) goto bad;
-      if (unlikely(PyDict_SetItem(res, __pyx_n_s_q_route, member) < 0)) goto bad;
-      Py_DECREF(member);
-      member = __pyx_convert_vector_to_py_std_3a__3a_vector_3c_std_3a__3a_vector_3c_int_3e____3e___(s.q_route_2); if (unlikely(!member)) goto bad;
-      if (unlikely(PyDict_SetItem(res, __pyx_n_s_q_route_2, member) < 0)) goto bad;
-      Py_DECREF(member);
-      return res;
-      bad:
-      Py_XDECREF(member);
-      Py_DECREF(res);
-      return NULL;
-    }
-    static PyObject* __pyx_convert__to_py_struct__QRoutes(struct QRoutes s) {
-      PyObject* res;
-      PyObject* member;
-      res = __Pyx_PyDict_NewPresized(2); if (unlikely(!res)) return NULL;
-      member = __pyx_convert_vector_to_py_std_3a__3a_vector_3c_double_3e___(s.psi); if (unlikely(!member)) goto bad;
-      if (unlikely(PyDict_SetItem(res, __pyx_n_s_psi, member) < 0)) goto bad;
-      Py_DECREF(member);
-      member = __pyx_convert_vector_to_py_std_3a__3a_vector_3c_std_3a__3a_vector_3c_int_3e____3e___(s.psi_route); if (unlikely(!member)) goto bad;
-      if (unlikely(PyDict_SetItem(res, __pyx_n_s_psi_route, member) < 0)) goto bad;
-      Py_DECREF(member);
-      return res;
-      bad:
-      Py_XDECREF(member);
-      Py_DECREF(res);
-      return NULL;
-    }
-    static PyObject* __pyx_convert__to_py_struct__LowerBound(struct LowerBound s) {
-      PyObject* res;
-      PyObject* member;
-      res = __Pyx_PyDict_NewPresized(4); if (unlikely(!res)) return NULL;
-      member = PyFloat_FromDouble(s.z_lb); if (unlikely(!member)) goto bad;
-      if (unlikely(PyDict_SetItem(res, __pyx_n_s_z_lb, member) < 0)) goto bad;
-      Py_DECREF(member);
-      member = __pyx_convert_vector_to_py_double(s.theta); if (unlikely(!member)) goto bad;
-      if (unlikely(PyDict_SetItem(res, __pyx_n_s_theta, member) < 0)) goto bad;
-      Py_DECREF(member);
-      member = __pyx_convert_vector_to_py_double(s.rho); if (unlikely(!member)) goto bad;
-      if (unlikely(PyDict_SetItem(res, __pyx_n_s_rho, member) < 0)) goto bad;
-      Py_DECREF(member);
-      member = __pyx_convert_vector_to_py_double(s.u); if (unlikely(!member)) goto bad;
-      if (unlikely(PyDict_SetItem(res, __pyx_n_s_u_2, member) < 0)) goto bad;
-      Py_DECREF(member);
-      return res;
-      bad:
-      Py_XDECREF(member);
-      Py_DECREF(res);
-      return NULL;
-    }
-    static PyObject* __pyx_convert__to_py_struct__SimpleRoute(struct SimpleRoute s) {
-      PyObject* res;
-      PyObject* member;
-      res = __Pyx_PyDict_NewPresized(10); if (unlikely(!res)) return NULL;
-      member = __pyx_convert_list_to_py_int(s.path); if (unlikely(!member)) goto bad;
-      if (unlikely(PyDict_SetItem(res, __pyx_n_s_path, member) < 0)) goto bad;
-      Py_DECREF(member);
-      member = __Pyx_PyInt_From_int(s.index_l); if (unlikely(!member)) goto bad;
-      if (unlikely(PyDict_SetItem(res, __pyx_n_s_index_l, member) < 0)) goto bad;
-      Py_DECREF(member);
-      member = __Pyx_PyInt_From_int(s.index_r); if (unlikely(!member)) goto bad;
-      if (unlikely(PyDict_SetItem(res, __pyx_n_s_index_r, member) < 0)) goto bad;
-      Py_DECREF(member);
-      member = PyFloat_FromDouble(s.cost); if (unlikely(!member)) goto bad;
-      if (unlikely(PyDict_SetItem(res, __pyx_n_s_cost, member) < 0)) goto bad;
-      Py_DECREF(member);
-      member = __Pyx_PyInt_From_int(s.load); if (unlikely(!member)) goto bad;
-      if (unlikely(PyDict_SetItem(res, __pyx_n_s_load, member) < 0)) goto bad;
-      Py_DECREF(member);
-      member = __Pyx_PyInt_From_int(s.median); if (unlikely(!member)) goto bad;
-      if (unlikely(PyDict_SetItem(res, __pyx_n_s_median, member) < 0)) goto bad;
-      Py_DECREF(member);
-      member = PyFloat_FromDouble(s.geo_cost); if (unlikely(!member)) goto bad;
-      if (unlikely(PyDict_SetItem(res, __pyx_n_s_geo_cost, member) < 0)) goto bad;
-      Py_DECREF(member);
-      member = __Pyx_PyInt_From_int(s.truck); if (unlikely(!member)) goto bad;
-      if (unlikely(PyDict_SetItem(res, __pyx_n_s_truck, member) < 0)) goto bad;
-      Py_DECREF(member);
-      member = PyFloat_FromDouble(s.l_lb); if (unlikely(!member)) goto bad;
-      if (unlikely(PyDict_SetItem(res, __pyx_n_s_l_lb, member) < 0)) goto bad;
-      Py_DECREF(member);
-      member = PyFloat_FromDouble(s.r_lb); if (unlikely(!member)) goto bad;
-      if (unlikely(PyDict_SetItem(res, __pyx_n_s_r_lb, member) < 0)) goto bad;
-      Py_DECREF(member);
-      return res;
-      bad:
-      Py_XDECREF(member);
-      Py_DECREF(res);
-      return NULL;
-    }
-    static PyObject* __pyx_convert__to_py_struct__DualSolution(struct DualSolution s) {
-      PyObject* res;
-      PyObject* member;
-      res = __Pyx_PyDict_NewPresized(6); if (unlikely(!res)) return NULL;
-      member = PyFloat_FromDouble(s.z_lb); if (unlikely(!member)) goto bad;
-      if (unlikely(PyDict_SetItem(res, __pyx_n_s_z_lb, member) < 0)) goto bad;
-      Py_DECREF(member);
-      member = __pyx_convert_vector_to_py_double(s.lamb); if (unlikely(!member)) goto bad;
-      if (unlikely(PyDict_SetItem(res, __pyx_n_s_lamb_2, member) < 0)) goto bad;
-      Py_DECREF(member);
-      member = __pyx_convert_vector_to_py_double(s.u); if (unlikely(!member)) goto bad;
-      if (unlikely(PyDict_SetItem(res, __pyx_n_s_u_2, member) < 0)) goto bad;
-      Py_DECREF(member);
-      member = __pyx_convert_vector_to_py_double(s.v); if (unlikely(!member)) goto bad;
-      if (unlikely(PyDict_SetItem(res, __pyx_n_s_v, member) < 0)) goto bad;
-      Py_DECREF(member);
-      member = __pyx_convert_vector_to_py_std_3a__3a_list_3c_struct__SimpleRoute_3e___(s.routes); if (unlikely(!member)) goto bad;
-      if (unlikely(PyDict_SetItem(res, __pyx_n_s_routes, member) < 0)) goto bad;
-      Py_DECREF(member);
-      member = PyFloat_FromDouble(s.gamma_guarantee); if (unlikely(!member)) goto bad;
-      if (unlikely(PyDict_SetItem(res, __pyx_n_s_gamma_guarantee, member) < 0)) goto bad;
-      Py_DECREF(member);
-      return res;
-      bad:
-      Py_XDECREF(member);
-      Py_DECREF(res);
-      return NULL;
-    }
-    /* Declarations */
-    #if CYTHON_CCOMPLEX
+static PyObject* __pyx_convert__to_py_struct__SimpleRoute(struct SimpleRoute s) {
+    PyObject* res;
+    PyObject* member;
+    res = __Pyx_PyDict_NewPresized(10); if (unlikely(!res)) return NULL;
+    member = __pyx_convert_list_to_py_int(s.path); if (unlikely(!member)) goto bad;
+    if (unlikely(PyDict_SetItem(res, __pyx_n_s_path, member) < 0)) goto bad;
+    Py_DECREF(member);
+    member = __Pyx_PyInt_From_int(s.index_l); if (unlikely(!member)) goto bad;
+    if (unlikely(PyDict_SetItem(res, __pyx_n_s_index_l, member) < 0)) goto bad;
+    Py_DECREF(member);
+    member = __Pyx_PyInt_From_int(s.index_r); if (unlikely(!member)) goto bad;
+    if (unlikely(PyDict_SetItem(res, __pyx_n_s_index_r, member) < 0)) goto bad;
+    Py_DECREF(member);
+    member = PyFloat_FromDouble(s.cost); if (unlikely(!member)) goto bad;
+    if (unlikely(PyDict_SetItem(res, __pyx_n_s_cost, member) < 0)) goto bad;
+    Py_DECREF(member);
+    member = __Pyx_PyInt_From_int(s.load); if (unlikely(!member)) goto bad;
+    if (unlikely(PyDict_SetItem(res, __pyx_n_s_load, member) < 0)) goto bad;
+    Py_DECREF(member);
+    member = __Pyx_PyInt_From_int(s.median); if (unlikely(!member)) goto bad;
+    if (unlikely(PyDict_SetItem(res, __pyx_n_s_median, member) < 0)) goto bad;
+    Py_DECREF(member);
+    member = PyFloat_FromDouble(s.geo_cost); if (unlikely(!member)) goto bad;
+    if (unlikely(PyDict_SetItem(res, __pyx_n_s_geo_cost, member) < 0)) goto bad;
+    Py_DECREF(member);
+    member = __Pyx_PyInt_From_int(s.truck); if (unlikely(!member)) goto bad;
+    if (unlikely(PyDict_SetItem(res, __pyx_n_s_truck, member) < 0)) goto bad;
+    Py_DECREF(member);
+    member = PyFloat_FromDouble(s.l_lb); if (unlikely(!member)) goto bad;
+    if (unlikely(PyDict_SetItem(res, __pyx_n_s_l_lb, member) < 0)) goto bad;
+    Py_DECREF(member);
+    member = PyFloat_FromDouble(s.r_lb); if (unlikely(!member)) goto bad;
+    if (unlikely(PyDict_SetItem(res, __pyx_n_s_r_lb, member) < 0)) goto bad;
+    Py_DECREF(member);
+    return res;
+    bad:
+    Py_XDECREF(member);
+    Py_DECREF(res);
+    return NULL;
+  }
+  static PyObject* __pyx_convert__to_py_struct__DualSolution(struct DualSolution s) {
+    PyObject* res;
+    PyObject* member;
+    res = __Pyx_PyDict_NewPresized(6); if (unlikely(!res)) return NULL;
+    member = PyFloat_FromDouble(s.z_lb); if (unlikely(!member)) goto bad;
+    if (unlikely(PyDict_SetItem(res, __pyx_n_s_z_lb, member) < 0)) goto bad;
+    Py_DECREF(member);
+    member = __pyx_convert_vector_to_py_double(s.lamb); if (unlikely(!member)) goto bad;
+    if (unlikely(PyDict_SetItem(res, __pyx_n_s_lamb, member) < 0)) goto bad;
+    Py_DECREF(member);
+    member = __pyx_convert_vector_to_py_double(s.u); if (unlikely(!member)) goto bad;
+    if (unlikely(PyDict_SetItem(res, __pyx_n_s_u_2, member) < 0)) goto bad;
+    Py_DECREF(member);
+    member = __pyx_convert_vector_to_py_double(s.v); if (unlikely(!member)) goto bad;
+    if (unlikely(PyDict_SetItem(res, __pyx_n_s_v, member) < 0)) goto bad;
+    Py_DECREF(member);
+    member = __pyx_convert_vector_to_py_std_3a__3a_list_3c_struct__SimpleRoute_3e___(s.routes); if (unlikely(!member)) goto bad;
+    if (unlikely(PyDict_SetItem(res, __pyx_n_s_routes, member) < 0)) goto bad;
+    Py_DECREF(member);
+    member = PyFloat_FromDouble(s.gamma_guarantee); if (unlikely(!member)) goto bad;
+    if (unlikely(PyDict_SetItem(res, __pyx_n_s_gamma_guarantee, member) < 0)) goto bad;
+    Py_DECREF(member);
+    return res;
+    bad:
+    Py_XDECREF(member);
+    Py_DECREF(res);
+    return NULL;
+  }
+  /* Declarations */
+  #if CYTHON_CCOMPLEX
   #ifdef __cplusplus
     static CYTHON_INLINE __pyx_t_float_complex __pyx_t_float_complex_from_parts(float x, float y) {
       return ::std::complex< float >(x, y);
@@ -9468,7 +7499,7 @@ static PyObject* __pyx_convert__to_py_struct__QPaths(struct QPaths s) {
 #endif
 
 /* Arithmetic */
-    #if CYTHON_CCOMPLEX
+  #if CYTHON_CCOMPLEX
 #else
     static CYTHON_INLINE int __Pyx_c_eq_float(__pyx_t_float_complex a, __pyx_t_float_complex b) {
        return (a.real == b.real) && (a.imag == b.imag);
@@ -9603,7 +7634,7 @@ static PyObject* __pyx_convert__to_py_struct__QPaths(struct QPaths s) {
 #endif
 
 /* Declarations */
-    #if CYTHON_CCOMPLEX
+  #if CYTHON_CCOMPLEX
   #ifdef __cplusplus
     static CYTHON_INLINE __pyx_t_double_complex __pyx_t_double_complex_from_parts(double x, double y) {
       return ::std::complex< double >(x, y);
@@ -9623,7 +7654,7 @@ static PyObject* __pyx_convert__to_py_struct__QPaths(struct QPaths s) {
 #endif
 
 /* Arithmetic */
-    #if CYTHON_CCOMPLEX
+  #if CYTHON_CCOMPLEX
 #else
     static CYTHON_INLINE int __Pyx_c_eq_double(__pyx_t_double_complex a, __pyx_t_double_complex b) {
        return (a.real == b.real) && (a.imag == b.imag);
@@ -9758,7 +7789,7 @@ static PyObject* __pyx_convert__to_py_struct__QPaths(struct QPaths s) {
 #endif
 
 /* CIntToPy */
-    static CYTHON_INLINE PyObject* __Pyx_PyInt_From_enum__NPY_TYPES(enum NPY_TYPES value) {
+  static CYTHON_INLINE PyObject* __Pyx_PyInt_From_enum__NPY_TYPES(enum NPY_TYPES value) {
     const enum NPY_TYPES neg_one = (enum NPY_TYPES) -1, const_zero = (enum NPY_TYPES) 0;
     const int is_unsigned = neg_one > const_zero;
     if (is_unsigned) {
@@ -9789,7 +7820,7 @@ static PyObject* __pyx_convert__to_py_struct__QPaths(struct QPaths s) {
 }
 
 /* CIntFromPy */
-    static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *x) {
+  static CYTHON_INLINE int __Pyx_PyInt_As_int(PyObject *x) {
     const int neg_one = (int) -1, const_zero = (int) 0;
     const int is_unsigned = neg_one > const_zero;
 #if PY_MAJOR_VERSION < 3
@@ -9978,7 +8009,7 @@ raise_neg_overflow:
 }
 
 /* CIntFromPy */
-    static CYTHON_INLINE size_t __Pyx_PyInt_As_size_t(PyObject *x) {
+  static CYTHON_INLINE size_t __Pyx_PyInt_As_size_t(PyObject *x) {
     const size_t neg_one = (size_t) -1, const_zero = (size_t) 0;
     const int is_unsigned = neg_one > const_zero;
 #if PY_MAJOR_VERSION < 3
@@ -10167,7 +8198,7 @@ raise_neg_overflow:
 }
 
 /* CIntToPy */
-    static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value) {
+  static CYTHON_INLINE PyObject* __Pyx_PyInt_From_long(long value) {
     const long neg_one = (long) -1, const_zero = (long) 0;
     const int is_unsigned = neg_one > const_zero;
     if (is_unsigned) {
@@ -10198,7 +8229,7 @@ raise_neg_overflow:
 }
 
 /* CIntFromPy */
-    static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *x) {
+  static CYTHON_INLINE long __Pyx_PyInt_As_long(PyObject *x) {
     const long neg_one = (long) -1, const_zero = (long) 0;
     const int is_unsigned = neg_one > const_zero;
 #if PY_MAJOR_VERSION < 3
@@ -10387,7 +8418,7 @@ raise_neg_overflow:
 }
 
 /* FastTypeChecks */
-    #if CYTHON_COMPILING_IN_CPYTHON
+  #if CYTHON_COMPILING_IN_CPYTHON
 static int __Pyx_InBases(PyTypeObject *a, PyTypeObject *b) {
     while (a) {
         a = a->tp_base;
@@ -10459,7 +8490,7 @@ static CYTHON_INLINE int __Pyx_PyErr_GivenExceptionMatches2(PyObject *err, PyObj
 #endif
 
 /* CheckBinaryVersion */
-    static int __Pyx_check_binary_version(void) {
+  static int __Pyx_check_binary_version(void) {
     char ctversion[4], rtversion[4];
     PyOS_snprintf(ctversion, 4, "%d.%d", PY_MAJOR_VERSION, PY_MINOR_VERSION);
     PyOS_snprintf(rtversion, 4, "%s", Py_GetVersion());
@@ -10475,7 +8506,7 @@ static CYTHON_INLINE int __Pyx_PyErr_GivenExceptionMatches2(PyObject *err, PyObj
 }
 
 /* ModuleImport */
-    #ifndef __PYX_HAVE_RT_ImportModule
+  #ifndef __PYX_HAVE_RT_ImportModule
 #define __PYX_HAVE_RT_ImportModule
 static PyObject *__Pyx_ImportModule(const char *name) {
     PyObject *py_name = 0;
@@ -10493,7 +8524,7 @@ bad:
 #endif
 
 /* TypeImport */
-    #ifndef __PYX_HAVE_RT_ImportType
+  #ifndef __PYX_HAVE_RT_ImportType
 #define __PYX_HAVE_RT_ImportType
 static PyTypeObject *__Pyx_ImportType(const char *module_name, const char *class_name,
     size_t size, int strict)
@@ -10558,7 +8589,7 @@ bad:
 #endif
 
 /* InitStrings */
-    static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
+  static int __Pyx_InitStrings(__Pyx_StringTabEntry *t) {
     while (t->p) {
         #if PY_MAJOR_VERSION < 3
         if (t->is_unicode) {

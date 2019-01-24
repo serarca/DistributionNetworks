@@ -12,16 +12,7 @@ import sys
 import pickle
 import os
 import pdb
-import argparse
 
-print(sys.argv)
-
-# Set up arguments
-if len(sys.argv) >= 5:
-    penalty_factor = float(sys.argv[4])
-else:
-	penalty_factor = 0
-print(penalty_factor)
 
 # Set current directory
 os.chdir(sys.argv[2])
@@ -74,10 +65,7 @@ try:
 	gamma = 10000
 	iterations_m2 = 1
 	z_ub = 1000000
-	print("Delta", Delta)
-	print("Gamma", gamma)
-	print("iterations", iterations_m2)
-	print("z_ub", z_ub)
+
 
 	# Parameters for the search algorithm that will not change
 	m = 1
@@ -88,19 +76,21 @@ try:
 	gamma_zero = -10**(-14) * z_ub
 	gamma_final = gamma
 	epsilon = 0.1
-	time_limit = 800
+	time_limit = 600
 	# Define penalties
 	if penalties:
 		penalties_array = np.array([[penalties[h][n] for n in N] for h in H])
 	else:
 		penalties_array = np.zeros([len(H),len(N)])
 	print(penalties)
+	penalty_factor = float(1)
+	penalty_factor = 0
 
-	result = lower_bound.construct_lower_bound_c(iterations_grad_m1,iterations_grad_m2,iterations_m2,z_ub,Delta,Delta_zero,Delta_final,gamma,gamma_zero,gamma_final,epsilon,H,capacities,N,quantities,geo_distance,n_trucks,penalties_array,penalty_factor)
+	# result = lower_bound.construct_lower_bound_c(iterations_grad_m1,iterations_grad_m2,iterations_m2,z_ub,Delta,Delta_zero,Delta_final,gamma,gamma_zero,gamma_final,epsilon,H,capacities,N,quantities,geo_distance,n_trucks,penalties_array,penalty_factor)
 
-	pickle.dump( result, open( results_folder + 'low_cost_routes/' + instance_end + '.p', "wb" ) )
+	# pickle.dump( result, open( results_folder + 'low_cost_routes/' + instance_end + '.p', "wb" ) )
 
-	#result = pickle.load(open( 'Results/low_cost_routes/' + instance_end + '.p', "r" ) )
+	result = pickle.load(open( results_folder + 'low_cost_routes/' + instance_end + '.p', "r" ) )
 
 	routes = lower_bound.primal_solver(result[iterations_m2],len(N),H, quantities, capacities, n_trucks, time_limit)
 
@@ -119,8 +109,7 @@ try:
 	    json.dump(result_dict, outfile)
 	print('Problem solved successfully')
 except Exception, e:
-	with open(results_folder+'/errors.txt', 'a') as file:
-		file.write('Error in instance %s \n' % instance)
-		file.write(str(e) + "\n")
-	print(e)
-
+    with open(results_folder+'/errors.txt', 'a') as file:
+    	file.write('Error in instance %s \n' % instance)
+    	file.write(str(e) + "\n")
+    print(e)

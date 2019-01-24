@@ -13,6 +13,8 @@
 #include "lower_bounds.h"
 #include "baldacci.h"
 #include "lower_bounds.cpp"
+#include "wrapper.cpp"
+
 #include "baldacci.cpp"
 template class std::set<tuple<int,int>>;
 # include <chrono>
@@ -29,7 +31,7 @@ using json = nlohmann::json;
 
 int main(){
 
-   std::ifstream i("/Users/sergiocamelo/Dropbox/Sergio-Joann/StandardizedData/instances/spatial/spatial_day_9.json");
+   std::ifstream i("/Users/sergiocamelo/Dropbox/Sergio-Joann/Results/2018-10-20_17:58/instances/spatial/spatial_day_9.json");
 
    json j;
    i >> j;
@@ -42,22 +44,15 @@ int main(){
 
    vector<vector<double>> geo_distance = j["distances"];
 
-   // Extract penalties and construct VRP
+   // Extract penalties
    auto it_penalties = j.find("penalties");
-   VRP vrp = VRP();
+   vector<vector<double>> penalties;
    if (it_penalties != j.end()) {
-      vrp = VRP(H, capacities, N, quantities, geo_distance, n_trucks, *it_penalties);
-   } else {
-      vrp = VRP(H, capacities, N, quantities, geo_distance, n_trucks);
+      vector<vector<double>> penalties_extracted = *it_penalties;
+      penalties = penalties_extracted;
    }
-   vrp.penalty_factor = 100000;
 
 
-
-
-   cout<<geo_distance<<endl;
-
-   double z_ub = 500000;
 
 
    int H_len = H.size();
@@ -71,15 +66,11 @@ int main(){
 
 
 
-   vector<double> mu(H_len,0);
-   vector<double> lamb(N_len,0);
-
-
-
 
    int iterations_grad_m1 = 200;
    int iterations_grad_m2 = 100;
    int iterations_m2 = 3;
+   double z_ub = 500000;
    int Delta = 6000;
    int Delta_zero = Delta;
    int Delta_final = Delta;
@@ -88,7 +79,12 @@ int main(){
    double gamma_final = 20000;
    double epsilon = 0.1;
 
-   vector<DualSolution> lb = construct_lower_bound(iterations_grad_m1,
+   double penalty_factor = 0;
+
+
+
+
+   vector<DualSolution> lb = construct_lower_bound_wrapper(iterations_grad_m1,
       iterations_grad_m2,
       iterations_m2,
       z_ub,
@@ -99,8 +95,16 @@ int main(){
       gamma_zero,
       gamma_final,
       epsilon,
-      vrp
+      H,
+      capacities,
+      N,
+      quantities,
+      geo_distance,
+      n_trucks,
+      penalties,
+      penalty_factor
    );
+
    cout<<lb[2].routes[0].size()<<endl;
    cout<<lb[2].routes[1].size()<<endl;
 

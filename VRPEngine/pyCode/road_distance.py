@@ -1,6 +1,5 @@
 import urllib2
 import json
-import ipdb
 import copy
 # Calculates road distance between two (lat,lon) tuples, also returns time spent
 # 
@@ -65,6 +64,10 @@ def waypoints(p0,p1):
     return new_pol
 
 
+def path_distance(path):
+    total_dist = 0
+    for i in range(len(path) - 1):
+        total_dist += road_distance(path[i],path[i+1])["distance"]
 
-
+    return total_dist
 

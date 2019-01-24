@@ -185,3 +185,11 @@ LB_GENPATH path_lower_bound(
    vector<int> quantities,
    string direction
 );
+
+vector<vector<double>> penalized_matrix(
+   vector<vector<double>> distance_dict,
+   vector<double> penalties,
+   int len_N,
+   int len_H,
+   double penalty_factor
+);

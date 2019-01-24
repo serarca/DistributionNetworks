@@ -812,15 +812,17 @@ def lower_bound_optimizer_M2(sub_iterations, z_ub, Delta, Delta_zero, gamma, gam
 
     return (max_val,u_opt,v_opt,lamb_opt)
 
-def construct_lower_bound_c(iterations_grad_m1,iterations_grad_m2,iterations_m2,z_ub,Delta,Delta_zero,Delta_final,gamma,gamma_zero,gamma_final,epsilon,H,capacities,N,quantities,geo_distance,n_trucks):
+def construct_lower_bound_c(iterations_grad_m1,iterations_grad_m2,iterations_m2,z_ub,Delta,Delta_zero,Delta_final,gamma,gamma_zero,gamma_final,epsilon,H,capacities,N,quantities,geo_distance,n_trucks, penalties, penalty_factor):
     H_ = (np.array(range(len(H)))+len(N)).astype(int)
     N_ = np.array(range(len(N))).astype(int)
     capacities_ = np.array([capacities[h] for h in H]).astype(int)
     quantities_ = np.array([quantities[n] for n in N]).astype(int)
     geo_distance_ = geo_distance.astype("float64")
     n_trucks_ = np.array([n_trucks[h] for h in H]).astype(int)
+    penalties_ = penalties.astype("float64")
+    penalty_factor_ = penalty_factor
 
-    result = cpp_lower_bounds.construct_lower_bound_(iterations_grad_m1,iterations_grad_m2,iterations_m2,z_ub,Delta,Delta_zero,Delta_final,gamma,gamma_zero,gamma_final,epsilon,H_,capacities_,N_,quantities_,geo_distance_,n_trucks_)
+    result = cpp_lower_bounds.construct_lower_bound_wrapper_(iterations_grad_m1,iterations_grad_m2,iterations_m2,z_ub,Delta,Delta_zero,Delta_final,gamma,gamma_zero,gamma_final,epsilon,H_,capacities_,N_,quantities_,geo_distance_,n_trucks_, penalties_, penalty_factor_)
 
 
     return (result)

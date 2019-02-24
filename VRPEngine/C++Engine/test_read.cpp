@@ -31,7 +31,7 @@ using json = nlohmann::json;
 
 int main(){
 
-   std::ifstream i("/Users/sergiocamelo/Dropbox/Sergio-Joann/Results/2018-10-20_17:58/instances/spatial/spatial_day_9.json");
+   std::ifstream i("/Users/sergiocamelo/Dropbox/Sergio-Joann/Results/2018-10-20_17:58/instances/daily/daily_cluster_591_day_11.json");
 
    json j;
    i >> j;
@@ -71,7 +71,7 @@ int main(){
    int iterations_grad_m2 = 100;
    int iterations_m2 = 3;
    double z_ub = 500000;
-   int Delta = 6000;
+   int Delta = 2;
    int Delta_zero = Delta;
    int Delta_final = Delta;
    double gamma = 20000;
@@ -105,10 +105,7 @@ int main(){
       penalty_factor
    );
 
-   cout<<lb[2].routes[0].size()<<endl;
-   cout<<lb[2].routes[1].size()<<endl;
 
-  print_sroute((lb[2].routes[0]).front());
 
 
    return 1;

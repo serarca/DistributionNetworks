@@ -73,7 +73,7 @@ try:
 	Delta = 2000
 	gamma = 10000
 	iterations_m2 = 1
-	z_ub = 1000000
+	z_ub = 4000000
 	print("Delta", Delta)
 	print("Gamma", gamma)
 	print("iterations", iterations_m2)

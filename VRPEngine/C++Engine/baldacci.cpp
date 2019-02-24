@@ -1138,8 +1138,11 @@ DualSolution optimize_lower_bound_M2(
 
    // Here we store the dual solution
    DualSolution ds;
-   int Delta_zero_current = Delta_zero;
+   // Whether all routes are terminated, that is, the current mu,lamb are feasible
+   bool all_terminated = false;
+   
    while(true){
+
       cout<<"New iteration of gradient ascent"<<endl;
       // We pass these routes to the algorithm that calculates the lower bound
       // Check not using the cost
@@ -1147,61 +1150,94 @@ DualSolution optimize_lower_bound_M2(
       vector<list<SimpleRoute>> newRoutes(len_H);
       vector<vector<double>> new_distance_dict = reduced_cost_matrix(geo_distance, ds.u, ds.v);
 
+      // Vectors indicate whether routes have been terminated or not
+      vector<int> new_routes_count(len_H);
+      vector<bool> terminated_neg(len_H, false);
+      int Delta_zero_current = Delta_zero;
+      double total_new_routes_count = 0;
 
+      // This will run until either all trucks are optimal or negative routes have
+      // been found
+      while(true){
+         for (auto h:H){
+            // Verify truck has not terminated
+            if (!terminated_neg[h-len_N]){
+               // Check the cost is that of the reduced variables
+               cout<<"Calculating negative routes of truck: "<<h<<endl;
+               double truck_zero_gamma_guarantee;
 
-      int new_routes_count = 0;
-      bool terminated_neg = true;
-      for (auto h:H){
-         // Check the cost is that of the reduced variables
-         cout<<"Calculating negative routes of truck: "<<h<<endl;
-         double truck_zero_gamma_guarantee;
+               // Create penalized distance matrix
+               vector<vector<double>> penalized_distance;
+               if (vrp.penalized){
+                  penalized_distance = penalized_matrix(
+                     new_distance_dict,
+                     vrp.penalties[h - len_N],
+                     len_N,
+                     len_H,
+                     vrp.penalty_factor
+                  );
+               } else {
+                  penalized_distance = new_distance_dict;
+               }
 
-         // Create penalized distance matrix
-         vector<vector<double>> penalized_distance;
-         if (vrp.penalized){
-            penalized_distance = penalized_matrix(
-               new_distance_dict,
-               vrp.penalties[h - len_N],
-               len_N,
-               len_H,
-               vrp.penalty_factor
-            );
-         } else {
-            penalized_distance = new_distance_dict;
+               // If this changes, then the algorithm did not terminate
+               bool termination = true;
+               newRoutes[h - len_N] = GENROUTE(z_ub, Delta_zero_current, gamma_zero, h, capacities[h - len_N], N, quantities, penalized_distance, geo_distance, termination, truck_zero_gamma_guarantee);
+               terminated_neg[h-len_N] = termination;
+
+               cout<<"    Truck zero gamma guarantee: "<<truck_zero_gamma_guarantee<<endl;
+               cout<<"Adding new routes: "<<h<<endl;
+               for (auto route:newRoutes[h - len_N]){
+                  if (route.cost < - pow(10,-13) * z_ub){
+                     Routes[h - len_N].push_back(route);
+                     //print_sroute(route);
+                     ++new_routes_count[h-len_N];
+                  }
+               }
+            }
          }
 
-         newRoutes[h - len_N] = GENROUTE(z_ub, Delta_zero_current, gamma_zero, h, capacities[h - len_N], N, quantities, penalized_distance, geo_distance, terminated_neg, truck_zero_gamma_guarantee);
-         cout<<"    Truck zero gamma guarantee: "<<truck_zero_gamma_guarantee<<endl;
-         cout<<"Adding new routes: "<<h<<endl;
-         for (auto route:newRoutes[h - len_N]){
-            if (route.cost < - pow(10,-13) * z_ub){
-               Routes[h - len_N].push_back(route);
-               //print_sroute(route);
-               ++new_routes_count;
+         total_new_routes_count = std::accumulate(new_routes_count.begin(), new_routes_count.end(), 0);
+         int total_non_terminated = 0;
+         for (int i = 0; i < len_H; i++){
+            if (!terminated_neg[i]){
+               ++total_non_terminated;
+            }
+         }
+
+         if (total_new_routes_count > 0){
+            cout<<"Found negative routes: "<<total_new_routes_count<<endl;
+            cout<<"Rerunning algorithm with more routes"<<endl;
+            break;
+         } else{
+            if (total_non_terminated == 0){
+               all_terminated = true;
+               break;
+            } else{
+               cout<<"Need more routes to guarantee feasibility"<<endl;
+               cout<<"Trucks without enough routes: "<<total_non_terminated<<endl;
+               Delta_zero_current = Delta_zero_current * 2;            
+               cout<<"Trying new delta: "<<Delta_zero_current<<endl;
             }
          }
 
       }
-      cout<<"Did the path generation terminate?"<<terminated_neg<<endl;
-      cout<<"Negative routes: "<<new_routes_count<<endl;
+
+      cout<<"Did the path generation terminate?"<<all_terminated<<endl;
+      
 
       cout<<"Routes per truck"<<endl;
       for (int i = 0; i< len_H; i++){
          cout<<i+len_N<<":"<<Routes[i].size()<<endl;
       }
-      if (new_routes_count != 0){
+
+      if (total_new_routes_count == 0){
          // We make sure that the algorithm has terminated because there are no
          // more negative routes
-         Delta_zero_current = Delta_zero;
-      }
-      if (new_routes_count == 0){
-         // We make sure that the algorithm has terminated because there are no
-         // more negative routes
-         if (terminated_neg){
+         if (all_terminated){
             break;
          } else {
-            cout<<"Need more routes to guarantee feasibility"<<endl;
-            Delta_zero_current = Delta_zero_current * 2;
+            cout<<"Error, should not be seeing this message"<<endl;
          }
 
       }

@@ -41,6 +41,15 @@ class TSP:
 
 
 	def solve(self):
+
+		if (len(self.N) <= 1):
+			cycle = self.E+self.N
+			return {
+			"solution":cycle,
+			"objective":np.sum([self.distance[i][i+1] for i in range(len(cycle)-1)])
+			}
+
+
 		precision = 1
 		# Let's construct the file
 		tsp_template = """TYPE : TSP

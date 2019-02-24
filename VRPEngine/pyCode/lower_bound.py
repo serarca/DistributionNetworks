@@ -865,7 +865,7 @@ def primal_solver(solution, len_N, H, quantities, capacities, n_trucks, time):
         for v in model.getVars():
             name = v.VarName
             value = v.x
-            if value == 1.0:
+            if round(value) == 1.0:
                 r_number = int(name.split('_')[1])
                 route_chosen = copy.deepcopy(reduced_routes[r_number])
                 routes_chosen.append(route_chosen)

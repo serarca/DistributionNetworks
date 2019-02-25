@@ -10,6 +10,9 @@
 #include <numeric>
 #include <math.h>
 #include "prettyprint.hpp"
+#include "VRPClass.cpp"
+
+
 template class std::vector<double>;
 template class std::vector<std::vector<double>>;
 
@@ -269,7 +272,7 @@ QPaths construct_q_paths_(
                      } else {
                         g[x_i][x_j] = f[l_p][x_j] + distance_dict[N[x_i]][N[x_j]];
                      }
-                     
+
                      // We save a boolean and the quantity at which g is calc
                      g_type[x_i][x_j][0] = 0;
                      g_type[x_i][x_j][1] = l_p;
@@ -574,6 +577,8 @@ DualSolution lower_bound_optimizer_M1(
 
       vector<vector<double>> distance_dict = reduced_cost_matrix(geo_distance, lamb, mu);
       // We pass these routes to the algorithm that calculates the lower bound
+      cout<<mu<<endl;
+      cout<<lamb<<endl;
       LowerBound lb = lower_bound_(vrp, distance_dict, mu, lamb);
       cout<<lb.z_lb<<endl;
       //cout<<lamb<<endl;

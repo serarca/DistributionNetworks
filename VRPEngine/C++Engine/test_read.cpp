@@ -13,7 +13,7 @@
 #include "lower_bounds.h"
 #include "baldacci.h"
 #include "lower_bounds.cpp"
-#include "wrapper.cpp"
+#include "VRPClass.cpp"
 
 #include "baldacci.cpp"
 template class std::set<tuple<int,int>>;
@@ -31,37 +31,7 @@ using json = nlohmann::json;
 
 int main(){
 
-   std::ifstream i("/Users/sergiocamelo/Dropbox/Sergio-Joann/Results/2018-10-20_17:58/instances/daily/daily_cluster_591_day_11.json");
-
-   json j;
-   i >> j;
-
-   vector<int> N = j["N"];
-   vector<int> H = j["H"];
-   vector<int> quantities = j["quantities"];
-   vector<int> capacities = j["capacities"];
-   vector<int> n_trucks = j["n_trucks"];
-
-   vector<vector<double>> geo_distance = j["distances"];
-
-   // Extract penalties
-   auto it_penalties = j.find("penalties");
-   vector<vector<double>> penalties;
-   if (it_penalties != j.end()) {
-      vector<vector<double>> penalties_extracted = *it_penalties;
-      penalties = penalties_extracted;
-   }
-
-
-
-
-   int H_len = H.size();
-   int N_len = N.size();
-
-   cout<<"There is "<<H_len<<" trucks"<<endl;
-   cout<<"There is "<<N_len<<" farmers"<<endl;
-   cout<<"Capacities:"<<capacities<<endl;
-   cout<<"Quantities:"<<quantities<<endl;
+   VRP vrp = VRP("/Users/sergiocamelo/Dropbox/Sergio-Joann/Results/Jan242019-nopenalty/instances/daily/daily_cluster_780_day_12.json");
 
 
 
@@ -79,12 +49,10 @@ int main(){
    double gamma_final = 20000;
    double epsilon = 0.1;
 
-   double penalty_factor = 0;
 
 
 
-
-   vector<DualSolution> lb = construct_lower_bound_wrapper(iterations_grad_m1,
+   vector<DualSolution> lb = construct_lower_bound(iterations_grad_m1,
       iterations_grad_m2,
       iterations_m2,
       z_ub,
@@ -95,14 +63,7 @@ int main(){
       gamma_zero,
       gamma_final,
       epsilon,
-      H,
-      capacities,
-      N,
-      quantities,
-      geo_distance,
-      n_trucks,
-      penalties,
-      penalty_factor
+      vrp
    );
 
 

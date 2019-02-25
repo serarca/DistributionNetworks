@@ -1,0 +1,8 @@
+{
+  "execPath": "/usr/bin/g++",
+  "gccDefaultCFlags": "-Wall",
+  "gccDefaultCppFlags": "-std=c++11 -I/Library/gurobi810/mac64/include -L/Library/gurobi810/mac64/lib -lgurobi_c++ -lgurobi81",
+  "gccErrorLimit": 15,
+  "gccIncludePaths": ".,./include,./path",
+  "gccSuppressWarnings": true
+}

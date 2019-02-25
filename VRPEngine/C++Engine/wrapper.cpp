@@ -19,30 +19,42 @@
 #include <bitset>
 
 
+#include "nlohmann/json.hpp"
+#include <fstream>
+// for convenience
+using json = nlohmann::json;
 
-vector<DualSolution> construct_lower_bound_wrapper(
-   int iterations_grad_m1,
-   int iterations_grad_m2,
-   int iterations_m2,
-   double z_ub,
-   int Delta,
-   int Delta_zero,
-   int Delta_final,
-   double gamma,
-   double gamma_zero,
-   double gamma_final,
-   double epsilon,
-   vector<int> H,
-   vector<int> capacities,
-   vector<int> N,
-   vector<int> quantities,
-   vector<vector<double>> geo_distance,
-   vector<int> n_trucks,
-   vector<vector<double>> penalties,
-   double penalty_factor
-){
 
-   // Construct the VRP
+VRP read_VRP(std::string filename, double penalty_factor = 0.0){
+
+   std::ifstream i("/Users/sergiocamelo/Dropbox/Sergio-Joann/Results/2018-10-20_17:58/instances/daily/daily_cluster_591_day_11.json");
+
+   json j;
+   i >> j;
+
+   vector<int> N = j["N"];
+   vector<int> H = j["H"];
+   vector<int> quantities = j["quantities"];
+   vector<int> capacities = j["capacities"];
+   vector<int> n_trucks = j["n_trucks"];
+
+   vector<vector<double>> geo_distance = j["distances"];
+
+   // Extract penalties
+   auto it_penalties = j.find("penalties");
+   vector<vector<double>> penalties;
+   if (it_penalties != j.end()) {
+      vector<vector<double>> penalties_extracted = *it_penalties;
+      penalties = penalties_extracted;
+   }
+
+   int H_len = H.size();
+   int N_len = N.size();
+
+   cout<<"There is "<<H_len<<" trucks"<<endl;
+   cout<<"There is "<<N_len<<" farmers"<<endl;
+   cout<<"Capacities:"<<capacities<<endl;
+   cout<<"Quantities:"<<quantities<<endl;
 
    VRP vrp = VRP();
    if (penalties.size() > 0) {
@@ -52,19 +64,6 @@ vector<DualSolution> construct_lower_bound_wrapper(
    }
    vrp.penalty_factor = penalty_factor;
 
-   return construct_lower_bound(
-      iterations_grad_m1,
-      iterations_grad_m2,
-      iterations_m2,
-      z_ub,
-      Delta,
-      Delta_zero,
-      Delta_final,
-      gamma,
-      gamma_zero,
-      gamma_final,
-      epsilon,
-      vrp
-   );
 
+   return vrp;
 }

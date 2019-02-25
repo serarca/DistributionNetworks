@@ -15,9 +15,12 @@
 #include "lower_bounds.h"
 #include "baldacci.h"
 
-#include<cmath>
+#include <cmath>
 #include "prettyprint.hpp"
 #include <bitset>
+#include "VRPClass.cpp"
+#include "utils/save_dual_solution.cpp"
+
 
 
 void print_set(set<tuple<int,int>> s){
@@ -241,7 +244,7 @@ vector<list<Path>> GENPATH(
          cout<<"found it again"<<endl;
       }
       */
-      
+
       // If path violates capacity, go to the next one
       if ((double) p_star.load > ((double) capacity)/2.0)
          continue;
@@ -275,7 +278,7 @@ vector<list<Path>> GENPATH(
                p_v_v(distance_dict);
             }
             */
-            
+
 
 
             // Calculate a lower bound
@@ -1140,7 +1143,7 @@ DualSolution optimize_lower_bound_M2(
    DualSolution ds;
    // Whether all routes are terminated, that is, the current mu,lamb are feasible
    bool all_terminated = false;
-   
+
    while(true){
 
       cout<<"New iteration of gradient ascent"<<endl;
@@ -1216,7 +1219,7 @@ DualSolution optimize_lower_bound_M2(
             } else{
                cout<<"Need more routes to guarantee feasibility"<<endl;
                cout<<"Trucks without enough routes: "<<total_non_terminated<<endl;
-               Delta_zero_current = Delta_zero_current * 2;            
+               Delta_zero_current = Delta_zero_current * 2;
                cout<<"Trying new delta: "<<Delta_zero_current<<endl;
             }
          }
@@ -1224,7 +1227,7 @@ DualSolution optimize_lower_bound_M2(
       }
 
       cout<<"Did the path generation terminate?"<<all_terminated<<endl;
-      
+
 
       cout<<"Routes per truck"<<endl;
       for (int i = 0; i< len_H; i++){
@@ -1276,6 +1279,7 @@ vector<DualSolution> construct_lower_bound(
    double inf = numeric_limits<double>::infinity();
    // Debugging first lower bounds
    DualSolution sol = lower_bound_optimizer_M1(iterations_grad_m1, z_ub, epsilon, vrp);
+   save_dual_solution("/Users/sergiocamelo/Dropbox/Sergio-Joann/Code/VRPEngine/C++Engine/tmp/"+vrp.name, sol);
    DualSolution old_sol;
    cout<<"Bound Christofides:"<<sol.z_lb<<endl;
    sol.routes.clear();

@@ -8,6 +8,8 @@
 #include <set>
 #include "lower_bounds.h"
 #include <bitset>
+#include "VRPClass.cpp"
+
 
 using namespace std;
 

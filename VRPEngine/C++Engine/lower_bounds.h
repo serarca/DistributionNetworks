@@ -6,67 +6,12 @@
 #include <string>
 #include <iostream>
 #include <list>
+#include "VRPClass.cpp"
+
 
 
 using namespace std;
 
-
-class VRP {
-
-public:
-   vector<int> H;
-   vector<int> capacities;
-   vector<int> N;
-   vector<int> quantities;
-   vector<vector<double>> geo_distance;
-   vector<int> n_trucks;
-   vector<vector<double>> penalties;
-   bool penalized;
-   double penalty_factor;
-
-   VRP(){}
-
-
-   VRP(
-      vector<int> H_,
-      vector<int> capacities_,
-      vector<int> N_,
-      vector<int> quantities_,
-      vector<vector<double>> geo_distance_,
-      vector<int> n_trucks_,
-      vector<vector<double>> penalties_
-   ){
-      H = H_;
-      capacities = capacities_;
-      N = N_;
-      quantities = quantities_;
-      geo_distance = geo_distance_;
-      n_trucks = n_trucks_;
-      penalties = penalties_;
-      penalized = true;
-      penalty_factor = 1;
-   }
-
-   VRP(
-      vector<int> H_,
-      vector<int> capacities_,
-      vector<int> N_,
-      vector<int> quantities_,
-      vector<vector<double>> geo_distance_,
-      vector<int> n_trucks_
-   ){
-      H = H_;
-      capacities = capacities_;
-      N = N_;
-      quantities = quantities_;
-      geo_distance = geo_distance_;
-      n_trucks = n_trucks_;
-      penalized = false;
-      penalty_factor = 1;
-   }
-
-
-};
 
 
 // The struct of results for q-routes

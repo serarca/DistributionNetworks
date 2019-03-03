@@ -41,6 +41,7 @@ public:
    bool penalized;
    double penalty_factor;
    string name;
+   string folder;
 
    VRP(){}
 
@@ -84,62 +85,6 @@ public:
       penalty_factor = 0.0;
    }
 
-
-   VRP(string filename, double penalty_factor_ = 0.0, string name_=""){
-      name = name_;
-
-      std::ifstream i(filename);
-
-      json j;
-      i >> j;
-
-      N = j["N"].get<vector<int>>();
-      H = j["H"].get<vector<int>>();
-      quantities = j["quantities"].get<vector<int>>();
-      capacities = j["capacities"].get<vector<int>>();
-      n_trucks = j["n_trucks"].get<vector<int>>();
-
-      geo_distance = j["distances"].get<vector<vector<double>>>();
-
-      // Extract penalties
-      auto it_penalties = j.find("penalties");
-      vector<vector<double>> penalties;
-      if (it_penalties != j.end()) {
-         vector<vector<double>> penalties_extracted = *it_penalties;
-         penalties = penalties_extracted;
-      }
-
-      int H_len = H.size();
-      int N_len = N.size();
-
-      cout<<"There is "<<H_len<<" trucks"<<endl;
-      cout<<"There is "<<N_len<<" farmers"<<endl;
-      cout<<"Capacities:"<<capacities<<endl;
-      cout<<"Quantities:"<<quantities<<endl;
-
-
-      if (penalties.size() > 0) {
-         penalized = true;
-      } else {
-         penalized = false;
-      }
-      penalty_factor = penalty_factor_;
-
-      cout<< H;
-
-      cout<< capacities<<endl;
-      cout<< N<<endl;
-      cout<< quantities<<endl;
-      //cout<< geo_distance<<endl<<endl;
-      cout<< n_trucks<<endl;
-      cout<< penalties<<endl;
-      cout<< penalized<<endl;
-      cout<< penalty_factor<<endl;
-      cout<< name<<endl;
-
-
-   }
-
    int len_H(){
       return H.size();
    }
@@ -156,3 +101,39 @@ public:
    }
 
 };
+
+VRP VRP_from_filename(string filename, string name_="", double penalty_factor_ = 0.0){
+   std::ifstream i(filename);
+   json j;
+   i >> j;
+
+   vector<int> N = j["N"];
+   vector<int> H = j["H"];
+   vector<int> quantities = j["quantities"];
+   vector<int> capacities = j["capacities"];
+   vector<int> n_trucks = j["n_trucks"];
+
+   vector<vector<double>> geo_distance = j["distances"];
+
+   // Extract penalties
+   auto it_penalties = j.find("penalties");
+   vector<vector<double>> penalties;
+   if (it_penalties != j.end()) {
+      vector<vector<double>> penalties_extracted = *it_penalties;
+      penalties = penalties_extracted;
+   }
+
+   VRP vrp;
+
+   if (penalties.size() > 0) {
+      vrp = VRP(H,capacities,N,quantities,geo_distance,n_trucks, penalties, penalty_factor_);
+   } else {
+      vrp = VRP(H,capacities,N,quantities,geo_distance,n_trucks);
+   }
+   vrp.name = name_;
+
+   return vrp;
+
+
+
+}

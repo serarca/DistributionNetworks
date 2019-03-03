@@ -75,6 +75,17 @@ PossibleValues possible_values(vector<int>& quantities, int truck_capacity){
    return possible;
 }
 
+void DualSolution::calc_reduced_distances(vector<vector<double>> geo_distance){
+   reduced_distances = reduced_cost_matrix(geo_distance,u,v);
+}
+
+void DualSolution::initialize_routes(int len_H){
+   routes = vector<list<SimpleRoute>>(len_H);
+}
+
+
+
+
 // Write lower bounds
 LowerBound lower_bound_(
    VRP &vrp,
@@ -224,7 +235,7 @@ QPaths construct_q_paths_(
 
    //Construct infinity
    double inf = numeric_limits<double>::infinity();
-   double inf_int = numeric_limits<int>::infinity();
+   int inf_int = numeric_limits<int>::infinity();
 
    //Initialize the routes
    vector<vector<double>> f(len_values, vector<double> (len_N));
@@ -354,8 +365,26 @@ LB_GENPATH path_lower_bound(
    vector<int> quantities,
    string direction
 ){
+   //cout<<direction<<endl;
    //Construct the qpaths
    QPaths qpaths = construct_q_paths_(h, truck_capacity, N, distance_dict, values, values_pos, quantities, direction);
+   //Debug
+   // if (direction == "right"){
+   //    int q = 90;
+   //    int p = 62;
+   //    cout<<"qpath"<<endl;
+   //    cout<<qpaths.q_route[values_pos[q]][p]<<endl;
+   //    cout<<qpaths.f[values_pos[q]][p]<<endl;
+   //    double real_cost = 0;
+   //    for (int s = 0; s < (int) qpaths.q_route[values_pos[q]][p].size() - 1; s++){
+   //       if (direction=="right"){
+   //          real_cost  += distance_dict[qpaths.q_route[values_pos[q]][p][s+1]][qpaths.q_route[values_pos[q]][p][s]];
+   //       } else {
+   //          real_cost  += distance_dict[qpaths.q_route[values_pos[q]][p][s]][qpaths.q_route[values_pos[q]][p][s+1]];
+   //       }
+   //    }
+   //    cout<<real_cost<<endl;
+   // }
 
    // Define infinity
    double infinity = numeric_limits<double>::infinity();
@@ -427,6 +456,13 @@ LB_GENPATH path_lower_bound(
    functions.G = G;
    functions.min_q_path = min_q_path;
    functions.min_q_path_2 = min_q_path_2;
+
+   //Debug
+   // if (direction == "right"){
+   //    cout<<"min_q_path"<<endl;
+   //    cout<<min_q_path[values_pos[10]][62]<<endl;
+   //    cout<<F[values_pos[10]][62]<<endl;
+   // }
 
 
    return functions;
@@ -577,8 +613,6 @@ DualSolution lower_bound_optimizer_M1(
 
       vector<vector<double>> distance_dict = reduced_cost_matrix(geo_distance, lamb, mu);
       // We pass these routes to the algorithm that calculates the lower bound
-      cout<<mu<<endl;
-      cout<<lamb<<endl;
       LowerBound lb = lower_bound_(vrp, distance_dict, mu, lamb);
       cout<<lb.z_lb<<endl;
       //cout<<lamb<<endl;

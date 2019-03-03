@@ -24,6 +24,11 @@ struct Path{
    double lower_bound;
    int load;
    int end;
+   int length;
+   vector<int> lb_path;
+   double lb_load;
+   double real_cost;
+   double real_lb;
 };
 
 //The struct of paths

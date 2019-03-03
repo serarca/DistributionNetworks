@@ -54,13 +54,25 @@ struct SimpleRoute{
 };
 
 
-struct DualSolution {
+class DualSolution {
+public:
    double z_lb;
    vector<double> lamb;
    vector<double> u;
    vector<double> v;
    vector<list<SimpleRoute>> routes;
    double gamma_guarantee;
+   vector<vector<double>> reduced_distances;
+
+   void calc_reduced_distances(vector<vector<double>> geo_distance);
+   void initialize_routes(int len_H);
+
+};
+
+struct TerminatingCondition {
+   bool terminated;
+   double gamma_guarantee;
+   int new_routes;
 };
 
 // A struct with posible values and their inverse maps

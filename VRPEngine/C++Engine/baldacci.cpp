@@ -198,7 +198,10 @@ vector<list<Path>> GENPATH(
    cout<<"Finished lower bounds"<<endl;
 
    vector<list<Path>> P(N.size() + 1, list<Path>(0));
-   vector<list<Path>> T(N.size() + 1, list<Path>(0));
+   //vector<list<Path>> T(N.size() + 1, list<Path>(0));
+
+   vector<vector<list<Path>>> P_q(capacity + 1,vector<list<Path>>(N.size() + 1, list<Path>(0)));
+   vector<vector<list<Path>>> T_q(capacity + 1,vector<list<Path>>(N.size() + 1, list<Path>(0)));
 
    Path init;
    init.path.push_front(h);
@@ -207,7 +210,7 @@ vector<list<Path>> GENPATH(
    init.load = 0;
    init.end = h;
    init.length = 0;
-   T[N.size()].push_front(init);
+   T_q[0][N.size()].push_front(init);
 
    // Define infinity
    double inf = numeric_limits<double>::infinity();
@@ -223,21 +226,26 @@ vector<list<Path>> GENPATH(
    while (true){
 
       auto start1 = std::chrono::high_resolution_clock::now();
-
-      if (count_paths % 100 ==0 )
-      {
-         cout<< count_paths<<endl;
-      }
+      //
+      // if (count_paths % 100 ==0 )
+      // {
+      //    cout<< count_paths<<endl;
+      // }
       // Check the route with the smallest cost
       int arg_min = -1;
       double cost_min = inf;
+      int qu_min = -1;
       // No typo here with the <=
-      for(int i = 0; i <= len_N; i++){
-         if (T[i].size() > 0){
-            double cost = T[i].front().lower_bound;
-            if (cost<cost_min){
-               cost_min = cost;
-               arg_min = i;
+      for(int qu = 0; qu <= capacity; qu++)
+      {
+         for(int i = 0; i <= len_N; i++){
+            if (T_q[qu][i].size() > 0){
+               double cost = T_q[qu][i].front().lower_bound;
+               if (cost<cost_min){
+                  cost_min = cost;
+                  arg_min = i;
+                  qu_min = qu;
+               }
             }
          }
       }
@@ -246,11 +254,11 @@ vector<list<Path>> GENPATH(
          if (max_length == numeric_limits<double>::infinity()){
             gamma_guarantee = gamma;
             cout<<"     Paths Reached Gamma: "<<gamma<<endl;
-            int total_paths = 0;
-            for (auto p:P){
-               total_paths+= p.size();
-            }
-            cout<<"        Total No. of Paths: "<<total_paths<<endl;
+            // int total_paths = 0;
+            // for (auto p:P){
+            //    total_paths+= p.size();
+            // }
+            // cout<<"        Total No. of Paths: "<<total_paths<<endl;
          }
          // for (int s = 0; s < N.size() + 1; s++){
          //    cout<<"           Farmer "<<s<<":"<<P[s].size()<<endl;
@@ -263,7 +271,7 @@ vector<list<Path>> GENPATH(
 
 
       // Check the first route and add it to P
-      P[arg_min].splice(P[arg_min].end(),T[arg_min],T[arg_min].begin());
+      P_q[qu_min][arg_min].splice(P_q[qu_min][arg_min].end(),T_q[qu_min][arg_min],T_q[qu_min][arg_min].begin());
       count_paths += 1;
 
       // Break if too many paths
@@ -272,11 +280,11 @@ vector<list<Path>> GENPATH(
             terminated = false;
             gamma_guarantee = cost_min;
             cout<<"     Paths Reached Delta, best LB: "<<cost_min<<endl;
-            int total_paths = 0;
-            for (auto p:P){
-               total_paths+= p.size();
-            }
-            cout<<"        Total No. of Paths: "<<total_paths<<endl;
+            // int total_paths = 0;
+            // for (auto p:P){
+            //    total_paths+= p.size();
+            // }
+            // cout<<"        Total No. of Paths: "<<total_paths<<endl;
          }
          // for (int s = 0; s < N.size() + 1; s++){
          //    cout<<"           Farmer "<<s<<":"<<P[s].size()<<endl;
@@ -288,7 +296,7 @@ vector<list<Path>> GENPATH(
       }
 
       // Extract the element
-      Path p_star = P[arg_min].back();
+      Path p_star = P_q[qu_min][arg_min].back();
 
       //Some debugging
       /*
@@ -443,7 +451,7 @@ vector<list<Path>> GENPATH(
 
             //Check if this new path is dominated by any path in P
             bool dominated = false;
-            for (auto p = P[i].begin(); p!=P[i].end(); ++p){
+            for (auto p = P_q[new_path.load][i].begin(); p!=P_q[new_path.load][i].end(); ++p){
                 if ((p->end == new_path.end) && (p->cost <= new_path.cost) && (p->nodes == new_path.nodes)){
                    dominated = true;
                    break;
@@ -463,16 +471,16 @@ vector<list<Path>> GENPATH(
 
             // We check that the path is not dominated, and erase those paths
             // which are dominated
-            auto p = T[i].begin();
+            auto p = T_q[new_path.load][i].begin();
             list<Path>::iterator p_insert;
             bool found_insertion = false;
-            while(p!=T[i].end()){
+            while(p!=T_q[new_path.load][i].end()){
                if ((p->end == new_path.end) && (p->cost <= new_path.cost) && (p->nodes == new_path.nodes)){
                   dominated = true;
                   break;
                }
                if ((p->end == new_path.end) && (p->cost > new_path.cost) && (p->nodes == new_path.nodes)){
-                  p=T[i].erase(p);
+                  p=T_q[new_path.load][i].erase(p);
                   continue;
                }
                if ((!found_insertion) && (p->lower_bound > new_path.lower_bound)){
@@ -482,9 +490,9 @@ vector<list<Path>> GENPATH(
                ++p;
             }
             if (!found_insertion){
-               p_insert = T[i].end();
+               p_insert = T_q[new_path.load][i].end();
             }
-            T[i].insert(p_insert,new_path);
+            T_q[new_path.load][i].insert(p_insert,new_path);
             cum4 += std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now()-start4).count();
          }
       }
@@ -523,13 +531,20 @@ vector<list<Path>> GENPATH(
 
    int cum5 = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now()-start5).count();
 
-   cout<<"times"<<endl;
-   cout<<cum1<<endl;
-   cout<<cum2<<endl;
-   cout<<cum3<<endl;
-   cout<<cum4<<endl;
-   cout<<cum5<<endl;
+   // cout<<"times"<<endl;
+   // cout<<cum1<<endl;
+   // cout<<cum2<<endl;
+   // cout<<cum3<<endl;
+   // cout<<cum4<<endl;
+   // cout<<cum5<<endl;
 
+   for (int i = 0; i <=N.size(); i++)
+   {
+      for (int qu = 0; qu <= capacity; qu++)
+      {
+         P[i].insert(P[i].end(), P_q[qu][i].begin(), P_q[qu][i].end());
+      }
+   }
 
    return P;
 }
@@ -591,7 +606,7 @@ list<SimpleRoute> GENROUTE(
       P_l[i].sort(cost_comparison);
       P_r[i].sort(cost_comparison);
    }
-
+   cout<<"Done with the ordering"<<endl;
    /*
    if (Delta == std::numeric_limits<int>::max()){
       cout<<"len P_l: "<<P_l.size()<<endl;
@@ -813,7 +828,7 @@ list<SimpleRoute> GENROUTE(
    for (auto r:SimpleRoutes){
       if (r.cost < -pow(10,-13) * z_ub){
          total_neg+=1;
-         print_sroute(r);
+         //print_sroute(r);
       }
    }
    cout<<"     Total of negative routes: "<<total_neg<<endl;
@@ -1130,7 +1145,10 @@ void lower_bound_optimizer_M2(
          v_opt = mu;
          lamb_opt = lamb;
       }
-      //cout<<lb.z_lb<<endl;
+      if (iteration % 10 == 0){
+         cout<<"  Bound "<<iteration<<": "<<lb.z_lb<<endl;
+      }
+
       //cout<<lamb<<endl;
       //cout<<mu<<endl;
       save_theta = lb.theta;
@@ -1388,13 +1406,18 @@ DualSolution optimize_lower_bound_M2(
 
    while(true){
 
+      // Reinitialize parameters
+      // ds.u = initial_sol.u;
+      // ds.lamb = initial_sol.lamb;
+      // ds.v = initial_sol.v;
+
       cout<<"New iteration of gradient ascent"<<endl;
       // We pass these routes to the algorithm that calculates the lower bound
       // Check not using the cost
+      // We use the same parameters of the previous solution
+
       lower_bound_optimizer_M2(sub_iterations, z_ub, epsilon, vrp, ds);
       ds.calc_reduced_distances(geo_distance);
-
-      save_dual_solution(vrp.folder+"dual_solutions/"+vrp.name+"_partial"+".json", ds);
 
       // Vectors indicate whether routes have been terminated or not
       vector<TerminatingCondition> terminating_conditions(len_H);
@@ -1503,10 +1526,10 @@ vector<DualSolution> construct_lower_bound(
    double inf = numeric_limits<double>::infinity();
    // Debugging first lower bounds
    DualSolution sol = lower_bound_optimizer_M1(iterations_grad_m1, z_ub, epsilon, vrp);
-   save_dual_solution(vrp.folder+"dual_solutions/"+vrp.name+".json", sol);
    DualSolution old_sol;
    cout<<"Bound Christofides:"<<sol.z_lb<<endl;
    sol.routes.clear();
+   sol.initialize_routes(vrp.len_H());
 
 
 
@@ -1519,6 +1542,7 @@ vector<DualSolution> construct_lower_bound(
       old_sol = sol;
       cout<<"Started Iteration of Bound 2 No. :"<<iter_2<<endl;
       sol = optimize_lower_bound_M2(iterations_grad_m2, z_ub, Delta, Delta_zero, gamma, gamma_zero, epsilon, vrp, old_sol);
+      save_dual_solution(vrp.folder+"dual_solutions/"+vrp.name+"_iter_"+to_string(iter_2)+".json", old_sol, vrp);
 
 
       // Debugging
@@ -1617,6 +1641,7 @@ vector<DualSolution> construct_lower_bound(
 
    // Save the solution in the return argument
    solutions[iterations_m2] = sol;
+   save_dual_solution(vrp.folder+"dual_solutions/"+vrp.name+"_iter_"+to_string(iterations_m2)+".json", sol, vrp);
    cout<<"Done"<<endl;
    return solutions;
 }

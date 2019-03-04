@@ -24,6 +24,8 @@ using get_time = chrono::steady_clock ;
 
 #include "nlohmann/json.hpp"
 #include <fstream>
+#include "utils/save_dual_solution.cpp"
+
 
 // for convenience
 using json = nlohmann::json;
@@ -33,7 +35,7 @@ int main(){
 
    string results = "/Users/sergiocamelo/Dropbox/Sergio-Joann/Results/Jan242019-nopenalty/";
    string folder = "instances/";
-   string filename = "spatial/spatial_day_3";
+   string filename = "daily/daily_cluster_780_day_6";
    //filename = "daily/daily_cluster_780_day_12";
    VRP vrp = VRP_from_filename(results+folder+filename+".json", filename);
    vrp.folder = results;
@@ -44,7 +46,7 @@ int main(){
    int iterations_grad_m2 = 100;
    int iterations_m2 = 3;
    double z_ub = 1000000;
-   int Delta = 2000;
+   int Delta = 1000;
    int Delta_zero = Delta;
    int Delta_final = Delta;
    double gamma = 20000;
@@ -53,14 +55,14 @@ int main(){
    double epsilon = 0.1;
 
    // //string iter = "1";
-   DualSolution partial_sol = read_dual_solution(vrp.folder+"dual_solutions/"+vrp.name+".json");
-   // DualSolution partial_sol = read_dual_solution(vrp.folder+"dual_solutions/"+vrp.name+"_partial.json");
-   partial_sol.initialize_routes(vrp.len_H());
-   DualSolution lb1 = optimize_lower_bound_M2(iterations_grad_m2, z_ub, Delta, Delta_zero, gamma, gamma_zero, epsilon, vrp, partial_sol);
-   save_dual_solution(vrp.folder+"dual_solutions/"+vrp.name+"_lb1"+".json", lb1, vrp);
-
-   DualSolution lb2 = optimize_lower_bound_M2(iterations_grad_m2, z_ub, Delta, Delta_zero, gamma, gamma_zero, epsilon, vrp, lb1);
-   save_dual_solution(vrp.folder+"dual_solutions/"+vrp.name+"_lb2"+".json", lb2, vrp);
+   // DualSolution partial_sol = read_dual_solution(vrp.folder+"dual_solutions/"+vrp.name+".json");
+   // // DualSolution partial_sol = read_dual_solution(vrp.folder+"dual_solutions/"+vrp.name+"_partial.json");
+   // partial_sol.initialize_routes(vrp.len_H());
+   // DualSolution lb1 = optimize_lower_bound_M2(iterations_grad_m2, z_ub, Delta, Delta_zero, gamma, gamma_zero, epsilon, vrp, partial_sol);
+   // save_dual_solution(vrp.folder+"dual_solutions/"+vrp.name+"_lb1"+".json", lb1, vrp);
+   //
+   // DualSolution lb2 = optimize_lower_bound_M2(iterations_grad_m2, z_ub, Delta, Delta_zero, gamma, gamma_zero, epsilon, vrp, lb1);
+   // save_dual_solution(vrp.folder+"dual_solutions/"+vrp.name+"_lb2"+".json", lb2, vrp);
 
 
 
@@ -83,19 +85,22 @@ int main(){
    //list<SimpleRoute> routes = GENROUTE(z_ub, Delta_zero_current, gamma_zero, h, termination, truck_zero_gamma_guarantee, vrp, partial_sol);
 
 
-   // vector<DualSolution> lb = construct_lower_bound(iterations_grad_m1,
-   //    iterations_grad_m2,
-   //    iterations_m2,
-   //    z_ub,
-   //    Delta,
-   //    Delta_zero,
-   //    Delta_final,
-   //    gamma,
-   //    gamma_zero,
-   //    gamma_final,
-   //    epsilon,
-   //    vrp
-   // );
+   vector<DualSolution> lb = construct_lower_bound(iterations_grad_m1,
+      iterations_grad_m2,
+      iterations_m2,
+      z_ub,
+      Delta,
+      Delta_zero,
+      Delta_final,
+      gamma,
+      gamma_zero,
+      gamma_final,
+      epsilon,
+      vrp
+   );
+
+
+   save_dual_solution(vrp.folder+"dual_solutions/"+vrp.name+".json", lb[iterations_m2], vrp);
 
 
    // cout<<vrp.geo_distance[80][62]<<endl;

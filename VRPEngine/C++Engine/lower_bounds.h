@@ -75,11 +75,7 @@ struct TerminatingCondition {
    int new_routes;
 };
 
-// A struct with posible values and their inverse maps
-struct PossibleValues {
-   vector<int> values;
-   map<int,int> values_pos;
-};
+
 
 struct LB_GENPATH {
    vector<vector<double>> F;

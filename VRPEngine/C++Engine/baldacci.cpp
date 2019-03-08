@@ -1313,7 +1313,43 @@ TerminatingCondition generateTruckMinRoutes(
    return condition;
 }
 
+void update_routes(
+   DualSolution& ds,
+   VRP& vrp,
+   int Delta,
+   double gamma,
+   double z_ub,
+   double bound,
+   bool paste
+){
+   //Calculate lengths
+   int len_N = vrp.len_N();
+   int len_H = vrp.len_H();
+   // Calculate reduced costs
+   vector<vector<double>>& geo_distance = vrp.geo_distance;
+   if (ds.reduced_distances.size() == 0){
+      ds.calc_reduced_distances(vrp.geo_distance);
+   }
+   // Initialize routes
+   if (ds.routes.size() == 0){
+      ds.initialize_routes(len_H);
+   }
 
+   // We generate routes for all of the trucks
+   vector<TerminatingCondition> initial_terminating_conditions(len_H);
+   for (auto h:vrp.H){
+      initial_terminating_conditions[h-len_N] = generateTruckMinRoutes(
+         z_ub,
+         Delta,
+         gamma,
+         h,
+         ds,
+         vrp,
+         bound,
+         paste
+      );
+   }
+}
 
 
 DualSolution optimize_lower_bound_M2(

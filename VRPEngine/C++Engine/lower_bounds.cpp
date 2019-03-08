@@ -1,3 +1,5 @@
+#pragma once
+
 #include <vector>
 #include <map>
 #include <string>
@@ -59,21 +61,6 @@ vector<vector<double>> reduced_cost_matrix(
    return geo_distance;
 }
 
-PossibleValues possible_values(vector<int>& quantities, int truck_capacity){
-   vector<int> values(truck_capacity);
-
-   for (int i=0; i< truck_capacity; i++){
-      values[i] = i + 1;
-   }
-   map<int, int> values_pos;
-   for (int i = 0; i < (int) values.size(); i++){
-      values_pos[values[i]] = i;
-   }
-   PossibleValues possible;
-   possible.values = values;
-   possible.values_pos = values_pos;
-   return possible;
-}
 
 void DualSolution::calc_reduced_distances(vector<vector<double>> geo_distance){
    reduced_distances = reduced_cost_matrix(geo_distance,u,v);

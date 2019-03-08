@@ -25,6 +25,29 @@ using json = nlohmann::json;
 
 using namespace std;
 
+// A struct with posible values and their inverse maps
+struct PossibleValues {
+   vector<int> values;
+   map<int,int> values_pos;
+};
+
+PossibleValues possible_values(vector<int>& quantities, int truck_capacity){
+   vector<int> values(truck_capacity);
+
+   for (int i=0; i< truck_capacity; i++){
+      values[i] = i + 1;
+   }
+   map<int, int> values_pos;
+   for (int i = 0; i < (int) values.size(); i++){
+      values_pos[values[i]] = i;
+   }
+   PossibleValues possible;
+   possible.values = values;
+   possible.values_pos = values_pos;
+   return possible;
+}
+
+
 
 class VRP {
 
@@ -42,6 +65,7 @@ public:
    double penalty_factor;
    string name;
    string folder;
+   vector<PossibleValues> possible_v;
 
    VRP(){}
 
@@ -65,6 +89,7 @@ public:
       penalties = penalties_;
       penalized = true;
       penalty_factor = penalty_factor_;
+      initialize_possible_values();
    }
 
    VRP(
@@ -83,6 +108,8 @@ public:
       n_trucks = n_trucks_;
       penalized = false;
       penalty_factor = 0.0;
+      initialize_possible_values();
+
    }
 
    int len_H(){
@@ -99,6 +126,14 @@ public:
       V.insert( V.end(), H.begin(), H.end() );
       return V;
    }
+
+   void initialize_possible_values(){
+      possible_v = vector<PossibleValues>(len_H());
+      for(int i = 0; i < len_H(); i++){
+         possible_v[i] = possible_values(quantities, capacities[i]);
+      }
+   }
+
 
 };
 

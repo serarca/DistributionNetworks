@@ -6,6 +6,7 @@
 #include "../nlohmann/json.hpp"
 #include <fstream>
 
+
 // Saves dual solution to json file
 void save_dual_solution(string file_name, DualSolution &sol, VRP &vrp, bool include_routes = false){
    json j;

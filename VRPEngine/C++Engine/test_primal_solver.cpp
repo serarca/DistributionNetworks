@@ -40,17 +40,18 @@ int main(int argc, char** argv){
 
    cout<<"Running instance: "<<argv[2]<<endl;
 
-   Parameters parameters;
+   RouteParameters parameters;
 
 
    string results_folder = argv[1];
    string instance_name = argv[2];
-   parameters.Delta_final = atoi(argv[3]);
-   parameters.gamma_final = stod(argv[4]);
+   parameters.Delta = atoi(argv[3]);
+   parameters.gamma = stod(argv[4]);
    parameters.z_ub = 1000000;
+   parameters.route_limit = 10;
 
-   cout<<"Running with Delta: "<<parameters.Delta_final<<endl;
-   cout<<"Running with Gamma: "<<parameters.gamma_final<<endl;
+   cout<<"Running with Delta: "<<parameters.Delta<<endl;
+   cout<<"Running with Gamma: "<<parameters.gamma<<endl;
 
 
 
@@ -64,9 +65,13 @@ int main(int argc, char** argv){
    cout<<"No. Trucks "<<vrp.len_H()<<endl;
 
 
-   cout<< vrp.folder+"dual_solutions/"+vrp.name+"_iter_3.json" <<endl;
-   DualSolution sol = read_dual_solution(vrp.folder+"dual_solutions/"+vrp.name+"_iter_3.json");
-   primal_solution(vrp, sol, parameters);
+   cout<< vrp.folder+"dual_solutions/"+vrp.name+"_partial.json" <<endl;
+   string file_write = vrp.folder+"bash_c/spatial_primal/"+vrp.name+"_"+to_string(parameters.Delta);
+   cout<<file_write<<endl;
+   DualSolution sol = read_dual_solution(vrp.folder+"dual_solutions/"+vrp.name+"_partial.json");
+   PrimalSolution solution = primal_solution(vrp, sol, parameters, file_write);
+   solution.update_routes();
+   solution.verify_solution();
 
    end = std::chrono::system_clock::now();
    std::chrono::duration<double> elapsed_seconds = end - start;

@@ -1,14 +1,17 @@
 #pragma once
 
-
+#include <iostream>
+#include <fstream>
 #include <gurobi_c++.h>
 using namespace std;
 #include "VRPClass.cpp"
 #include "lower_bounds.cpp"
 #include "baldacci.cpp"
 #include "ParametersClass.cpp"
+#include "PrimalClass.cpp"
 
-void primal_solution(VRP& vrp, DualSolution& ds, Parameters& parameters){
+
+PrimalSolution primal_solution(VRP& vrp, DualSolution& ds, RouteParameters& parameters, string file){
 
 
    double inf = numeric_limits<double>::infinity();
@@ -17,12 +20,15 @@ void primal_solution(VRP& vrp, DualSolution& ds, Parameters& parameters){
    update_routes(
       ds,
       vrp,
-      parameters.Delta_final,
-      parameters.gamma_final,
+      parameters.Delta,
+      parameters.gamma,
       parameters.z_ub,
       inf,
-      false
+      false,
+      parameters.route_limit
    );
+
+   PrimalSolution solution(vrp);
 
 
    try {
@@ -40,7 +46,7 @@ void primal_solution(VRP& vrp, DualSolution& ds, Parameters& parameters){
    for (int i = 0; i < ds.routes.size(); i++){
       int j = 0;
       for (auto route:ds.routes[i]){
-         GRBVar var = model.addVar(0.0, 1.0, route.geo_cost, GRB_CONTINUOUS, to_string(i)+"_"+to_string(j));
+         GRBVar var = model.addVar(0.0, 1.0, route.geo_cost, GRB_BINARY, to_string(i)+"_"+to_string(j));
          vars[i].push_back(var);
          for (auto farmer:route.path){
             if (farmer<vrp.len_N()){
@@ -75,11 +81,34 @@ void primal_solution(VRP& vrp, DualSolution& ds, Parameters& parameters){
    cout << "LB: " << ds.z_lb << endl;
    cout << "Gap: "<< (model.get(GRB_DoubleAttr_ObjVal) - ds.z_lb)/model.get(GRB_DoubleAttr_ObjVal)*100<<endl;
 
+   ofstream myfile;
+   myfile.open (file);
+   myfile << "UB: " << model.get(GRB_DoubleAttr_ObjVal)<<"\n"
+   <<"LB: " << ds.z_lb<<"\n"
+   << "Gap: "<< (model.get(GRB_DoubleAttr_ObjVal) - ds.z_lb)/model.get(GRB_DoubleAttr_ObjVal)*100<<"\n";
+   myfile.close();
+
+   // Extract solution
+   for (int i = 0; i < ds.routes.size(); i++){
+      int j = 0;
+      for (auto route:ds.routes[i]){
+         int value = round(vars[i][j].get(GRB_DoubleAttr_X));
+         if (value == 1){
+            solution.routes[i] = route;
+         }
+         j++;
+      }
+   }
+
+
+
    } catch(GRBException e) {
    cout << "Error code = " << e.getErrorCode() << endl;
    cout << e.getMessage() << endl;
    } catch(...) {
    cout << "Exception during optimization" << endl;
    }
+
+   return solution;
 
 }

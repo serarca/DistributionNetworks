@@ -33,47 +33,76 @@ int main(){
 
    string results = "/Users/sergiocamelo/Dropbox/Sergio-Joann/Results/Jan242019-nopenalty/";
    string folder = "instances/";
-   string filename = "spatial/spatial_day_3";
+   string filename = "daily/daily_cluster_780_day_6";
    //filename = "daily/daily_cluster_780_day_12";
    VRP vrp = VRP_from_filename(results+folder+filename+".json", filename);
    vrp.folder = results;
    cout<<"No. Farmers "<<vrp.len_N()<<endl;
 
+   int inf_int = numeric_limits<int>::max();
 
    int iterations_grad_m1 = 50;
    int iterations_grad_m2 = 100;
    int iterations_m2 = 3;
    double z_ub = 1000000;
-   int Delta = 2000;
+   int Delta = 100;
    int Delta_zero = Delta;
    int Delta_final = Delta;
    double gamma = 20000;
    double gamma_zero = - pow(10,-14)*z_ub;
    double gamma_final = 20000;
    double epsilon = 0.1;
+   int limit = 11;
 
-   // //string iter = "1";
-   DualSolution partial_sol = read_dual_solution(vrp.folder+"dual_solutions/"+vrp.name+".json");
-   // DualSolution partial_sol = read_dual_solution(vrp.folder+"dual_solutions/"+vrp.name+"_partial.json");
+   // // //string iter = "1";
+   DualSolution partial_sol = read_dual_solution(vrp.folder+"dual_solutions/"+vrp.name+"_iter_0.json");
+   // // DualSolution partial_sol = read_dual_solution(vrp.folder+"dual_solutions/"+vrp.name+"_partial.json");
    partial_sol.initialize_routes(vrp.len_H());
-   DualSolution lb1 = optimize_lower_bound_M2(iterations_grad_m2, z_ub, Delta, Delta_zero, gamma, gamma_zero, epsilon, vrp, partial_sol);
-   save_dual_solution(vrp.folder+"dual_solutions/"+vrp.name+"_lb1"+".json", lb1, vrp);
+   partial_sol.calc_reduced_distances(vrp.geo_distance);
+   DualSolution lb1 = optimize_lower_bound_M2(iterations_grad_m2, z_ub, Delta, Delta_zero, gamma, gamma_zero, epsilon, vrp, partial_sol, limit);
+   // save_dual_solution(vrp.folder+"dual_solutions/"+vrp.name+"_lb1"+".json", lb1, vrp);
+   //
+   // DualSolution lb2 = optimize_lower_bound_M2(iterations_grad_m2, z_ub, Delta, Delta_zero, gamma, gamma_zero, epsilon, vrp, lb1, limit);
+   // save_dual_solution(vrp.folder+"dual_solutions/"+vrp.name+"_lb2"+".json", lb2, vrp);
 
-   DualSolution lb2 = optimize_lower_bound_M2(iterations_grad_m2, z_ub, Delta, Delta_zero, gamma, gamma_zero, epsilon, vrp, lb1);
-   save_dual_solution(vrp.folder+"dual_solutions/"+vrp.name+"_lb2"+".json", lb2, vrp);
-
-
+   //int h = 80;
 
    // generateTruckMinRoutes(
    //    z_ub,
-   //    16000,
-   //    gamma_zero,
+   //    2000,
+   //    gamma,
    //    80,
    //    partial_sol,
    //    vrp,
    //    - pow(10,-13) * z_ub,
-   //    true
+   //    true,
+   //    limit
    // );
+
+   // RouteParameters route_parameters;
+   // route_parameters.Delta = 10;
+   // route_parameters.gamma = gamma;
+   // route_parameters.lb_limit = limit;
+   // route_parameters.route_limit = limit;
+   // TerminatingCondition terminating_condition;
+   //
+   // vector<list<Path>> paths = GENPATH(route_parameters, vrp, h, partial_sol.reduced_distances, "right", terminating_condition);
+   // cout<<terminating_condition.gamma_guarantee<<endl;
+   // cout<<terminating_condition.new_routes<<endl;
+   // print_Paths(paths);
+
+   // LB_GENPATH lb = path_lower_bound(
+   //    h,
+   //    vrp,
+   //    partial_sol.reduced_distances,
+   //    "left",
+   //    route_parameters.lb_limit
+   // );
+
+   // cout<<lb.F[49][14]<<endl;
+   // cout<<lb.min_q_path[49][14]<<endl;
+
+
 
    // double truck_zero_gamma_guarantee = 0;
    // int Delta_zero_current = 1000;
@@ -82,7 +111,7 @@ int main(){
    // int h = 97;
    //list<SimpleRoute> routes = GENROUTE(z_ub, Delta_zero_current, gamma_zero, h, termination, truck_zero_gamma_guarantee, vrp, partial_sol);
 
-
+   //
    // vector<DualSolution> lb = construct_lower_bound(iterations_grad_m1,
    //    iterations_grad_m2,
    //    iterations_m2,
@@ -94,7 +123,8 @@ int main(){
    //    gamma_zero,
    //    gamma_final,
    //    epsilon,
-   //    vrp
+   //    vrp,
+   //    limit
    // );
 
 

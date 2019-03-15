@@ -20,6 +20,10 @@
 #include <bitset>
 #include "VRPClass.cpp"
 #include "utils/save_dual_solution.cpp"
+#include "q_paths.cpp"
+#include "ParametersClass.cpp"
+
+
 
 #include <chrono>
 
@@ -167,18 +171,24 @@ using GenRoute = vector<list<SimpleRoute>>;
 bool compare_routes (Route i, Route j) { return (i.cost<j.cost); }
 
 vector<list<Path>> GENPATH(
-   int Delta,
-   double gamma,
+   RouteParameters& route_parameters,
+   VRP& vrp,
    int h,
-   int capacity,
-   vector<int> N,
-   vector<int> quantities,
    vector<vector<double>> &distance_dict,
    string direction,
-   bool &terminated,
-   double &gamma_guarantee,
-   double max_length
+   TerminatingCondition& terminating_condition
 ){
+   bool &terminated = terminating_condition.terminated;
+   terminated = true;
+   double &gamma_guarantee = terminating_condition.gamma_guarantee;
+
+   int Delta = route_parameters.Delta;
+   double gamma = route_parameters.gamma;
+
+   int capacity = vrp.capacities[h-vrp.len_N()];
+   vector<int>& N = vrp.N;
+   vector<int>& quantities = vrp.quantities;
+
 
    auto start5 = std::chrono::high_resolution_clock::now();
 
@@ -191,10 +201,13 @@ vector<list<Path>> GENPATH(
    LB_GENPATH Path_lb;
    if (direction == "left")
    {
-      Path_lb = path_lower_bound(h,capacity,N,distance_dict,pv.values,pv.values_pos,quantities,"right");
+      Path_lb = path_lower_bound(h,vrp,distance_dict,"right",route_parameters.lb_limit);
    } else {
-      Path_lb = path_lower_bound(h,capacity,N,distance_dict,pv.values,pv.values_pos,quantities,"left");
+      Path_lb = path_lower_bound(h,vrp,distance_dict,"left",route_parameters.lb_limit);
    }
+
+
+
    cout<<"Finished lower bounds"<<endl;
 
    vector<list<Path>> P(N.size() + 1, list<Path>(0));
@@ -251,15 +264,7 @@ vector<list<Path>> GENPATH(
       }
       // Break if no more routes
       if (arg_min == -1){
-         if (max_length == numeric_limits<double>::infinity()){
-            gamma_guarantee = gamma;
-            cout<<"     Paths Reached Gamma: "<<gamma<<endl;
-            // int total_paths = 0;
-            // for (auto p:P){
-            //    total_paths+= p.size();
-            // }
-            // cout<<"        Total No. of Paths: "<<total_paths<<endl;
-         }
+         gamma_guarantee = gamma;
          // for (int s = 0; s < N.size() + 1; s++){
          //    cout<<"           Farmer "<<s<<":"<<P[s].size()<<endl;
          // }
@@ -276,16 +281,8 @@ vector<list<Path>> GENPATH(
 
       // Break if too many paths
       if (count_paths==Delta){
-         if (max_length == numeric_limits<double>::infinity()){
-            terminated = false;
-            gamma_guarantee = cost_min;
-            cout<<"     Paths Reached Delta, best LB: "<<cost_min<<endl;
-            // int total_paths = 0;
-            // for (auto p:P){
-            //    total_paths+= p.size();
-            // }
-            // cout<<"        Total No. of Paths: "<<total_paths<<endl;
-         }
+         terminated = false;
+         gamma_guarantee = cost_min;
          // for (int s = 0; s < N.size() + 1; s++){
          //    cout<<"           Farmer "<<s<<":"<<P[s].size()<<endl;
          // }
@@ -310,7 +307,7 @@ vector<list<Path>> GENPATH(
 
       // If path too long, go to the next one
 
-      if ((double) p_star.length >= max_length)
+      if ((double) p_star.length - 1 >= route_parameters.route_limit)
          continue;
 
       // If path violates capacity, go to the next one
@@ -380,40 +377,36 @@ vector<list<Path>> GENPATH(
                //lb_path = Path_lb.min_q_path_2[pv.values_pos[new_path.load]][i];
             }
             new_path.lower_bound = new_path.cost + remaining_cost;
-            //new_path.lb_path = lb_path;
-            ////Calculate load of path
-            //new_path.lb_load = 0;
+            // cout<<"In Path"<<in_path;
+            // cout<<"Path: "<<new_path.path<<endl;
+            // cout<<"LB: "<<new_path.lower_bound<<endl;
+            // cout<<"Q: "<<pv.values_pos[new_path.load]<<endl;
+            // cout<<"Load: "<<new_path.load<<endl;
+            // cout<<"End: "<<i<<endl;
 
+            // new_path.lb_path = lb_path;
+            // //Calculate load of path
+            // new_path.lb_load = 0;
+            //
             // for (int s = 1; s<(int) new_path.lb_path.size() - 1; s++){
             //    int n = new_path.lb_path[s];
             //    new_path.lb_load += quantities[n];
             // }
-            //
+
             // //Calculate real lower bound to debug
             // new_path.real_cost = 0;
             // new_path.real_lb = 0;
-            // if(new_path.load == 10 && new_path.end == 62)
-            // {
-            //    cout<<direction<<endl;
-            // }
+            //
             // for (auto it = new_path.path.begin(); std::next(it,1)!=new_path.path.end(); ++it){
             //    int n = *it;
             //    int n_next = *std::next(it,1);
             //    if (direction=="left"){
             //       new_path.real_cost += distance_dict[n][n_next];
-            //       if(new_path.load == 10 && new_path.end == 62)
-            //       {
-            //          cout<<n<<','<<n_next<<": "<<distance_dict[n][n_next]<<endl;
-            //
-            //       }
             //    } else {
             //       new_path.real_cost += distance_dict[n_next][n];
-            //       if(new_path.load == 10 && new_path.end == 62){
-            //          cout<<n<<','<<n_next<<": "<<distance_dict[n_next][n]<<endl;
-            //       }
             //    }
             // }
-            // new_path.real_lb = new_path.real_cost;
+            //new_path.real_lb = new_path.real_cost;
             // for (int s = 0; s < (int) new_path.lb_path.size() - 1; s++){
             //    if (direction=="left"){
             //       new_path.real_lb  += distance_dict[new_path.lb_path[s+1]][new_path.lb_path[s]];
@@ -428,7 +421,7 @@ vector<list<Path>> GENPATH(
             //       }
             //    }
             // }
-            //
+
 
 
             /*
@@ -546,20 +539,24 @@ vector<list<Path>> GENPATH(
       }
    }
 
+   terminating_condition.new_routes = count_paths;
+
    return P;
 }
 
 list<SimpleRoute> GENROUTE(
-   double z_ub,
-   int Delta,
-   double gamma,
+   RouteParameters& route_parameters,
    int h,
-   bool &terminated,
-   double &gamma_guarantee,
+   TerminatingCondition& terminating_condition,
    VRP &vrp,
    DualSolution &sol,
    vector<vector<double>> penalized_distances
 ){
+
+   double z_ub = route_parameters.z_ub;
+   int Delta = route_parameters.Delta;
+   double gamma = route_parameters.gamma;
+
    int total_routes = 0;
    //int negative_routes = 0;
    int len_N = vrp.len_N();
@@ -574,32 +571,36 @@ list<SimpleRoute> GENROUTE(
    cout<<"     Generating paths"<<endl;
 
    double inf = numeric_limits<double>::infinity();
-   double gamma_guarantee_1;
-   GenPath P_l = GENPATH(Delta, gamma, h, capacity, N, quantities, distance_dict, "left", terminated, gamma_guarantee_1,inf);
-   GenPath P_l_small = GENPATH(Delta, gamma, h, capacity, N, quantities, distance_dict, "left", terminated, gamma_guarantee_1,1);
+   TerminatingCondition cond_l;
+   GenPath P_l = GENPATH(route_parameters, vrp, h, distance_dict, "left", cond_l);
+   cout<<"  Left Paths Contructed: "<<cond_l.new_routes<<endl;
+   cout<<"  Left Gamma: "<<cond_l.gamma_guarantee<<endl;
+
+   // Add smaller paths on length 1
+   TerminatingCondition dummy_l;
+   RouteParameters dummy_route_parameters = route_parameters;
+   dummy_route_parameters.route_limit = 1;
+   GenPath P_l_small = GENPATH(dummy_route_parameters, vrp, h, distance_dict, "left", dummy_l);
    for (int i = 0; i<N.size(); i++){
       P_l[i].insert(P_l[i].end(), P_l_small[i].begin(), P_l_small[i].end());
    }
 
-   // Debug
-   if (h==5 && gamma == 5){
-      //print_paths(P_l[1]);
-   }
-   double gamma_guarantee_2;
-   GenPath P_r = GENPATH(Delta, gamma, h, capacity, N, quantities, distance_dict, "right", terminated, gamma_guarantee_2,inf);
-   GenPath P_r_small = GENPATH(Delta, gamma, h, capacity, N, quantities, distance_dict, "right", terminated, gamma_guarantee_2,1);
+
+
+   TerminatingCondition cond_r;
+   TerminatingCondition dummy_r;
+   GenPath P_r = GENPATH(route_parameters, vrp, h, distance_dict, "right", cond_r);
+   cout<<"  Right Paths Contructed: "<<cond_r.new_routes<<endl;
+   cout<<"  Right Gamma: "<<cond_r.gamma_guarantee<<endl;
+   GenPath P_r_small = GENPATH(dummy_route_parameters, vrp, h, distance_dict, "right", dummy_r);
    for (int i = 0; i<N.size(); i++){
       P_r[i].insert(P_r[i].end(), P_r_small[i].begin(), P_r_small[i].end());
    }
 
-
    cout<<"     Done with the paths"<<endl;
-   cout<<"     Terminated: "<<terminated<<endl;
-   if (h==5 && gamma == 5){
-      //print_paths(P_r[1]);
-      //p_v_v(distance_dict);
-   }
-   gamma_guarantee = min(gamma_guarantee_1,gamma_guarantee_2);
+
+   terminating_condition.gamma_guarantee = min(cond_r.gamma_guarantee,cond_l.gamma_guarantee);
+   terminating_condition.terminated = cond_r.terminated && cond_l.terminated;
    // We order the paths by their cost
    auto cost_comparison = [](Path a, Path b) { return a.cost < b.cost; };
    for (int i = 0; i<len_N; i++){
@@ -1250,7 +1251,8 @@ TerminatingCondition generateTruckMinRoutes(
    DualSolution& initial_sol,
    VRP& vrp,
    double bound,
-   bool paste
+   bool paste,
+   int limit
 ){
    // Define infinity
    double inf = numeric_limits<double>::infinity();
@@ -1284,12 +1286,20 @@ TerminatingCondition generateTruckMinRoutes(
    }
 
    // Initialize the parameters
-   bool terminated_initial = true;
-   double truck_guarantee;
+   TerminatingCondition terminating_condition;
    cout<<"Generating Routes for Truck: "<<h<<endl;
 
-   list<SimpleRoute> Routes = GENROUTE(z_ub, Delta, gamma, h, terminated_initial, truck_guarantee, vrp, initial_sol, penalized_distances);
-   cout<<"  Truck guarantee: "<<truck_guarantee<<endl;
+
+   RouteParameters route_parameters;
+   route_parameters.z_ub = z_ub;
+   route_parameters.Delta = Delta;
+   route_parameters.gamma = gamma;
+   route_parameters.lb_limit = limit;
+   route_parameters.route_limit = limit;
+
+   list<SimpleRoute> Routes = GENROUTE(route_parameters, h, terminating_condition, vrp, initial_sol, penalized_distances);
+   cout<<"  Truck guarantee: "<<terminating_condition.gamma_guarantee<<endl;
+   cout<<"  Terminated: "<<terminating_condition.terminated<<endl;
 
    // Delete routes
    if (!paste){
@@ -1303,14 +1313,11 @@ TerminatingCondition generateTruckMinRoutes(
       }
    }
 
-   TerminatingCondition condition;
-   condition.terminated = terminated_initial;
-   condition.gamma_guarantee = truck_guarantee;
-   condition.new_routes = new_routes_count;
+   terminating_condition.new_routes = new_routes_count;
 
    cout<<"  Routes Found: "<<new_routes_count<<endl;
 
-   return condition;
+   return terminating_condition;
 }
 
 void update_routes(
@@ -1320,7 +1327,8 @@ void update_routes(
    double gamma,
    double z_ub,
    double bound,
-   bool paste
+   bool paste,
+   int limit
 ){
    //Calculate lengths
    int len_N = vrp.len_N();
@@ -1346,7 +1354,8 @@ void update_routes(
          ds,
          vrp,
          bound,
-         paste
+         paste,
+         limit
       );
    }
 }
@@ -1361,7 +1370,8 @@ DualSolution optimize_lower_bound_M2(
    double gamma_zero,
    double epsilon,
    VRP &vrp,
-   DualSolution &initial_sol
+   DualSolution &initial_sol,
+   int limit
 ){
 
    vector<double> mu = initial_sol.v;
@@ -1402,7 +1412,8 @@ DualSolution optimize_lower_bound_M2(
          initial_sol,
          vrp,
          inf,
-         false
+         false,
+         limit
       );
    }
    // // Now we add routes that come from a previous iteration of the algorithm
@@ -1477,7 +1488,8 @@ DualSolution optimize_lower_bound_M2(
                   ds,
                   vrp,
                   - pow(10,-13) * z_ub,
-                  true
+                  true,
+                  limit
                );
             }
          }
@@ -1545,7 +1557,8 @@ vector<DualSolution> construct_lower_bound(
    double gamma_zero,
    double gamma_final,
    double epsilon,
-   VRP &vrp
+   VRP &vrp,
+   int limit
 ){
 
    vector<int>& H = vrp.H;
@@ -1561,7 +1574,7 @@ vector<DualSolution> construct_lower_bound(
    // Define infinity
    double inf = numeric_limits<double>::infinity();
    // Debugging first lower bounds
-   DualSolution sol = lower_bound_optimizer_M1(iterations_grad_m1, z_ub, epsilon, vrp);
+   DualSolution sol = lower_bound_optimizer_M1(iterations_grad_m1, z_ub, epsilon, vrp, limit);
    DualSolution old_sol;
    cout<<"Bound Christofides:"<<sol.z_lb<<endl;
    sol.routes.clear();
@@ -1577,7 +1590,7 @@ vector<DualSolution> construct_lower_bound(
    for (int iter_2 = 0; iter_2<iterations_m2; iter_2++){
       old_sol = sol;
       cout<<"Started Iteration of Bound 2 No. :"<<iter_2<<endl;
-      sol = optimize_lower_bound_M2(iterations_grad_m2, z_ub, Delta, Delta_zero, gamma, gamma_zero, epsilon, vrp, old_sol);
+      sol = optimize_lower_bound_M2(iterations_grad_m2, z_ub, Delta, Delta_zero, gamma, gamma_zero, epsilon, vrp, old_sol, limit);
       save_dual_solution(vrp.folder+"dual_solutions/"+vrp.name+"_iter_"+to_string(iter_2)+".json", old_sol, vrp);
 
 
@@ -1611,7 +1624,8 @@ vector<DualSolution> construct_lower_bound(
          sol,
          vrp,
          - pow(10,-13) * z_ub,
-         false
+         false,
+         limit
       );
 
    }

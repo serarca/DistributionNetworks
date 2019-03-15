@@ -47,13 +47,14 @@ int main(int argc, char** argv){
    int iterations_grad_m2 = 150;
    int iterations_m2 = 3;
    double z_ub = 2000000;
-   int Delta = 500;
+   int Delta = 1000;
    int Delta_zero = Delta;
    int Delta_final = Delta;
    double gamma = 20000;
    double gamma_zero = - pow(10,-14)*z_ub;
    double gamma_final = 20000;
    double epsilon = 0.1;
+   int limit = 15;
 
 
    vector<DualSolution> lb = construct_lower_bound(iterations_grad_m1,
@@ -67,7 +68,8 @@ int main(int argc, char** argv){
       gamma_zero,
       gamma_final,
       epsilon,
-      vrp
+      vrp,
+      limit
    );
 
 

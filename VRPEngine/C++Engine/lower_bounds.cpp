@@ -13,6 +13,8 @@
 #include <math.h>
 #include "prettyprint.hpp"
 #include "VRPClass.cpp"
+#include "q_paths.cpp"
+
 
 
 template class std::vector<double>;
@@ -78,7 +80,8 @@ LowerBound lower_bound_(
    VRP &vrp,
    vector<vector<double>> &distance_dict,
    vector<double> mu,
-   vector<double> lamb
+   vector<double> lamb,
+   int limit
 ){
 
    vector<int>& H = vrp.H;
@@ -113,7 +116,22 @@ LowerBound lower_bound_(
       }
 
       PossibleValues possible = possible_values(quantities, truck_capacity);
-      QRoutes qroutes = construct_q_routes_(H[h], truck_capacity, N, penalized_distance, possible.values, possible.values_pos, quantities);
+
+      QRoutes qroutes;
+      bool old_code = true;
+      if (limit == numeric_limits<int>::max()){
+         if (old_code){
+            qroutes = construct_q_routes_(H[h], truck_capacity, N, penalized_distance, possible.values, possible.values_pos, quantities);
+         } else {
+            qroutes = construct_q_routes_(vrp, H[h], penalized_distance);
+         }
+      } else {
+         if (!old_code){
+            qroutes = construct_q_routes_lim_(vrp, H[h], penalized_distance, limit);
+         } else {
+            qroutes = construct_q_routes_(H[h], truck_capacity, N, penalized_distance, possible.values, possible.values_pos, quantities);
+         }
+      }
 
 
       // We find the minimum l
@@ -222,7 +240,7 @@ QPaths construct_q_paths_(
 
    //Construct infinity
    double inf = numeric_limits<double>::infinity();
-   int inf_int = numeric_limits<int>::infinity();
+   int inf_int = numeric_limits<int>::max();
 
    //Initialize the routes
    vector<vector<double>> f(len_values, vector<double> (len_N));
@@ -566,8 +584,9 @@ DualSolution lower_bound_optimizer_M1(
    int iterations,
    double z_ub,
    double epsilon,
-   VRP &vrp)
-{
+   VRP &vrp,
+   int limit
+){
 
    vector<int>& H = vrp.H;
    vector<int>& capacities = vrp.capacities;
@@ -600,7 +619,7 @@ DualSolution lower_bound_optimizer_M1(
 
       vector<vector<double>> distance_dict = reduced_cost_matrix(geo_distance, lamb, mu);
       // We pass these routes to the algorithm that calculates the lower bound
-      LowerBound lb = lower_bound_(vrp, distance_dict, mu, lamb);
+      LowerBound lb = lower_bound_(vrp, distance_dict, mu, lamb, limit);
       cout<<lb.z_lb<<endl;
       //cout<<lamb<<endl;
       //cout<<mu<<endl;

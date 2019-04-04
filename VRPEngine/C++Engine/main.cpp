@@ -35,7 +35,7 @@ int main(int argc, char** argv){
    string results_folder = argv[1];
    string instance_name = argv[2];
    string instances_folder = "instances/";
-
+   cout<<results_folder+instances_folder+instance_name+".json"<<endl;
    VRP vrp = VRP_from_filename(results_folder+instances_folder+instance_name+".json", instance_name);
    vrp.folder = results_folder;
    cout<<"No. Farmers "<<vrp.len_N()<<endl;

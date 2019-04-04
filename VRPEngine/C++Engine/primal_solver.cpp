@@ -11,7 +11,7 @@ using namespace std;
 #include "PrimalClass.cpp"
 
 
-PrimalSolution primal_solution(VRP& vrp, DualSolution& ds, RouteParameters& parameters, string file){
+PrimalSolution primal_solution(VRP& vrp, DualSolution& ds, RouteParameters& parameters){
 
 
    double inf = numeric_limits<double>::infinity();
@@ -67,6 +67,9 @@ PrimalSolution primal_solution(VRP& vrp, DualSolution& ds, RouteParameters& para
    }
 
 
+   // Set time limit
+   model.getEnv().set(GRB_DoubleParam_TimeLimit, 7000);
+
    // Optimize model
    model.optimize();
 
@@ -81,12 +84,6 @@ PrimalSolution primal_solution(VRP& vrp, DualSolution& ds, RouteParameters& para
    cout << "LB: " << ds.z_lb << endl;
    cout << "Gap: "<< (model.get(GRB_DoubleAttr_ObjVal) - ds.z_lb)/model.get(GRB_DoubleAttr_ObjVal)*100<<endl;
 
-   ofstream myfile;
-   myfile.open (file);
-   myfile << "UB: " << model.get(GRB_DoubleAttr_ObjVal)<<"\n"
-   <<"LB: " << ds.z_lb<<"\n"
-   << "Gap: "<< (model.get(GRB_DoubleAttr_ObjVal) - ds.z_lb)/model.get(GRB_DoubleAttr_ObjVal)*100<<"\n";
-   myfile.close();
 
    // Extract solution
    for (int i = 0; i < ds.routes.size(); i++){

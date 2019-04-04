@@ -68,7 +68,7 @@ public:
       }
    }
 
-   void verify_solution(){
+   bool verify_solution(){
       z_lb = 0;
       load = 0;
       vector<int> served_farmers(vrp.len_N(),0);
@@ -78,6 +78,7 @@ public:
          load += route.load;
          if (vrp.capacities[i]<route.load){
             cout<<"Violating loads"<<endl;
+            return false;
          }
 
          vector<int> v_path{ std::begin(route.path), std::end(route.path) };
@@ -92,10 +93,36 @@ public:
       for (int i = 0; i<served_farmers.size(); i++){
          if (served_farmers[i]!= 1){
             cout<<"Violating farmers"<<endl;
+            return false;
          }
       }
       cout<<"Total Cost: "<<z_lb<<endl;
       cout<<"Total Load: "<<load<<endl;
+      return true;
+   }
+
+   void save_solution(string filename){
+      json j;
+
+      update_routes();
+      if (!verify_solution()){
+         j["status"] = "verified";
+      } else {
+         j["z_lb"] = z_lb;
+
+         for (int i = 0; i < vrp.len_H(); i++){
+            SimpleRoute& route = routes[i];
+            vector<int> v_path{ std::begin(route.path), std::end(route.path) };
+            j["routes"].push_back(v_path);
+         }
+
+      }
+
+      std::ofstream o(filename);
+      o << std::setw(4) << j << std::endl;
+
+
+
    }
 
 

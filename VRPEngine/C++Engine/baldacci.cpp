@@ -1590,6 +1590,7 @@ vector<DualSolution> construct_lower_bound(
    for (int iter_2 = 0; iter_2<iterations_m2; iter_2++){
       old_sol = sol;
       cout<<"Started Iteration of Bound 2 No. :"<<iter_2<<endl;
+      save_dual_solution(vrp.folder+"dual_solutions/"+vrp.name+"_iter_"+to_string(iter_2)+".json", old_sol, vrp);
       sol = optimize_lower_bound_M2(iterations_grad_m2, z_ub, Delta, Delta_zero, gamma, gamma_zero, epsilon, vrp, old_sol, limit);
       save_dual_solution(vrp.folder+"dual_solutions/"+vrp.name+"_iter_"+to_string(iter_2)+".json", old_sol, vrp);
 

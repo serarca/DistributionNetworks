@@ -71,3 +71,20 @@ def path_distance(path):
 
     return total_dist
 
+# Calculates distance to start
+def distance_to_start(p):
+    response_closest_start = json.loads(urllib2.urlopen('http://127.0.0.1:5000/nearest/v1/foot/%f,%f'%(p[1],p[0])).read())
+    dist_start = response_closest_start['waypoints'][0]['distance']
+    return dist_start
+
+# Calculates closest point on map
+def closest(p):
+    response_closest_start = json.loads(urllib2.urlopen('http://127.0.0.1:5000/nearest/v1/foot/%f,%f'%(p[1],p[0])).read())
+    return (response_closest_start['waypoints'][0]['location'][1],response_closest_start['waypoints'][0]['location'][0])
+
+# Calculates closest nodes on map
+def access_nodes(p):
+    response_closest_start = json.loads(urllib2.urlopen('http://127.0.0.1:5000/nearest/v1/foot/%f,%f'%(p[1],p[0])).read())
+    return response_closest_start['waypoints'][0]['nodes']
+
+

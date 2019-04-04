@@ -48,7 +48,7 @@ int main(int argc, char** argv){
    parameters.Delta = atoi(argv[3]);
    parameters.gamma = stod(argv[4]);
    parameters.z_ub = 1000000;
-   parameters.route_limit = 10;
+   parameters.route_limit = 15;
 
    cout<<"Running with Delta: "<<parameters.Delta<<endl;
    cout<<"Running with Gamma: "<<parameters.gamma<<endl;
@@ -65,13 +65,14 @@ int main(int argc, char** argv){
    cout<<"No. Trucks "<<vrp.len_H()<<endl;
 
 
-   cout<< vrp.folder+"dual_solutions/"+vrp.name+"_partial.json" <<endl;
+   cout<< vrp.folder+"dual_solutions/"+vrp.name+"_iter_3.json" <<endl;
    string file_write = vrp.folder+"bash_c/spatial_primal/"+vrp.name+"_"+to_string(parameters.Delta);
    cout<<file_write<<endl;
-   DualSolution sol = read_dual_solution(vrp.folder+"dual_solutions/"+vrp.name+"_partial.json");
-   PrimalSolution solution = primal_solution(vrp, sol, parameters, file_write);
-   solution.update_routes();
-   solution.verify_solution();
+   DualSolution sol = read_dual_solution(vrp.folder+"dual_solutions/"+vrp.name+"_iter_3.json");
+   PrimalSolution solution = primal_solution(vrp, sol, parameters);
+
+   solution.save_solution(file_write);
+
 
    end = std::chrono::system_clock::now();
    std::chrono::duration<double> elapsed_seconds = end - start;

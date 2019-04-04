@@ -1,4 +1,5 @@
 import numpy as np
+
 from scipy.spatial import distance_matrix
 from scipy.spatial.distance import pdist
 import math
@@ -10,7 +11,7 @@ from tsp_nn import NearestNeighbourSolver
 from tsp_ni import NearestInsertionSolver
 import copy
 from scipy.spatial import distance as distance_lib
-#import lower_bound
+import lower_bound
 import road_distance
 
 

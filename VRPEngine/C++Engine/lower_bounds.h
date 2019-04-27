@@ -48,6 +48,7 @@ struct SimpleRoute{
    int load;
    int median;
    double geo_cost;
+   double truck_cost;
    int truck;
    double l_lb;
    double r_lb;
@@ -62,14 +63,14 @@ public:
    vector<double> v;
    vector<list<SimpleRoute>> routes;
    double gamma_guarantee;
-   vector<vector<double>> reduced_distances;
+   vector<vector<vector<double>>> reduced_truck_distances;
 
-   void calc_reduced_distances(vector<vector<double>> geo_distance);
+   void sol_calc_reduced_truck_distances(vector<vector<vector<double>>> truck_distances);
    void initialize_routes(int len_H);
 
 };
 
-struct TerminatingCondition {
+struct TerminatingCondition{
    bool terminated;
    double gamma_guarantee;
    int new_routes;

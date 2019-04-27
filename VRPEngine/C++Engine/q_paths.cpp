@@ -132,7 +132,7 @@ QPathsLim construct_q_paths_lim_(
                // To fix the bug in case len_N==2
                if (arg_min_2 == inf_int){
                   arg_min_2 = arg_min_1;
-                  cout<<"Weird behavior"<<endl;
+                  //cout<<"Weird behavior"<<endl;
                }
                p[lim][l][x_i] = arg_min_1;
                f[lim][l][x_i] = min_1;

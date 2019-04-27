@@ -2,6 +2,7 @@ import numpy as np
 
 # This is done to be able to read the files
 import sys
+import networkx as nx
 sys.path.insert(0, "Code/VRPEngine/pyCode")
 sys.path.insert(0, "Code/VRPEngine/pyCode/tsp")
 
@@ -22,59 +23,182 @@ import road_distance
 
 from ._json import primal_from_json
 import json
+from ._GVRP import *
+import collections
+
+class Farmer:
+	def __init__(self, location, quantity, pickups, cluster, rate, farmer_id, plot_id):
+		self.t = "farmer"
+		self.location = location
+		self.quantity = quantity
+		self.pickups = pickups
+		self.cluster_id_sq = cluster
+		self.rate = rate
+		self.farmer_id = farmer_id
+		self.node_id = plot_id
+		self.access_point = calc_access_point(location)
+		self.access_nodes = calc_access_nodes(location)
+		self.dist_access_point = calc_dist_to_access_point(location)
+	
+def calc_access_point(location):
+	return road_distance.closest(location)
+
+def calc_dist_to_access_point(location):
+	return road_distance.distance_to_start(location)
+	
+
+def calc_access_nodes(location):
+	return road_distance.access_nodes(location)
+
+		
+class Middleman:
+	def __init__(self, location, cluster, mill_codes):
+		self.t = "middleman"
+		self.location = location
+		self.node_id = cluster
+		self.access_point = calc_access_point(location)
+		self.mill_codes_sq = mill_codes
+		self.access_point = calc_access_point(location)
+		self.access_nodes = calc_access_nodes(location)
+		self.dist_access_point = calc_dist_to_access_point(location)
+		
+class Truck:
+	def __init__(self, truck_id, cluster, capacity, truck_type):
+		self.t = "truck"
+		self.node_id = truck_id
+		self.cluster_id = cluster
+		self.capacity = capacity
+		self.truck_type = truck_type
+
+
+class Day:
+	def __init__(self, day_id):
+		self.day_id = day_id
+		
+class Mill:
+	def __init__(self, mill_id, name, location):
+		self.t = "mill"
+		self.node_id = mill_id
+		self.name = name
+		self.location = location
+		self.access_point = calc_access_point(location)
+		self.access_nodes = calc_access_nodes(location)
+		self.dist_access_point = calc_dist_to_access_point(location)
+		
+
+class GlobalVRP:
+	def __init__(self, farmers, middlemen, mills, trucks, days_list):
+		
+		# Assign farmers to middlemen
+		for k,m in middlemen.iteritems():
+			m.farmers_sq = []
+
+		for k,f in farmers.iteritems():
+			cluster = f.cluster_id_sq
+			middlemen[cluster].farmers_sq.append(f)
+
+		for k,m in middlemen.iteritems():
+			m.n_farmers_sq = len(m.farmers_sq)
+
+		# Assign trucks to middleman
+		for k,m in middlemen.iteritems():
+			m.trucks = collections.defaultdict(list)
+			m.truck_ids = []
+
+		for k,t in trucks.iteritems():
+			cluster = t.cluster_id
+			middlemen[cluster].trucks[t.capacity].append(t)
+			middlemen[cluster].truck_ids.append(t.node_id)
+			# Assign location to truck
+			t.location = middlemen[cluster].location
+			t.dist_access_point = middlemen[cluster].dist_access_point
+			t.access_point = middlemen[cluster].access_point
+
+		for k,m in middlemen.iteritems():
+			m.n_trucks = {k:len(ts) for k,ts in m.trucks.iteritems()}
+
+
+		# Assign mills to middleman
+		for k,m in middlemen.iteritems():
+			m.mills_sq = []
+			for mill_code in m.mill_codes_sq:
+				if mill_code!="other_mills":
+					m.mills_sq.append(mills[mill_code])
+
+		# Create days:
+		days_dict = {}
+		for day in days_list:
+			days_dict[day] = Day(day)
+
+
+		self.farmers = farmers
+		self.middlemen = middlemen
+		self.mills = mills
+		self.trucks = trucks
+		self.days_list = days_list
+		self.days = days_dict
+
+	# Iterate over nodes
+	def iter_nodes(self):
+		for n in self.farmers.iteritems():
+			yield n
+		for n in self.middlemen.iteritems():
+			yield n
+		for n in self.mills.iteritems():
+			yield n
 
 
 def to_json(vrp, file_name):
 	file_dict = {
 		"H":vrp.H,
 		"N":vrp.N,
-	    "H_p":vrp.H_p,
-	    "N_p":vrp.N_p,
-	    "capacities": vrp.capacities,
-	    "quantities": vrp.quantities,
-	    "mapping": vrp.mapping,
-	    "distances": vrp.distance,
-	    "n_trucks": vrp.n_trucks
+		"H_p":vrp.H_p,
+		"N_p":vrp.N_p,
+		"capacities": vrp.capacities,
+		"quantities": vrp.quantities,
+		"mapping": vrp.mapping,
+		"distances": vrp.distance,
+		"n_trucks": vrp.n_trucks
 	}
 	print(file_dict)
 
 	with open(file_name, "wb" ) as fp:
-	    json.dump(file_dict, fp)
+		json.dump(file_dict, fp)
 
 # Parses data into numeric JSON format that can be read by C++
 def c_json_parser(vrp):
-    N_ = list(range(len(vrp.N)))
-    H_ = list(range(len(vrp.N),len(vrp.N)+len(vrp.H)))
-    capacities_ = [int(vrp.capacities[h]*10) for h in vrp.H]
-    quantities_ = [int(vrp.quantities[n]*10) for n in vrp.N]
-    n_trucks_ = [int(vrp.n_trucks[h]) for h in vrp.H]
-    if vrp.penalties:
-        penalties_ = []
-        for i,h in enumerate(vrp.H):
-            penalties_.append([])
-            for j,n in enumerate(vrp.N):
-                penalties_[i].append(vrp.penalties[h][n])
-    file_dict = {"H":H_,
-                "N":N_,
-                "H_p":vrp.H_p.tolist(),
-                "N_p":vrp.N_p.tolist(),
-                "capacities": capacities_,
-                "quantities": quantities_,
-                "mapping": vrp.mapping,
-                "distances": vrp.distance.tolist(),
-                "n_trucks": n_trucks_,
-                }
-    if vrp.penalties:
-        file_dict.update({
-                "penalties": penalties_,
-            })
-    return file_dict
+	N_ = list(range(len(vrp.N)))
+	H_ = list(range(len(vrp.N),len(vrp.N)+len(vrp.H)))
+	capacities_ = [int(vrp.capacities[h]*10) for h in vrp.H]
+	quantities_ = [int(vrp.quantities[n]*10) for n in vrp.N]
+	n_trucks_ = [int(vrp.n_trucks[h]) for h in vrp.H]
+	if vrp.penalties:
+		penalties_ = []
+		for i,h in enumerate(vrp.H):
+			penalties_.append([])
+			for j,n in enumerate(vrp.N):
+				penalties_[i].append(vrp.penalties[h][n])
+	file_dict = {"H":H_,
+				"N":N_,
+				"H_p":vrp.H_p.tolist(),
+				"N_p":vrp.N_p.tolist(),
+				"capacities": capacities_,
+				"quantities": quantities_,
+				"mapping": vrp.mapping,
+				"distances": vrp.distance.tolist(),
+				"n_trucks": n_trucks_,
+				}
+	if vrp.penalties:
+		file_dict.update({
+				"penalties": penalties_,
+			})
+	return file_dict
 
 
 
 # This class holds a VRP problem
 class VRP:
-	def __init__(self, H, N, H_p, N_p, quantities, capacities, type_dist, M = False, M_p = False, distance_matrix = None, penalties = None, n_trucks = None, network_data = None, mapping = None):
+	def __init__(self, H, N, H_p, N_p, quantities, capacities, type_dist, M = False, M_p = False, distance_matrix = None, penalties = None, n_trucks = None, network = None, mapping = None):
 		self.V = N+H
 		self.H = H
 		self.N = N
@@ -86,16 +210,39 @@ class VRP:
 		self.M_p = M_p
 		self.M = M
 		self.time = None
-		self.network_data = network_data
+		self.network = network
 		self.n_trucks = n_trucks
 		self.penalties = penalties
 		self.mapping = mapping
+		self.type_dist = type_dist
+
+		def dist_f(loc1,loc2):
+			if self.type_dist == 'road_time':
+				return (road_distance.road_distance(loc1,loc2)['time'])
+			elif self.type_dist == 'road_dist':
+				return (road_distance.road_distance(loc1,loc2)['distance'])
+			elif self.type_dist == 'network_time':
+				weight = 'weight_time'
+				return self.network.network_distance(tuple(loc1),tuple(loc2),weight)
+			elif self.type_dist == 'network_dist':
+				weight = 'weight_dist'
+				return self.network.network_distance(tuple(loc1),tuple(loc2),weight)
+			elif self.type_dist == 'zero_dist':
+				return 0.0
+			else:
+				raise Exception("unkown dist type")
 
 		# Find closest mill to each node
 		if M:
 			self.closest_mill = {}
 			for i in range(len(self.N)):
-				self.closest_mill[N[i]] = M[distance_lib.cdist([N_p[i,:]], M_p).argmin()]
+				min_dist = np.float('inf')
+				for j in range(len(self.M)):
+					#import pdb; pdb.set_trace()
+					d = dist_f(N_p[i,:], M_p[j,:])
+					if d<min_dist:
+						min_dist = d
+						self.closest_mill[N[i]] = M[j]
 
 		# Create distance matrices
 		if type(distance_matrix) is np.ndarray:
@@ -110,15 +257,22 @@ class VRP:
 			if type_dist == 'manhattan':
 				self.manhattan_distance = self.manhattan_distance_matrix(pd.DataFrame(data = np.concatenate([N_p, H_p]), index = np.concatenate([self.N,self.H]), columns = ['lat','lon']))
 				self.distance = self.manhattan_distance
-			if type_dist == 'road':
+			if type_dist == 'road_time':
+				aux = self.road_distance_matrix(pd.DataFrame(data = np.concatenate([N_p, H_p]), index = np.concatenate([self.N,self.H]), columns = ['lat','lon']))
+				self.road_distance = aux[0]
+				self.road_time = aux[1]
+				self.distance = self.road_time
+				self.time = self.road_time
+			if type_dist == 'road_dist':
 				aux = self.road_distance_matrix(pd.DataFrame(data = np.concatenate([N_p, H_p]), index = np.concatenate([self.N,self.H]), columns = ['lat','lon']))
 				self.road_distance = aux[0]
 				self.road_time = aux[1]
 				self.distance = self.road_distance
 				self.time = self.road_time
 			if type_dist == 'network':
-				self.network_distance = self.network_distance_matrix(pd.DataFrame(data = np.concatenate([N_p, H_p]), index = np.concatenate([self.N,self.H]), columns = ['lat','lon']))
-				self.distance = self.network_distance
+				raise Exception("Should not go in here")
+			if type_dist == "zero_dist":
+				self.distance = np.zeros([len(N)+len(H),len(N)+len(H)])
 	
 		self.positions = dict(zip(np.concatenate([N,H]),list(range(len(N+H)))))
 		# Create distance dictionary
@@ -138,6 +292,7 @@ class VRP:
 
 
 	from ._json import from_json
+	from ._GVRP_utils import create_VRP_instance
 
 	# Construct geographical distances matrix
 	def geo_distance_matrix(self,df,mills = False):
@@ -203,10 +358,6 @@ class VRP:
 							d_time[i,j] = seg_1['time'] + seg_2['time']
 		return (d_dist,d_time)
 
-	# Distance based on a graph network constructed on Networkx
-	def network_distance_matrix(self,df):
-		network = network_data['network']
-		dist_access_point = network_data['dist_access_point']
 
 
 

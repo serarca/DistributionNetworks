@@ -17,6 +17,7 @@ PrimalSolution primal_solution(VRP& vrp, DualSolution& ds, RouteParameters& para
    double inf = numeric_limits<double>::infinity();
 
    // Construct the routes from the dual solution
+   cout<<"Updating Routes"<<endl;
    update_routes(
       ds,
       vrp,
@@ -27,6 +28,7 @@ PrimalSolution primal_solution(VRP& vrp, DualSolution& ds, RouteParameters& para
       false,
       parameters.route_limit
    );
+   cout<<"Finished updating Routes"<<endl;
 
    PrimalSolution solution(vrp);
 
@@ -46,7 +48,7 @@ PrimalSolution primal_solution(VRP& vrp, DualSolution& ds, RouteParameters& para
    for (int i = 0; i < ds.routes.size(); i++){
       int j = 0;
       for (auto route:ds.routes[i]){
-         GRBVar var = model.addVar(0.0, 1.0, route.geo_cost, GRB_BINARY, to_string(i)+"_"+to_string(j));
+         GRBVar var = model.addVar(0.0, 1.0, route.truck_cost, GRB_BINARY, to_string(i)+"_"+to_string(j));
          vars[i].push_back(var);
          for (auto farmer:route.path){
             if (farmer<vrp.len_N()){
@@ -73,12 +75,16 @@ PrimalSolution primal_solution(VRP& vrp, DualSolution& ds, RouteParameters& para
    // Optimize model
    model.optimize();
 
-   // cout << x.get(GRB_StringAttr_VarName) << " "
-   // << x.get(GRB_DoubleAttr_X) << endl;
-   // cout << y.get(GRB_StringAttr_VarName) << " "
-   // << y.get(GRB_DoubleAttr_X) << endl;
-   // cout << z.get(GRB_StringAttr_VarName) << " "
-   // << z.get(GRB_DoubleAttr_X) << endl;
+
+   // Get status
+   int optimstatus = model.get(GRB_IntAttr_Status);
+
+   if (optimstatus == GRB_INFEASIBLE) {
+      solution.feasible = false;
+      cout << "Model is infeasible" << endl;
+   }else{
+      solution.feasible = true;
+   }
 
    cout << "UB: " << model.get(GRB_DoubleAttr_ObjVal) << endl;
    cout << "LB: " << ds.z_lb << endl;
@@ -96,6 +102,7 @@ PrimalSolution primal_solution(VRP& vrp, DualSolution& ds, RouteParameters& para
          j++;
       }
    }
+   solution.z_lb = ds.z_lb;
 
 
 

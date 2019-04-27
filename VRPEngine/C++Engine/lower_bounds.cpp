@@ -45,9 +45,21 @@ vector<vector<double>> penalized_matrix(
 }
 
 
+vector<vector<vector<double>>> calc_reduced_truck_distances(
+   vector<vector<vector<double>>> truck_distances,
+   vector<double> lamb,
+   vector<double> mu
+){
+   vector<vector<vector<double>>> reduced_truck_distances;
+   int len_H = truck_distances.size();
+   for(int i = 0; i<len_H; i++){
+      reduced_truck_distances.push_back(reduced_cost_matrix(truck_distances[i], lamb, mu));
+   }
+   return reduced_truck_distances;
+}
 
 vector<vector<double>> reduced_cost_matrix(
-   vector<vector<double>> geo_distance,
+   vector<vector<double>> truck_distance,
    vector<double> lamb,
    vector<double> mu
 ){
@@ -55,18 +67,20 @@ vector<vector<double>> reduced_cost_matrix(
    penalties.reserve( lamb.size() + mu.size() ); // preallocate memory
    penalties.insert( penalties.end(), lamb.begin(), lamb.end() );
    penalties.insert( penalties.end(), mu.begin(), mu.end() );
-   for (int i = 0; i < (int) geo_distance.size(); i++){
-      for (int j = 0; j < (int) geo_distance.size(); j++){
-         geo_distance[i][j] -= (penalties[i]/2.0 + penalties[j]/2.0);
+   for (int i = 0; i < (int) truck_distance.size(); i++){
+      for (int j = 0; j < (int) truck_distance.size(); j++){
+         truck_distance[i][j] -= (penalties[i]/2.0 + penalties[j]/2.0);
       }
    }
-   return geo_distance;
+   return truck_distance;
 }
 
 
-void DualSolution::calc_reduced_distances(vector<vector<double>> geo_distance){
-   reduced_distances = reduced_cost_matrix(geo_distance,u,v);
+void DualSolution::sol_calc_reduced_truck_distances(vector<vector<vector<double>>> truck_distances){
+   reduced_truck_distances = calc_reduced_truck_distances(truck_distances,u,v);
 }
+
+
 
 void DualSolution::initialize_routes(int len_H){
    routes = vector<list<SimpleRoute>>(len_H);
@@ -78,7 +92,7 @@ void DualSolution::initialize_routes(int len_H){
 // Write lower bounds
 LowerBound lower_bound_(
    VRP &vrp,
-   vector<vector<double>> &distance_dict,
+   vector<vector<vector<double>>> &red_truck_distances,
    vector<double> mu,
    vector<double> lamb,
    int limit
@@ -102,34 +116,21 @@ LowerBound lower_bound_(
    for (int h = 0; h < len_H; h++){
       int truck_capacity = capacities[h];
 
-      vector<vector<double>> penalized_distance;
-      if (vrp.penalized){
-         penalized_distance = penalized_matrix(
-            distance_dict,
-            vrp.penalties[h],
-            len_N,
-            len_H,
-            vrp.penalty_factor
-         );
-      } else {
-         penalized_distance = distance_dict;
-      }
-
       PossibleValues possible = possible_values(quantities, truck_capacity);
 
       QRoutes qroutes;
       bool old_code = true;
       if (limit == numeric_limits<int>::max()){
          if (old_code){
-            qroutes = construct_q_routes_(H[h], truck_capacity, N, penalized_distance, possible.values, possible.values_pos, quantities);
+            qroutes = construct_q_routes_(H[h], truck_capacity, N, red_truck_distances[h], possible.values, possible.values_pos, quantities);
          } else {
-            qroutes = construct_q_routes_(vrp, H[h], penalized_distance);
+            qroutes = construct_q_routes_(vrp, H[h], red_truck_distances[h]);
          }
       } else {
          if (!old_code){
-            qroutes = construct_q_routes_lim_(vrp, H[h], penalized_distance, limit);
+            qroutes = construct_q_routes_lim_(vrp, H[h], red_truck_distances[h], limit);
          } else {
-            qroutes = construct_q_routes_(H[h], truck_capacity, N, penalized_distance, possible.values, possible.values_pos, quantities);
+            qroutes = construct_q_routes_(H[h], truck_capacity, N, red_truck_distances[h], possible.values, possible.values_pos, quantities);
          }
       }
 
@@ -308,7 +309,8 @@ QPaths construct_q_paths_(
 
       for (int x_i = 0; x_i < len_N; x_i++){
          int q_p = Q - quantities[x_i];
-         if (q_p > 0){
+         // We need the quantity len_N to be >1 to avoid bugs
+         if (q_p > 0 && len_N > 1){
             // Find the minimum
             int arg_min_1 = inf_int;
             int arg_min_2 = inf_int;
@@ -592,7 +594,6 @@ DualSolution lower_bound_optimizer_M1(
    vector<int>& capacities = vrp.capacities;
    vector<int>& N = vrp.N;
    vector<int>& quantities = vrp.quantities;
-   vector<vector<double>>& geo_distance = vrp.geo_distance;
    vector<int>& n_trucks = vrp.n_trucks;
 
    //Calculate lengths
@@ -617,9 +618,11 @@ DualSolution lower_bound_optimizer_M1(
 
    for (int iteration = 0; iteration<iterations; iteration++){
 
-      vector<vector<double>> distance_dict = reduced_cost_matrix(geo_distance, lamb, mu);
+
+      vector<vector<vector<double>>> red_truck_distances = calc_reduced_truck_distances(vrp.truck_distances, lamb, mu);
+
       // We pass these routes to the algorithm that calculates the lower bound
-      LowerBound lb = lower_bound_(vrp, distance_dict, mu, lamb, limit);
+      LowerBound lb = lower_bound_(vrp, red_truck_distances, mu, lamb, limit);
       cout<<lb.z_lb<<endl;
       //cout<<lamb<<endl;
       //cout<<mu<<endl;

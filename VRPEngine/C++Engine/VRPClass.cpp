@@ -47,6 +47,24 @@ PossibleValues possible_values(vector<int>& quantities, int truck_capacity){
    return possible;
 }
 
+vector<vector<double>> penalize_distance(
+   vector<vector<double>> distance_dict,
+   vector<double> penalties,
+   int len_N,
+   int len_H,
+   double penalty_factor
+){
+   for (int n = 0; n < len_N; n++){
+      for (int v = 0; v < len_N + len_H; v++){
+         if (v != n){
+            distance_dict[n][v] += penalties[n]/2.0 * penalty_factor;
+            distance_dict[v][n] += penalties[n]/2.0 * penalty_factor;
+         }
+      }
+   }
+   return distance_dict;
+}
+
 
 
 class VRP {
@@ -59,6 +77,7 @@ public:
    vector<int> N;
    vector<int> quantities;
    vector<vector<double>> geo_distance;
+   vector<vector<vector<double>>> truck_distances;
    vector<int> n_trucks;
    vector<vector<double>> penalties;
    bool penalized;
@@ -66,6 +85,7 @@ public:
    string name;
    string folder;
    vector<PossibleValues> possible_v;
+   string mapping;
 
    VRP(){}
 
@@ -75,42 +95,22 @@ public:
       vector<int> capacities_,
       vector<int> N_,
       vector<int> quantities_,
-      vector<vector<double>> geo_distance_,
-      vector<int> n_trucks_,
-      vector<vector<double>> penalties_,
-      double penalty_factor_ = 0.0
-   ){
-      H = H_;
-      capacities = capacities_;
-      N = N_;
-      quantities = quantities_;
-      geo_distance = geo_distance_;
-      n_trucks = n_trucks_;
-      penalties = penalties_;
-      penalized = true;
-      penalty_factor = penalty_factor_;
-      initialize_possible_values();
-   }
-
-   VRP(
-      vector<int> H_,
-      vector<int> capacities_,
-      vector<int> N_,
-      vector<int> quantities_,
-      vector<vector<double>> geo_distance_,
+      vector<vector<vector<double>>> truck_distances_,
       vector<int> n_trucks_
    ){
+      // Set up basic quantities
       H = H_;
       capacities = capacities_;
       N = N_;
       quantities = quantities_;
-      geo_distance = geo_distance_;
+      truck_distances = truck_distances_;
       n_trucks = n_trucks_;
-      penalized = false;
-      penalty_factor = 0.0;
+
+      // Initialize possible values
       initialize_possible_values();
 
    }
+
 
    int len_H(){
       return H.size();
@@ -147,6 +147,7 @@ VRP VRP_from_filename(string filename, string name_="", double penalty_factor_ =
    vector<int> quantities = j["quantities"];
    vector<int> capacities = j["capacities"];
    vector<int> n_trucks = j["n_trucks"];
+   string mapping = j["mapping"].dump();
 
    vector<vector<double>> geo_distance = j["distances"];
 
@@ -160,12 +161,36 @@ VRP VRP_from_filename(string filename, string name_="", double penalty_factor_ =
 
    VRP vrp;
 
-   if (penalties.size() > 0) {
-      vrp = VRP(H,capacities,N,quantities,geo_distance,n_trucks, penalties, penalty_factor_);
+   // Construct truck_distances
+   auto it_truck_distances = j.find("truck_distances");
+   vector<vector<vector<double>>> truck_distances;
+   if (it_truck_distances != j.end()) {
+      vector<vector<vector<double>>> distances_extracted = *it_truck_distances;
+      truck_distances = distances_extracted;
    } else {
-      vrp = VRP(H,capacities,N,quantities,geo_distance,n_trucks);
+      //Construct truck distances using geo_distances
+      for(int i=0; i<H.size(); i++){
+         truck_distances.push_back(geo_distance);
+      }
    }
+
+   vrp = VRP(H,capacities,N,quantities,truck_distances,n_trucks);
+
+   if (penalties.size() > 0 && penalty_factor_!=0.0) {
+      vrp.penalized = true;
+      for(int i=0; i<vrp.len_H(); i++){
+         vrp.truck_distances[i] = penalize_distance(vrp.truck_distances[i], penalties[i], N.size(), H.size(), penalty_factor_);
+      }
+      vrp.penalties = penalties;
+      vrp.penalty_factor = penalty_factor_;
+   } else {
+      vrp.penalized = false;
+   }
+
+   // Add other quantities
+   vrp.geo_distance = geo_distance;
    vrp.name = name_;
+   vrp.mapping = mapping;
 
    return vrp;
 

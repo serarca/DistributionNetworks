@@ -1,0 +1,14 @@
+python2 create_spatial_inst.py /Users/sergiocamelo/Dropbox/Sergio-Joann/ Jan242019-network/ 0
+python2 create_spatial_inst.py /Users/sergiocamelo/Dropbox/Sergio-Joann/ Jan242019-network/ 1
+python2 create_spatial_inst.py /Users/sergiocamelo/Dropbox/Sergio-Joann/ Jan242019-network/ 2
+python2 create_spatial_inst.py /Users/sergiocamelo/Dropbox/Sergio-Joann/ Jan242019-network/ 3
+python2 create_spatial_inst.py /Users/sergiocamelo/Dropbox/Sergio-Joann/ Jan242019-network/ 4
+python2 create_spatial_inst.py /Users/sergiocamelo/Dropbox/Sergio-Joann/ Jan242019-network/ 5
+python2 create_spatial_inst.py /Users/sergiocamelo/Dropbox/Sergio-Joann/ Jan242019-network/ 6
+python2 create_spatial_inst.py /Users/sergiocamelo/Dropbox/Sergio-Joann/ Jan242019-network/ 7
+python2 create_spatial_inst.py /Users/sergiocamelo/Dropbox/Sergio-Joann/ Jan242019-network/ 8
+python2 create_spatial_inst.py /Users/sergiocamelo/Dropbox/Sergio-Joann/ Jan242019-network/ 9
+python2 create_spatial_inst.py /Users/sergiocamelo/Dropbox/Sergio-Joann/ Jan242019-network/ 10
+python2 create_spatial_inst.py /Users/sergiocamelo/Dropbox/Sergio-Joann/ Jan242019-network/ 11
+python2 create_spatial_inst.py /Users/sergiocamelo/Dropbox/Sergio-Joann/ Jan242019-network/ 12
+python2 create_spatial_inst.py /Users/sergiocamelo/Dropbox/Sergio-Joann/ Jan242019-network/ 13

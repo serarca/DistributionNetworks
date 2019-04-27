@@ -26,6 +26,8 @@ using get_time = chrono::steady_clock ;
 #include "utils/save_dual_solution.cpp"
 #include "primal_solver.cpp"
 #include "ParametersClass.cpp"
+#include "utils/fexists.cpp"
+
 
 
 
@@ -33,12 +35,18 @@ using get_time = chrono::steady_clock ;
 using json = nlohmann::json;
 
 int main(int argc, char** argv){
-
+   cout<<"Hello"<<endl;
    // Take time
    std::chrono::time_point<std::chrono::system_clock> start, end;
    start = std::chrono::system_clock::now();
 
    cout<<"Running instance: "<<argv[2]<<endl;
+
+   // Get penalty factor
+   double penalty_factor = 0.0;
+   if (argc >= 6){
+      penalty_factor = stod(argv[5]);
+   }
 
    RouteParameters parameters;
 
@@ -49,6 +57,7 @@ int main(int argc, char** argv){
    parameters.gamma = stod(argv[4]);
    parameters.z_ub = 1000000;
    parameters.route_limit = 15;
+   int max_iterations = 5;
 
    cout<<"Running with Delta: "<<parameters.Delta<<endl;
    cout<<"Running with Gamma: "<<parameters.gamma<<endl;
@@ -58,18 +67,33 @@ int main(int argc, char** argv){
 
    string instances_folder = "instances/";
 
-   VRP vrp = VRP_from_filename(results_folder+instances_folder+instance_name+".json", instance_name);
+   cout<<"Reading VRP: "+results_folder+instances_folder+instance_name+".json"<<endl;
+   VRP vrp = VRP_from_filename(results_folder+instances_folder+instance_name+".json", instance_name, penalty_factor=penalty_factor);
    vrp.folder = results_folder;
 
    cout<<"No. Farmers "<<vrp.len_N()<<endl;
    cout<<"No. Trucks "<<vrp.len_H()<<endl;
 
+   string file_write = vrp.folder+"primal_solutions/"+vrp.name+"_"+to_string(parameters.Delta);
 
-   cout<< vrp.folder+"dual_solutions/"+vrp.name+"_iter_3.json" <<endl;
-   string file_write = vrp.folder+"bash_c/spatial_primal/"+vrp.name+"_"+to_string(parameters.Delta);
-   cout<<file_write<<endl;
-   DualSolution sol = read_dual_solution(vrp.folder+"dual_solutions/"+vrp.name+"_iter_3.json");
+   string file_read = "";
+   for (int i = max_iterations; i>=0; i--){
+      if (fexists(vrp.folder+"dual_solutions/"+vrp.name+"_iter_"+to_string(i)+".json")){
+         file_read = vrp.folder+"dual_solutions/"+vrp.name+"_iter_"+to_string(i)+".json";
+         break;
+      }
+   }
+   cout<< file_read <<endl;
+
+   DualSolution sol = read_dual_solution(file_read);
    PrimalSolution solution = primal_solution(vrp, sol, parameters);
+   // Increase gamma until solution is feasible
+   if (!solution.feasible){
+      while(!solution.feasible){
+         parameters.gamma =  2*parameters.gamma;
+         solution = primal_solution(vrp, sol, parameters);
+      }
+   }
 
    solution.save_solution(file_write);
 

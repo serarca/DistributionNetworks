@@ -29,14 +29,22 @@ using get_time = chrono::steady_clock ;
 using json = nlohmann::json;
 
 int main(int argc, char** argv){
+   cout<<argc<<endl;
+   cout<<"HEllo"<<endl;
+
 
    cout<<"Running instance: "<<argv[2]<<endl;
 
    string results_folder = argv[1];
    string instance_name = argv[2];
+   double penalty_factor = 0.0;
+   if (argc >= 4){
+      penalty_factor = stod(argv[3]);
+   }
+   
    string instances_folder = "instances/";
    cout<<results_folder+instances_folder+instance_name+".json"<<endl;
-   VRP vrp = VRP_from_filename(results_folder+instances_folder+instance_name+".json", instance_name);
+   VRP vrp = VRP_from_filename(results_folder+instances_folder+instance_name+".json", instance_name, penalty_factor = penalty_factor);
    vrp.folder = results_folder;
    cout<<"No. Farmers "<<vrp.len_N()<<endl;
    cout<<"No. Trucks "<<vrp.len_H()<<endl;

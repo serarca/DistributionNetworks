@@ -805,11 +805,13 @@ list<SimpleRoute> GENROUTE(
 
          // Fill the geo_cost
          copy.geo_cost = 0;
+         copy.truck_cost = 0;
          auto it1 = copy.path.begin();
          auto it2 = copy.path.begin();
          it2++;
          while(it2!=copy.path.end()){
             copy.geo_cost+=geo_distance[*it1][*it2];
+            copy.truck_cost+=vrp.truck_distances[h - len_N][*it1][*it2];
             it1++;
             it2++;
          }
@@ -947,11 +949,13 @@ list<SimpleRoute> GENROUTE(
 
          // Fill the geo_cost
          n_route.geo_cost = 0;
+         n_route.truck_cost = 0;
          auto it1 = n_route.path.begin();
          auto it2 = n_route.path.begin();
          it2++;
          while(it2!=n_route.path.end()){
             n_route.geo_cost+=geo_distance[*it1][*it2];
+            n_route.truck_cost+=vrp.truck_distances[h - len_N][*it1][*it2];
             it1++;
             it2++;
          }
@@ -993,9 +997,10 @@ LowerBound lower_bound_M2(
    double inf = numeric_limits<double>::infinity();
 
    // Update the costs of the routes
-   for (auto & truck_routes:Routes){
+   for (int i = 0; i<vrp.len_H(); i++){
+      auto &truck_routes = Routes[i];
       for (auto & route:truck_routes){
-         route.cost = route.geo_cost;
+         route.cost = route.truck_cost;
          route.cost -= mu[route.truck - len_N];
          for (auto node:route.path){
             if (node<len_N){
@@ -1112,7 +1117,6 @@ void lower_bound_optimizer_M2(
    vector<int>& capacities = vrp.capacities;
    vector<int>& N = vrp.N;
    vector<int>& quantities = vrp.quantities;
-   vector<vector<double>>& geo_distance = vrp.geo_distance;
    vector<int>& n_trucks = vrp.n_trucks;
 
    //Calculate lengths
@@ -1261,8 +1265,8 @@ TerminatingCondition generateTruckMinRoutes(
    double initial_gamma_guarantee = inf;
 
    //Create reduced distances
-   if (initial_sol.reduced_distances.size() == 0){
-      initial_sol.calc_reduced_distances(vrp.geo_distance);
+   if (initial_sol.reduced_truck_distances.size() == 0){
+      initial_sol.sol_calc_reduced_truck_distances(vrp.truck_distances);
    }
 
 
@@ -1270,20 +1274,6 @@ TerminatingCondition generateTruckMinRoutes(
    int len_N = vrp.len_N();
    int len_H = vrp.len_H();
 
-
-   // Create penalized distance matrix
-   vector<vector<double>> penalized_distances;
-   if (vrp.penalized){
-      penalized_distances = penalized_matrix(
-         initial_sol.reduced_distances,
-         vrp.penalties[h - len_N],
-         len_N,
-         len_H,
-         vrp.penalty_factor
-      );
-   } else {
-      penalized_distances = initial_sol.reduced_distances;
-   }
 
    // Initialize the parameters
    TerminatingCondition terminating_condition;
@@ -1297,7 +1287,7 @@ TerminatingCondition generateTruckMinRoutes(
    route_parameters.lb_limit = limit;
    route_parameters.route_limit = limit;
 
-   list<SimpleRoute> Routes = GENROUTE(route_parameters, h, terminating_condition, vrp, initial_sol, penalized_distances);
+   list<SimpleRoute> Routes = GENROUTE(route_parameters, h, terminating_condition, vrp, initial_sol, initial_sol.reduced_truck_distances[h-len_N]);
    cout<<"  Truck guarantee: "<<terminating_condition.gamma_guarantee<<endl;
    cout<<"  Terminated: "<<terminating_condition.terminated<<endl;
 
@@ -1334,9 +1324,8 @@ void update_routes(
    int len_N = vrp.len_N();
    int len_H = vrp.len_H();
    // Calculate reduced costs
-   vector<vector<double>>& geo_distance = vrp.geo_distance;
-   if (ds.reduced_distances.size() == 0){
-      ds.calc_reduced_distances(vrp.geo_distance);
+   if (ds.reduced_truck_distances.size() == 0){
+      ds.sol_calc_reduced_truck_distances(vrp.truck_distances);
    }
    // Initialize routes
    if (ds.routes.size() == 0){
@@ -1393,8 +1382,8 @@ DualSolution optimize_lower_bound_M2(
 
 
    // Calculate reduced costs
-   if (initial_sol.reduced_distances.size() == 0){
-      initial_sol.calc_reduced_distances(vrp.geo_distance);
+   if (initial_sol.reduced_truck_distances.size() == 0){
+      initial_sol.sol_calc_reduced_truck_distances(vrp.truck_distances);
    }
 
    // Define infinity
@@ -1464,7 +1453,7 @@ DualSolution optimize_lower_bound_M2(
       // We use the same parameters of the previous solution
 
       lower_bound_optimizer_M2(sub_iterations, z_ub, epsilon, vrp, ds);
-      ds.calc_reduced_distances(geo_distance);
+      ds.sol_calc_reduced_truck_distances(vrp.truck_distances);
 
       // Vectors indicate whether routes have been terminated or not
       vector<TerminatingCondition> terminating_conditions(len_H);
@@ -1565,7 +1554,6 @@ vector<DualSolution> construct_lower_bound(
    vector<int>& capacities = vrp.capacities;
    vector<int>& N = vrp.N;
    vector<int>& quantities = vrp.quantities;
-   vector<vector<double>>& geo_distance = vrp.geo_distance;
    vector<int>& n_trucks = vrp.n_trucks;
 
 
